@@ -11,11 +11,11 @@ False
 --> 이렇게 바로 list를 확인해 볼 수 있는 것이 python의 좋은 점이다.
 
 days=["Mon", "Tue", 'Wed', 'Thur', 'Fri']
-print(len(days)) # len(s) --> list의 길이를 볼 수 있음
+print(len(days)) # len(s) --> sequence의 길이를 볼 수 있음
 5
 
 random=["a","b","c","d","e","f"] 
-print(len(random)) # len(s) --> list의 길이를 볼 수 있음
+print(len(random)) # len(s) --> sequence의 길이를 볼 수 있음
 6
 
 --> s는 정의한 sequence를 의미하는 것으로 보여짐
