@@ -1,0 +1,19 @@
+def say_introduce(name, age, are_from, fav_food):
+  return f"Hello {name}! you are {age}, you are form {are_from}, you like {fav_food}"
+  
+hello=say_introduce("nicolas", "29", "kimchi", "colombia")
+
+print(hello)
+
+--> Hello nicolas! you are 29, you are form kimchi, you like colombia
+
+--------------------------------------------
+
+def say_introduce(name, age, are_from, fav_food):
+  return f"Hello {name}! you are {age}, you are form {are_from}, you like {fav_food}"
+  
+hello=say_introduce(name="nicolas", age="29", fav_food="kimchi", are_from="colombia")
+
+print(hello)
+
+--> Hello nicolas! you are 29, you are form colombia, you like kimchi
