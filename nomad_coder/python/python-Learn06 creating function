@@ -1,0 +1,18 @@
+def say_hello(who="you"):   <-- default 값을 정해준 상황
+    print("hello", who)
+    
+say_hello("Nicolas")
+say_hello()                 <--- 그래서 이렇게 쳐도 default값을 받아서 호출할 수 있는 것임
+
+hello Nicolas
+hello you
+
+
+
+
+def plus(a,b):
+    print(a+b)
+    
+plus(25474221,2213243543)
+
+2238717764
