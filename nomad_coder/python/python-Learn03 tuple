@@ -1,0 +1,20 @@
+days2=("Mon", "Tue", 'Wed', 'Thur', 'Fri')
+print(type(days2))
+
+<class 'tuple'>
+
+# tuple Common --> 순서가 바뀌지 않는 고정 list로 할 수 있는 것들
+
+x in s
+x not in s
+s + t
+s * n or n * s
+s[i]
+s[i:j]
+s[i:j:k]
+len(s)
+min(s)
+max(s)
+s.index(x[, i[, j]])
+s.count(x)
+
