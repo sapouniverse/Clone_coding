@@ -1,0 +1,22 @@
+for i in range(5):
+  print("HaHa")
+
+for i in range(10):
+  if(i%2==0):
+    print("넌 짝수")
+  elif(i==3):
+    print("당첨")
+  else:
+    print("다음 기회에")
+
+def multiple_7(x):
+  return x*7
+
+for i in range(10):
+  print(multiple_7(i))
+
+a=7 # 숫자 타입
+b="7" # 문자 타입
+
+print(str(a)+b)
+print(a+int(b))
