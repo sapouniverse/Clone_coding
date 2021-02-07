@@ -1,9 +1,14 @@
 days2=("Mon", "Tue", 'Wed', 'Thur', 'Fri')
 print(type(days2))
+print(days2[3]) # s[i] sequence에서 item을 불러옴. 여기선 4번째 item을 불러온 것임
 
 <class 'tuple'>
+Thur
 
-# tuple Common --> 순서가 바뀌지 않는 고정 list로 할 수 있는 것들
+
+결론 : []로 만들었던 list를 ()
+
+# tuple Common --> 순서가 바뀌지 않는 고정 list로 할 수 있는 것들 
 
 x in s
 x not in s
