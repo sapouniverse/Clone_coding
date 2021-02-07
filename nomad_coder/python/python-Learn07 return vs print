@@ -1,0 +1,19 @@
+def say_nick(nick):
+    if nick=="바보":
+        return
+    print("나의 별명은 %s입니다" % nick)
+    
+    
+say_nick("당나귀")
+say_nick("바보")
+say_nick("기린")
+say_nick("바보")
+say_nick("말")
+
+
+나의 별명은 당나귀입니다
+나의 별명은 기린입니다
+나의 별명은 말입니다
+
+--> return은 함수를 빠져나올 때 많이 쓰는 것으로 보인다
+--> print는 우리가 보기 좋으라고 만든거지, 컴퓨터는 전혀 신경 안쓴다.
