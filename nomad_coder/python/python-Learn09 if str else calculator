@@ -1,0 +1,18 @@
+def e_plus(a,b):
+    if type(a) is str:
+        return None
+    elif type(b) is str:
+        return None
+    else:
+        return a + b
+    
+x=e_plus(10,213)
+y=e_plus("11230",212313)
+z=e_plus(1123410,"123213")
+u=e_plus("112351250","2123412313")
+v=e_plus(100,300)
+
+print(x,y,z,u,v)
+
+
+223 None None None 400
