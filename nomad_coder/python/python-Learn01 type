@@ -1,0 +1,30 @@
+# python erro 도움 청할 때
+1. 원하는 것이 무엇인가?
+2. 뭐를 해봤는가?
+3. 어느 부분에서 안됐는가?
+4. erro가 어떻게 생겼는가?
+
+# type 알아보기
+
+a_string="like this"
+a_number=3
+a_float=3.12
+a_boolean=False
+a_none=None
+days=["Mon", "Tue", 'Wed', 'Thur', 'Fri']
+
+print(type(a_string))
+print(type(a_number))
+print(type(a_float))
+print(type(a_boolean))
+print(type(a_none))
+
+<class 'str'>
+<class 'int'>
+<class 'float'>
+<class 'bool'>
+<class 'NoneType'>
+<class 'list'>
+
+# python code 정보 얻는 사이트
+--> python standard library (https://docs.python.org/3/library/)
