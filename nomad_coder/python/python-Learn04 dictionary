@@ -1,0 +1,61 @@
+who = {
+    "name": "Suepr",
+    "age": 29,
+    "korean": True,
+    "fav_food": ["Kimchi", "rice"]
+
+}
+
+print(who)
+
+{'name': 'Suepr', 'age': 29, 'korean': True, 'fav_food': ['Kimchi', 'rice']}
+
+
+
+print(who["name"])
+print(who["age"])
+print(who["korean"])
+print(who["fav_food"])
+
+Suepr
+29
+True
+['Kimchi', 'rice']
+
+
+
+who["handsome"]=True # dictionary에 추가하기
+print(who)
+{'name': 'Suepr', 'age': 29, 'korean': True, 'fav_food': ['Kimchi', 'rice'], 'handsome': True}
+
+--> ""으로 정의하고 :으로 구분짓고 ,로 표 만드는 느낌
+
+
+
+
+
+
+--> str을 ""으로 정의하지 않으면 erro가 뜨니까 주의!
+
+※주의---------------------------------------------------------------------
+who = {
+    name: "Suepr",
+    age: 29,
+    korean: True,
+    fav_food: ["Kimchi", "rice"]
+
+}
+
+print(who)
+
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+<ipython-input-20-f6d8d7ccafe7> in <module>
+      1 who = {
+----> 2     name: "Suepr",
+      3     age: 29,
+      4     korean: True,
+      5     fav_food: ["Kimchi", "rice"]
+
+NameError: name 'name' is not defined
+
