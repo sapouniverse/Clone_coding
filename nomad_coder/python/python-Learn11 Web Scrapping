@@ -4,14 +4,14 @@ pip install beautifulsoup4
 import requests
 from bs4 import BeautifulSoup
 
-indeed_result = requests.get("https://kr.indeed.com/jobs?q=python&limit=50")
-indeed_soup = BeautifulSoup(indeed_result.text, 'html.parser')
-pagination=indeed_soup.find("div", {"class":"pagination"})
+indeed_result = requests.get("https://kr.indeed.com/jobs?q=python&limit=50") # 해당 주소의 소스코드를 싹 가져와주는 마법의 request
+indeed_soup = BeautifulSoup(indeed_result.text, 'html.parser') # 싹 불러온 소스코드를 soup에 다시 복사하는 중
+pagination=indeed_soup.find("div", {"class":"pagination"}) # A4로 280페이지가 넘는 소스코드 중에 "div class="pagination"만 찾아서 불러와달라는 상냥한 명령
 
 
-pages=pagination.find_all('a')
+pages=pagination.find_all('a') # </a> 이거 찾을라고 한 것임. 그 앞에 페이지 숫자가 붙어있거든~
 spans=[]
-for page in pages:
+for page in pages: # 반복해서 <span class="pn">숫자</span>만 뽑아오는 작업
     spans.append(page.find("span"))
 
 
@@ -19,6 +19,5 @@ print(spans[:-1])
 
 [<span class="pn">2</span>, <span class="pn">3</span>, <span class="pn">4</span>, <span class="pn">5</span>]
 
---> 맨 마지막 페이지를 가져오고 싶은데, 해당 페이지가 리뉴얼 되니까 5페이지밖에 못가져오네? 
-이럴 경우에는 어떻게 해야 하는 것인지 
-
+--> 5페이지 밖에 없어서 못불러오는 것에 대해선 해당 페이지에서 그것밖에 제공 안하니까 어쩔수 없지만 응용해서 다 불러오고 싶은데 아직은 아닌듯
+--> for~in을 이용해서 맨 마지막페이지까지 지동으로 넘기면서 모든 페이지의 div class="pagination"를 다 불러온 다음에 합칠 수 있지 않을까? 라고 질문만 남기고 패스
