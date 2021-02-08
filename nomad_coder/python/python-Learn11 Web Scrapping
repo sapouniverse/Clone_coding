@@ -1,0 +1,24 @@
+pip install requests
+pip install beautifulsoup4
+
+import requests
+from bs4 import BeautifulSoup
+
+indeed_result = requests.get("https://kr.indeed.com/jobs?q=python&limit=50")
+indeed_soup = BeautifulSoup(indeed_result.text, 'html.parser')
+pagination=indeed_soup.find("div", {"class":"pagination"})
+
+
+pages=pagination.find_all('a')
+spans=[]
+for page in pages:
+    spans.append(page.find("span"))
+
+
+print(spans[:-1])
+
+[<span class="pn">2</span>, <span class="pn">3</span>, <span class="pn">4</span>, <span class="pn">5</span>]
+
+--> 맨 마지막 페이지를 가져오고 싶은데, 해당 페이지가 리뉴얼 되니까 5페이지밖에 못가져오네? 
+이럴 경우에는 어떻게 해야 하는 것인지 
+
