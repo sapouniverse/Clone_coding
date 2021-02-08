@@ -12,7 +12,7 @@ pagination=indeed_soup.find("div", {"class":"pagination"}) # A4로 280페이지�
 pages=pagination.find_all('a') # </a> 이거 찾을라고 한 것임. 그 앞에 페이지 숫자가 붙어있거든~
 spans=[]
 for page in pages: # 반복해서 <span class="pn">숫자</span>만 뽑아오는 작업
-    spans.append(page.find("span"))
+    spans.append(page.find("span")) # append는 마지막에 원소 추가인데? span을 찾아서 뭐하라는거야?
 
 
 print(spans[:-1])
