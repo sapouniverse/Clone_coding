@@ -1,0 +1,45 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+max_indeed_pages=extract_indeed_pages()
+extract_indeed_jobs(max_indeed_pages)
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  for result in results:
+    title=(result.find("h2", {"class": "title"}))
+    title_anchor=title.find("a")["title"]                       <------- 정리가 잘돼서 이쁨. 앞으로 갖다 쓸 때 title_anchor 갖다 쓰겠다고 미리 정의해둠
+
+    company=result.find("span", {"class":"company"})
+    company_anchor=company.find("a")                            <------- 정리가 잘돼서 이쁨. 앞으로 갖다 쓸 때 company_anchor 갖다 쓰겠다고 미리 정의해둠
+
+    if company.find("a") is not None:
+      print(company.find("a").string)
+    else:
+      print(company.string)
+
+  return jobs 
