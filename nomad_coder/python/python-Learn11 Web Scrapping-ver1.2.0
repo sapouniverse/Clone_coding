@@ -43,7 +43,7 @@ def extract_indeed_jobs(last_pages):
   return jobs 
 
 ----------------------
-# 결과 : 링크가 없고 sapn만 있는 경우가 있어서 None이 뜸
+# 결과 : 링크가 없고 sapn만 있는 경우가 있어서 None이 뜸. 드디어 if else를 쓸 때가 
 
 
 None
