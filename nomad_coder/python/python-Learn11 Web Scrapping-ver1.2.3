@@ -1,0 +1,101 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+max_indeed_pages=extract_indeed_pages()
+extract_indeed_jobs(max_indeed_pages)
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  for result in results:
+    title=(result.find("h2", {"class": "title"}))
+    title_anchor=title.find("a")["title"]
+
+    company=result.find("span", {"class":"company"})       <----------- soup처럼 막 섞여서 싹다 불러왔던 company라는 변수
+    company_anchor=company.find("a")                       <----------- company_anchor에다가 soup에서 찾은 결과를 담아주고
+
+    if company_anchor is not None:
+      company=(company_anchor.string)                      <----------- if를 통해 company 안에 있는 내용을 털어버리고 string을 넣어줌
+    else:
+      company=(company.string)                             <----------- if를 통해 company 안에 있는 내용을 털어버리고 string을 넣어줌
+
+    company=company.strip()                                <----------- company 양 끝에 있는 공백과 엔터를 strip 벗겨버림
+    print(company)
+    
+  return jobs 
+-----------------------------------------------------------------------
+# 결과 : 매우 깔끔
+
+쏘카
+세메스
+No Deviation Pte Ltd
+ASML
+정보통신기획평가원
+Zurich Instruments
+한국알프스
+한국카카오은행
+유저해빗
+프랭클린템플턴투신
+Raytheon Intelligence & Space
+한국정보기술단
+Mentor Graphics (Korea) LLC
+NHN
+매크로액트
+KLA-Tencor
+쏘카
+Bloomberg
+지능형자동차부품진흥원
+로제타텍
+네이버랩스
+KLA-Tencor
+Bloomberg
+dunnhumby
+GE Appliances
+네오위즈
+웹젠
+마이뮤직테이스트
+한국폴리텍대학분당융합기술교육원
+큐빅스
+카카오커머스
+아르비존
+스테코
+네오위즈
+KIS채권평가
+LG전자
+규
+NHN
+쏘카
+LG CNS
+Synopsys
+Ernst & Young
+자산운용: Quantitative Research
+Nexon
+NVIDIA
+딥엑스
+대한상공회의소 광주인력개발원
+다온에스엔씨
+신한비엔피파리바자산운용
+네오위즈
