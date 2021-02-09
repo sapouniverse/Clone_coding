@@ -1,0 +1,100 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+max_indeed_pages=extract_indeed_pages()
+
+
+extract_indeed_jobs(max_indeed_pages)
+
+
+
+indeed.py
+
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  for result in results:
+    title=(result.find("h2", {"class": "title"}))
+    anchor=title.find("a")["title"]                               <----------anchor 중에서 title만 따오는 작업
+    print(anchor)
+
+  return jobs 
+
+----------------------------------------------------------------
+# 결과 : 한 페이지의 직무만 가져오게 됨
+
+데이터 분석가/사이언티스트(신입/인턴 가능)
+Field Application YieldStar Competency Engineer
+Data Scientist (KOREA)
+2021년 IITP 주관 글로벌핵심인재양성 지원사업
+Application Engineer South Korea (Physics, EE)
+2021년도 한국알프스 수시
+SM파견 웹개발자
+데이터 분석 및 컨설팅 분야 (Python, SAS, 빅데이터) 경력직
+[빅데이터플랫폼] 데이터 엔지니어
+프랭클린템플턴투신운용 Junior Trader (Quant base 필수)
+Sr Systems Administrator I
+2021 Market Data Analyst - Seoul
+지능형자동차부품진흥원 인력
+[타다]데이터 분석가/사이언티스트
+Application Engineer Consultant - HAV
+Engr, Apps Dev 2
+2021년 (신입) 전문연구요원 모집
+2021년 상반기 Python 경력
+Applied Data Scientist
+[전문연구요원] 상시 (전직)
+2021 Global Data Internship - Seoul (Korean Speaker)
+Engr, Tech Supp 3
+[각 분야별] Java, MySQL, Python 외 정규직
+사내 및 서비스 보안 담당자 (경력)
+Developer / Designer recruit
+데이터 엔지니어(신입/경력)
+[EY한영] 금융감사본부 Data Analytics 전문 경력직 모집
+데이터 마케팅(분석/모델링) 전문가
+글로벌 소셜카지노 서비스 해외사업 담당자 (경력)
+AI 분야 경력
+각 부문별 수시
+[카카오커머스] 기술직군
+펌웨어, C·C++ 경력 계약직
+사물인터넷(IoT) 개발자 (하드웨어 및 소프트웨어)
+[4년제 대졸자 취업연계과정] 융합 SW 바이오 분야, 전공무관, 취업율 92.7
+Design Consultant, Staff
+[고경력자의 경우 시간단축] 홈페이지 개발 및 관리 웹프로그래머
+[전문연구요원] 빅데이터 엔지니어(신입/경력)
+[넥슨·엔씨소프트등] 자바·파이썬 응용SW 개발자 양성교육 · 동종업계 신입 초봉5천
+1
+Software Engineer - AI
+스테코 부문별 신입 및 경력사원
+웹개발자, 모바일앱개발 외 신입/경력 정규직, 계약직
+Perception Software Engineer - Autonomous Vehicles
+Quantitative Researcher
+(광주취업맛집1위)2021년도 국비 기술교육생
+글로벌 소셜카지노 부문 사업PM
+데이터 사이언스(데이터 모델링 및 추천 모델링)
+퀀트운용팀 (사원-대리급)
+Data Scientist 경력인재 - 글로벌 우량대기업
+[Janssen] Data Scientist
+
