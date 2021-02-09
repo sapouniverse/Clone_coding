@@ -1,0 +1,61 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+max_indeed_pages=extract_indeed_pages()
+
+
+extract_indeed_jobs(max_indeed_pages)
+
+
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  for page in range(last_pages):
+    result = requests.get(f"{INDEED_URL}&start={page*LIMIT}")
+    soup = BeautifulSoup(result.text, "html.parser")
+    results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+    
+    print(results)
+
+  return jobs
+
+-------------------------------------------
+결과 : 
+
+wind
+ow['result_2695294aea6dc3b6']['showReport'] = true;</script></div></div>
+</div>
+</div>
+
+
+.
+.
+.
+.
+.
+
+<div class="tellafriend-container result-tab email_job_content"></div>
+<div class="sign-in-container result-tab"></div>
+</div>
+</div>]
