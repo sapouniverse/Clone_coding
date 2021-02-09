@@ -1,0 +1,144 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+max_indeed_pages=extract_indeed_pages()
+extract_indeed_jobs(max_indeed_pages)
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  for result in results:
+    title=(result.find("h2", {"class": "title"}))
+    anchor=title.find("a")["title"]
+    company=result.find("span", {"class":"company"})  <---------  .find("a)를 빼서
+    if company.find("a") is not None:                 <---------- 여기에 넣을건데, if라는 조건을 걸었음. 
+      print(company.find("a").string)
+    else:
+      print(company.string)
+
+  return jobs 
+------------------------------------------------
+결과 : 뷰티풀
+
+쏘카
+
+한국카카오은행
+
+No Deviation Pte Ltd
+
+정보통신기획평가원
+
+ASML
+
+Zurich Instruments
+
+한국정보기술단
+
+Bloomberg
+
+한국알프스
+
+Mentor Graphics (Korea) LLC
+
+Raytheon Intelligence & Space
+
+매크로액트
+
+NHN
+
+한국폴리텍대학분당융합기술교육원
+
+프랭클린템플턴투신
+
+유저해빗
+
+쏘카
+
+네이버랩스
+
+카카오커머스
+
+웹젠
+
+자산운용: Quantitative Research
+
+KLA-Tencor
+
+카카오
+
+KLA-Tencor
+
+카카오
+
+네오위즈
+
+스테코
+
+큐빅스
+
+LG CNS
+
+Nexon
+
+현대오트론
+
+로제타텍
+
+에스에프인촌
+
+아르비존
+
+KIS채권평가
+
+지능형자동차부품진흥원
+
+라이나생명보험
+
+네오위즈
+
+LG CNS
+
+다온에스엔씨
+
+NHN
+
+딥엑스
+
+dunnhumby
+
+Nexon
+
+카카오
+
+GE Appliances
+
+Bloomberg
+
+쏘카
+
+엔씨소프트
+
+웹젠
