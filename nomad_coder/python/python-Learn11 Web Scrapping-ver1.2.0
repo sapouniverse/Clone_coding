@@ -1,0 +1,122 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+max_indeed_pages=extract_indeed_pages()
+
+
+extract_indeed_jobs(max_indeed_pages)
+
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  for result in results:
+    title=(result.find("h2", {"class": "title"}))
+    anchor=title.find("a")["title"]
+    company=result.find("span", {"class":"company"}).find("a")   <--------- 회사 이름 찾아올거에요!!
+    print(company)
+
+  return jobs 
+
+----------------------
+# 결과 : 회사 이름만 있고 링크가 없는 경우가 있네? ㅋㅋㅋ 그럼 이제 if else 쓸 차례!!
+
+
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+<a class="turnstileLink" data-tn-element="companyName" href="/cmp/Siemens-Ag" onm
+ousedown="this.href = appendParamsOnce(this.href, 'from=SERP&amp;campaignid=serp-
+linkcompanyname&amp;fromjk=68486bb7da29a05b&amp;jcid=f501f29886ed5032')" rel="noo
+pener" target="_blank">
+Mentor Graphics (Korea) LLC</a>
+<a class="turnstileLink" data-tn-element="companyName" href="/cmp/Nhn-Entertainme
+nt" onmousedown="this.href = appendParamsOnce(this.href, 'from=SERP&amp;campaigni
+d=serp-linkcompanyname&amp;fromjk=9acc17c535b42959&amp;jcid=cd21d69148a07a70')" r
+el="noopener" target="_blank">
+NHN</a>
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+<a class="turnstileLink" data-tn-element="companyName" href="/cmp/Lg%EC%A0%84%EC%
+9E%90" onmousedown="this.href = appendParamsOnce(this.href, 'from=SERP&amp;campai
+gnid=serp-linkcompanyname&amp;fromjk=9edef5cb1029c4c1&amp;jcid=9702ca14c9a11940')
+" rel="noopener" target="_blank">
+LG전자</a>
+None
+None
+<a class="turnstileLink" data-tn-element="companyName" href="/cmp/Nhn-Entertainme
+nt" onmousedown="this.href = appendParamsOnce(this.href, 'from=SERP&amp;campaigni
+d=serp-linkcompanyname&amp;fromjk=da5c549bf1a76ded&amp;jcid=cd21d69148a07a70')" r
+el="noopener" target="_blank">
+NHN</a>
+None
+None
+<a class="turnstileLink" data-tn-element="companyName" href="/cmp/%EC%97%98%EC%A7
+%80%EC%94%A8%EC%97%94%EC%97%90%EC%8A%A4" onmousedown="this.href = appendParamsOnc
+e(this.href, 'from=SERP&amp;campaignid=serp-linkcompanyname&amp;fromjk=c8bf4fa589
+99927f&amp;jcid=68cc2b3d84f16c85')" rel="noopener" target="_blank">
+LG CNS</a>
+None
+<a class="turnstileLink" data-tn-element="companyName" href="/cmp/Ey" onmousedown
+="this.href = appendParamsOnce(this.href, 'from=SERP&amp;campaignid=serp-linkcomp
+anyname&amp;fromjk=e934bb33ef71dacb&amp;jcid=f1909f38354860e3')" rel="noopener" t
+arget="_blank">
+Ernst &amp; Young</a>
+None
+None
+None
+None
+None
+None
+None
+None
