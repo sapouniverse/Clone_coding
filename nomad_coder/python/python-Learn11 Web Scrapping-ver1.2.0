@@ -43,7 +43,7 @@ def extract_indeed_jobs(last_pages):
   return jobs 
 
 ----------------------
-# 결과 : 회사 이름만 있고 링크가 없는 경우가 있네? ㅋㅋㅋ 그럼 이제 if else 쓸 차례!!
+# 결과 : 링크가 없고 sapn만 있는 경우가 있어서 None이 뜸
 
 
 None
