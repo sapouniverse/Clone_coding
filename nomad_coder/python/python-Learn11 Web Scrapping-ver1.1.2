@@ -1,0 +1,61 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+max_indeed_pages=extract_indeed_pages()
+
+
+extract_indeed_jobs(max_indeed_pages)
+
+
+
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):  <--------------------------- 반복 안하려고 여기를 주석처리하고 
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}") <----- 여기를 0 처리 했음
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  
+  print(results)
+
+  return jobs 
+-------------------------------------------------------------------
+# 결과 : 이렇게 하면 한 페이지의 정보만 나오게 됨
+
+[<div class="jobsearch-SerpJobCard unifiedRow row result" data-jk="55584c627df1ac
+aa" data-tn-component="organicJob" id="p_55584c627df1acaa">
+<h2 class="title">
+
+.
+.
+.
+.
+.
+
+<div class="tellafriend-container result-tab email_job_content"></div>
+<div class="sign-in-container result-tab"></div>
+</div>
+</div>]
+
+
