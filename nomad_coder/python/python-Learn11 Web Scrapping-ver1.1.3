@@ -1,0 +1,459 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+max_indeed_pages=extract_indeed_pages()
+
+
+extract_indeed_jobs(max_indeed_pages)
+
+
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  
+  for result in results:                          <---------- for문만 한번 더 실행시킨거임
+    print(result.find("h2", {"class": "title"}))  <---------- soup의 list 중에 title을 출력하는것임
+  
+
+  return jobs 
+
+----------------------------------------------------------------------------------------
+
+# 결과 : 이제 뭔가 좀 규칙이 보임. 타이틀만 따온거임
+
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=555
+84c627df1acaa&amp;fccid=ebcd554962f400ec&amp;vjs=3" id="jl_55584c627df1acaa" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[0],true,0);" onmousedown="ret
+urn rclk(this,jobmap[0],0);" rel="noopener nofollow" target="_blank" title="데이
+터 분석가/사이언티스트(신입/인턴 가능)">
+데이터 분석가/사이언티스트(신입/인턴 가능)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=3ee
+73b74de360c58&amp;fccid=57ed5f0210b0681a&amp;vjs=3" id="jl_3ee73b74de360c58" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[1],true,0);" onmousedown="ret
+urn rclk(this,jobmap[1],0);" rel="noopener nofollow" target="_blank" title="Field
+ Application YieldStar Competency Engineer">
+Field Application YieldStar Competency E...</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=efb
+69a29d8bd7514&amp;fccid=0c77e931bbae40ba&amp;vjs=3" id="jl_efb69a29d8bd7514" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[2],true,0);" onmousedown="ret
+urn rclk(this,jobmap[2],0);" rel="noopener nofollow" target="_blank" title="2021
+년 IITP 주관 글로벌핵심인재양성 지원사업">
+2021년 IITP 주관 글로벌핵심인재양성 지원사업</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/company/No-De
+viation-Pte-Ltd/jobs/Data-Scientist-0d207415a075d21c?fccid=1685f7430879dfc6&amp;v
+js=3" id="jl_0d207415a075d21c" onclick="setRefineByCookie([]); return rclk(this,j
+obmap[3],true,0);" onmousedown="return rclk(this,jobmap[3],0);" rel="noopener nof
+ollow" target="_blank" title="Data Scientist (KOREA)">
+Data Scientist (KOREA)</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/pagead/clk?mo
+=r&amp;ad=-6NYlbfkN0A0uritR0otiaIwNMOxeFV2-8uqNew40xXu27AW8VouaVBamllT3jpNKR6-cTI
+tqBrw1OIsQxzHDmNW56oVGF1MZ_LJL4Kut5oCCnsCeREcv9g-iQp6alIzHKzgO9FsEjaybp3HYOeIrBCm
+DgOUqpp6zRvxPjvhLePqKUB8T5AMYj187Z0pMGtMaC9t5mgC4dQBbclYUVX6vmqEsgDKOjQnG708LXFi-
+sUoXq4-h7jIHCeWxnaIvWzi44wl76UfGb4BzesqSGambe_NyjYuNXAYh7RA5FI5IMPU_Vz5aydN1LSM7E
+8JGfl8QydMr8wLMox_9rpUt5WSwffr5xd9278LzT7XQMNvg4OMTQCE91lRXkGbDpWCSbqHLlcD36il9V-
+W3haQlhzlVUB8Iny-y3jCqKKDst-TvZT8fHg06bjyGUGA6drbW615dTyUwIwzTWqA3Rg40hddNgGX0lds
+2FJWrZKFq1V3V7veK7ocKw9OmlERQv67E2fgBdR4Ob7GVmFnaSsp-TzQ5KUgwAq37OsWjXgn2TcyjzZN3
+A5JPnl2SunQsVI-MSSO3plyl9OSPBFNt9YVl43M36GW32fB62B_ulYigXiO2W-BxatciabvSMj3EfKOA3
+OWVdzIH8DdpwEebpN_danRhjFAZWmvIq0hy78ntAET_mxFH-jycDWq0BZ13Dr1-JFk&amp;p=4&amp;fv
+j=0&amp;vjs=3" id="sja4" onclick="setRefineByCookie([]); sjoc('sja4', 0); convCtr
+('SJ'); rclk(this,jobmap[4],true,0);" onmousedown="sjomd('sja4'); clk('sja4'); rc
+lk(this,jobmap[4],0);" rel="noopener nofollow" target="_blank" title="Application
+ Engineer South Korea (Physics, EE)">
+Application Engineer South Korea (Physics, EE)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=090
+2a0487b3b69a9&amp;fccid=c6fb677a631c5147&amp;vjs=3" id="jl_0902a0487b3b69a9" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[5],true,0);" onmousedown="ret
+urn rclk(this,jobmap[5],0);" rel="noopener nofollow" target="_blank" title="2021
+년도 한국알프스 수시">
+2021년도 한국알프스 수시</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=69e
+29038ecc0f40f&amp;fccid=95c773635e68072c&amp;vjs=3" id="jl_69e29038ecc0f40f" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[6],true,1);" onmousedown="ret
+urn rclk(this,jobmap[6],1);" rel="noopener nofollow" target="_blank" title="SM파
+견 웹개발자">
+SM파견 웹개발자</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=9fe
+4755841bec8ce&amp;fccid=99925e8e7b9604cc&amp;vjs=3" id="jl_9fe4755841bec8ce" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[7],true,0);" onmousedown="ret
+urn rclk(this,jobmap[7],0);" rel="noopener nofollow" target="_blank" title="데이
+터 분석 및 컨설팅 분야 (Python, SAS, 빅데이터) 경력직">
+데이터 분석 및 컨설팅 분야 (<b>Python</b>, SAS, 빅데이터) 경력직</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=927
+439a84026234e&amp;fccid=aea6a13a3459fdb2&amp;vjs=3" id="jl_927439a84026234e" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[8],true,0);" onmousedown="ret
+urn rclk(this,jobmap[8],0);" rel="noopener nofollow" target="_blank" title="[빅데
+이터플랫폼] 데이터 엔지니어">
+[빅데이터플랫폼] 데이터 엔지니어</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=4ad
+ac8923476d038&amp;fccid=bab92f71c1e85edd&amp;vjs=3" id="jl_4adac8923476d038" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[9],true,0);" onmousedown="ret
+urn rclk(this,jobmap[9],0);" rel="noopener nofollow" target="_blank" title="프랭
+클린템플턴투신운용 Junior Trader (Quant base 필수)">
+프랭클린템플턴투신운용 Junior Trader (Quant base 필수...</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=78f
+5465432356e17&amp;fccid=03e5fef1f1c1b85d&amp;vjs=3" id="jl_78f5465432356e17" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[10],true,0);" onmousedown="re
+turn rclk(this,jobmap[10],0);" rel="noopener nofollow" target="_blank" title="Sr
+Systems Administrator I">
+Sr Systems Administrator I</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=e8a
+4630bec0783e8&amp;fccid=f770da67b3b51c62&amp;vjs=3" id="jl_e8a4630bec0783e8" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[11],true,0);" onmousedown="re
+turn rclk(this,jobmap[11],0);" rel="noopener nofollow" target="_blank" title="202
+1 Market Data Analyst - Seoul">
+2021 Market Data Analyst - Seoul</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=fd0
+194167a01fed0&amp;fccid=e754c4daa6aa41e0&amp;vjs=3" id="jl_fd0194167a01fed0" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[12],true,0);" onmousedown="re
+turn rclk(this,jobmap[12],0);" rel="noopener nofollow" target="_blank" title="지
+능형자동차부품진흥원 인력">
+지능형자동차부품진흥원 인력</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=333
+0430ae94277db&amp;fccid=ebcd554962f400ec&amp;vjs=3" id="jl_3330430ae94277db" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[13],true,0);" onmousedown="re
+turn rclk(this,jobmap[13],0);" rel="noopener nofollow" target="_blank" title="[타
+다]데이터 분석가/사이언티스트">
+[타다]데이터 분석가/사이언티스트</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=684
+86bb7da29a05b&amp;fccid=3b89b9ec324f96c8&amp;vjs=3" id="jl_68486bb7da29a05b" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[14],true,0);" onmousedown="re
+turn rclk(this,jobmap[14],0);" rel="noopener nofollow" target="_blank" title="App
+lication Engineer Consultant - HAV">
+Application Engineer Consultant - HAV</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=ab3
+8178e6071aa0f&amp;fccid=c8fc142c28286059&amp;vjs=3" id="jl_ab38178e6071aa0f" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[15],true,0);" onmousedown="re
+turn rclk(this,jobmap[15],0);" rel="noopener nofollow" target="_blank" title="Eng
+r, Apps Dev 2">
+Engr, Apps Dev 2</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=9ac
+c17c535b42959&amp;fccid=a72ebaf825acf7af&amp;vjs=3" id="jl_9acc17c535b42959" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[16],true,0);" onmousedown="re
+turn rclk(this,jobmap[16],0);" rel="noopener nofollow" target="_blank" title="202
+1년 (신입) 전문연구요원 모집">
+2021년 (신입) 전문연구요원 모집</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=228
+80c1154a12433&amp;fccid=26a0e6271e2baf16&amp;vjs=3" id="jl_22880c1154a12433" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[17],true,0);" onmousedown="re
+turn rclk(this,jobmap[17],0);" rel="noopener nofollow" target="_blank" title="[각
+ 분야별] Java, MySQL, Python 외 정규직">
+[각 분야별] Java, MySQL, <b>Python</b> 외 정규직</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=059
+2fae45af22542&amp;fccid=6b97aba1037c0b00&amp;vjs=3" id="jl_0592fae45af22542" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[18],true,0);" onmousedown="re
+turn rclk(this,jobmap[18],0);" rel="noopener nofollow" target="_blank" title="202
+1년 상반기 Python 경력">
+2021년 상반기 <b>Python</b> 경력</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=f10
+a132f53b6307d&amp;fccid=36801496409e6dc9&amp;vjs=3" id="jl_f10a132f53b6307d" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[19],true,0);" onmousedown="re
+turn rclk(this,jobmap[19],0);" rel="noopener nofollow" target="_blank" title="App
+lied Data Scientist">
+Applied Data Scientist</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=14b
+591547a3b9df5&amp;fccid=d30455f17633cf87&amp;vjs=3" id="jl_14b591547a3b9df5" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[20],true,0);" onmousedown="re
+turn rclk(this,jobmap[20],0);" rel="noopener nofollow" target="_blank" title="[전
+문연구요원] 상시 (전직)">
+[전문연구요원] 상시 (전직)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=18f
+62dc644a89e0c&amp;fccid=f770da67b3b51c62&amp;vjs=3" id="jl_18f62dc644a89e0c" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[21],true,0);" onmousedown="re
+turn rclk(this,jobmap[21],0);" rel="noopener nofollow" target="_blank" title="202
+1 Global Data Internship - Seoul (Korean Speaker)">
+2021 Global Data Internship - Seoul (Kor...</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=233
+bbfd9781e846d&amp;fccid=c8fc142c28286059&amp;vjs=3" id="jl_233bbfd9781e846d" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[22],true,0);" onmousedown="re
+turn rclk(this,jobmap[22],0);" rel="noopener nofollow" target="_blank" title="Eng
+r, Tech Supp 3">
+Engr, Tech Supp 3</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=cd4
+0cf786e32f325&amp;fccid=a4f571f3a628be3e&amp;vjs=3" id="jl_cd40cf786e32f325" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[23],true,0);" onmousedown="re
+turn rclk(this,jobmap[23],0);" rel="noopener nofollow" target="_blank" title="사
+내 및 서비스 보안 담당자 (경력)">
+사내 및 서비스 보안 담당자 (경력)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=55a
+19c92c845685e&amp;fccid=74d05cee5b52f133&amp;vjs=3" id="jl_55a19c92c845685e" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[24],true,0);" onmousedown="re
+turn rclk(this,jobmap[24],0);" rel="noopener nofollow" target="_blank" title="Dev
+eloper / Designer recruit">
+Developer / Designer recruit</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=05a
+a5498d84c58e1&amp;fccid=ebcd554962f400ec&amp;vjs=3" id="jl_05aa5498d84c58e1" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[25],true,0);" onmousedown="re
+turn rclk(this,jobmap[25],0);" rel="noopener nofollow" target="_blank" title="데
+이터 엔지니어(신입/경력)">
+데이터 엔지니어(신입/경력)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=e93
+4bb33ef71dacb&amp;fccid=1544766d4c2915b0&amp;vjs=3" id="jl_e934bb33ef71dacb" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[26],true,0);" onmousedown="re
+turn rclk(this,jobmap[26],0);" rel="noopener nofollow" target="_blank" title="[EY
+한영] 금융감사본부 Data Analytics 전문 경력직 모집">
+[EY한영] 금융감사본부 Data Analytics 전문 경력직 모집</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=9ed
+ef5cb1029c4c1&amp;fccid=9702ca14c9a11940&amp;vjs=3" id="jl_9edef5cb1029c4c1" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[27],true,0);" onmousedown="re
+turn rclk(this,jobmap[27],0);" rel="noopener nofollow" target="_blank" title="데
+이터 마케팅(분석/모델링) 전문가">
+데이터 마케팅(분석/모델링) 전문가</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=57d
+ead75c6dee2c1&amp;fccid=a4f571f3a628be3e&amp;vjs=3" id="jl_57dead75c6dee2c1" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[28],true,0);" onmousedown="re
+turn rclk(this,jobmap[28],0);" rel="noopener nofollow" target="_blank" title="글
+로벌 소셜카지노 서비스 해외사업 담당자 (경력)">
+글로벌 소셜카지노 서비스 해외사업 담당자 (경력)</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=c8b
+f4fa58999927f&amp;fccid=9635ff240e3de5f6&amp;vjs=3" id="jl_c8bf4fa58999927f" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[29],true,0);" onmousedown="re
+turn rclk(this,jobmap[29],0);" rel="noopener nofollow" target="_blank" title="AI
+분야 경력">
+AI 분야 경력</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=330
+617e8381fbee6&amp;fccid=c54b7952dd9d6d70&amp;vjs=3" id="jl_330617e8381fbee6" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[30],true,0);" onmousedown="re
+turn rclk(this,jobmap[30],0);" rel="noopener nofollow" target="_blank" title="각
+부문별 수시">
+각 부문별 수시</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=52f
+8fb3f7e662c5d&amp;fccid=b1f5de6cae96f6c2&amp;vjs=3" id="jl_52f8fb3f7e662c5d" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[31],true,0);" onmousedown="re
+turn rclk(this,jobmap[31],0);" rel="noopener nofollow" target="_blank" title="[카
+카오커머스] 기술직군">
+[카카오커머스] 기술직군</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=7a7
+e2f032c8599f9&amp;fccid=0245d3ec47035b6e&amp;vjs=3" id="jl_7a7e2f032c8599f9" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[32],true,0);" onmousedown="re
+turn rclk(this,jobmap[32],0);" rel="noopener nofollow" target="_blank" title="펌
+웨어, C·C++ 경력 계약직">
+펌웨어, C·C++ 경력 계약직</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=a4a
+de495ab488c6f&amp;fccid=b5f62c3a6cfa7f3e&amp;vjs=3" id="jl_a4ade495ab488c6f" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[33],true,0);" onmousedown="re
+turn rclk(this,jobmap[33],0);" rel="noopener nofollow" target="_blank" title="사
+물인터넷(IoT) 개발자 (하드웨어 및 소프트웨어)">
+사물인터넷(IoT) 개발자 (하드웨어 및 소프트웨어)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=24f
+7f205ae589c18&amp;fccid=0e6cbd3a7d3c7896&amp;vjs=3" id="jl_24f7f205ae589c18" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[34],true,0);" onmousedown="re
+turn rclk(this,jobmap[34],0);" rel="noopener nofollow" target="_blank" title="[4
+년제 대졸자 취업연계과정] 융합 SW 바이오 분야, 전공무관, 취업율 92.7">
+[4년제 대졸자 취업연계과정] 융합 SW 바이오 분야, 전공무관, 취업율...</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=7e9
+a745cd8bdcbe3&amp;fccid=6ce9eba87609c3e9&amp;vjs=3" id="jl_7e9a745cd8bdcbe3" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[35],true,0);" onmousedown="re
+turn rclk(this,jobmap[35],0);" rel="noopener nofollow" target="_blank" title="Des
+ign Consultant, Staff">
+Design Consultant, Staff</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=44b
+27e9dde454c6a&amp;fccid=dd616958bd9ddc12&amp;vjs=3" id="jl_44b27e9dde454c6a" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[36],true,1);" onmousedown="re
+turn rclk(this,jobmap[36],1);" rel="noopener nofollow" target="_blank" title="[고
+경력자의 경우 시간단축] 홈페이지 개발 및 관리 웹프로그래머">
+[고경력자의 경우 시간단축] 홈페이지 개발 및 관리 웹프로그래머</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=325
+9e28d21f56288&amp;fccid=6e2a9dddd86c4648&amp;vjs=3" id="jl_3259e28d21f56288" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[37],true,0);" onmousedown="re
+turn rclk(this,jobmap[37],0);" rel="noopener nofollow" target="_blank" title="[전
+문연구요원] 빅데이터 엔지니어(신입/경력)">
+[전문연구요원] 빅데이터 엔지니어(신입/경력)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=469
+8c0e2364b5576&amp;fccid=6007d6f6e2003d79&amp;vjs=3" id="jl_4698c0e2364b5576" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[38],true,0);" onmousedown="re
+turn rclk(this,jobmap[38],0);" rel="noopener nofollow" target="_blank" title="[넥
+슨·엔씨소프트등] 자바·파이썬 응용SW 개발자 양성교육 · 동종업계 신입 초봉5천1">
+
+[넥슨·엔씨소프트등] 자바·파이썬 응용SW 개발자 양성교육 · 동종업계...</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=b6f
+60e1ac5501c9c&amp;fccid=6a7f2fa034a3fd36&amp;vjs=3" id="jl_b6f60e1ac5501c9c" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[39],true,0);" onmousedown="re
+turn rclk(this,jobmap[39],0);" rel="noopener nofollow" target="_blank" title="Sof
+tware Engineer - AI">
+Software Engineer - AI</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=df6
+07996134e60ff&amp;fccid=eaff5feec88e83e3&amp;vjs=3" id="jl_df607996134e60ff" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[40],true,0);" onmousedown="re
+turn rclk(this,jobmap[40],0);" rel="noopener nofollow" target="_blank" title="스
+테코 부문별 신입 및 경력사원">
+스테코 부문별 신입 및 경력사원</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=79c
+3fd29f2a08496&amp;fccid=e20330dcd63acb35&amp;vjs=3" id="jl_79c3fd29f2a08496" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[41],true,1);" onmousedown="re
+turn rclk(this,jobmap[41],1);" rel="noopener nofollow" target="_blank" title="웹
+개발자, 모바일앱개발 외 신입/경력 정규직, 계약직">
+웹개발자, 모바일앱개발 외 신입/경력 정규직, 계약직</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=94e
+6b51a16f4a0f6&amp;fccid=c267f29f0f85e8b8&amp;vjs=3" id="jl_94e6b51a16f4a0f6" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[42],true,0);" onmousedown="re
+turn rclk(this,jobmap[42],0);" rel="noopener nofollow" target="_blank" title="Per
+ception Software Engineer - Autonomous Vehicles">
+Perception Software Engineer - Autonomou...</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?cmp=%E
+C%9E%90%EC%82%B0%EC%9A%B4%EC%9A%A9%3A-Quantitative-Research&amp;ti=Quantitative+R
+esearcher&amp;jk=7453bfdc26273cd9&amp;fccid=def328ffc9620ff6&amp;vjs=3" id="jl_74
+53bfdc26273cd9" onclick="setRefineByCookie([]); return rclk(this,jobmap[43],true,
+1);" onmousedown="return rclk(this,jobmap[43],1);" rel="noopener nofollow" target
+="_blank" title="Quantitative Researcher">
+Quantitative Researcher</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=5c7
+ce2a8bacecf7d&amp;fccid=4746daf5fe536ea2&amp;vjs=3" id="jl_5c7ce2a8bacecf7d" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[44],true,0);" onmousedown="re
+turn rclk(this,jobmap[44],0);" rel="noopener nofollow" target="_blank" title="(광
+주취업맛집1위)2021년도 국비 기술교육생">
+(광주취업맛집1위)2021년도 국비 기술교육생</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=466
+5562997b87ff0&amp;fccid=a4f571f3a628be3e&amp;vjs=3" id="jl_4665562997b87ff0" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[45],true,0);" onmousedown="re
+turn rclk(this,jobmap[45],0);" rel="noopener nofollow" target="_blank" title="글
+로벌 소셜카지노 부문 사업PM">
+글로벌 소셜카지노 부문 사업PM</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=da5
+c549bf1a76ded&amp;fccid=a72ebaf825acf7af&amp;vjs=3" id="jl_da5c549bf1a76ded" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[46],true,0);" onmousedown="re
+turn rclk(this,jobmap[46],0);" rel="noopener nofollow" target="_blank" title="데
+이터 사이언스(데이터 모델링 및 추천 모델링)">
+데이터 사이언스(데이터 모델링 및 추천 모델링)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=904
+0dba1c8db2a5d&amp;fccid=3e2ea46f3238fe0e&amp;vjs=3" id="jl_9040dba1c8db2a5d" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[47],true,0);" onmousedown="re
+turn rclk(this,jobmap[47],0);" rel="noopener nofollow" target="_blank" title="퀀
+트운용팀 (사원-대리급)">
+퀀트운용팀 (사원-대리급)</a>
+</h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=50d
+45047905b6954&amp;fccid=629bf66c8ed71fe3&amp;vjs=3" id="jl_50d45047905b6954" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[48],true,0);" onmousedown="re
+turn rclk(this,jobmap[48],0);" rel="noopener nofollow" target="_blank" title="Dat
+a Scientist 경력인재 - 글로벌 우량대기업">
+Data Scientist 경력인재 - 글로벌 우량대기업</a>
+<span class="new">new</span></h2>
+<h2 class="title">
+<a class="jobtitle turnstileLink" data-tn-element="jobTitle" href="/rc/clk?jk=4bd
+70fb8a220d90d&amp;fccid=0bed8e17bc113980&amp;vjs=3" id="jl_4bd70fb8a220d90d" oncl
+ick="setRefineByCookie([]); return rclk(this,jobmap[49],true,0);" onmousedown="re
+turn rclk(this,jobmap[49],0);" rel="noopener nofollow" target="_blank" title="[Ja
+nssen] Data Scientist">
+[Janssen] Data Scientist</a>
+</h2>
