@@ -32,14 +32,15 @@ def extract_indeed_jobs(last_pages):
   results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
   for result in results:
     title=(result.find("h2", {"class": "title"}))
-    title_anchor=title.find("a")["title"]                       <------- 정리가 잘돼서 이쁨. 앞으로 갖다 쓸 때 title_anchor 갖다 쓰겠다고 미리 정의해둠
+    title_anchor=title.find("a")["title"]                  <------- 정리가 잘돼서 이쁨. 앞으로 갖다 쓸 때 title_anchor 갖다 쓰겠다고 미리 정의한 것
 
     company=result.find("span", {"class":"company"})
-    company_anchor=company.find("a")                            <------- 정리가 잘돼서 이쁨. 앞으로 갖다 쓸 때 company_anchor 갖다 쓰겠다고 미리 정의해둠
+    company_anchor=company.find("a")                       <------- 정리가 잘돼서 이쁨. 앞으로 갖다 쓸 때 company_anchor 갖다 쓰겠다고 미리 정의한 것
 
-    if company.find("a") is not None:
-      print(company.find("a").string)
+    if company_anchor is not None:
+      print(company_anchor.string)
     else:
       print(company.string)
 
   return jobs 
+
