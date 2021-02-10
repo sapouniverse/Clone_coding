@@ -1,0 +1,112 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+max_indeed_pages=extract_indeed_pages()
+indeed_jobs=extract_indeed_jobs(max_indeed_pages)
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_job(html):
+    title=(html.find("h2", {"class": "title"}))
+    title_anchor=title.find("a")["title"]
+------------------------------------------------------------------------------------- 공고 제목 따왔고
+    company=html.find("span", {"class":"company"})
+    company_anchor=company.find("a")
+
+    if company_anchor is not None:
+      company=(company_anchor.string)
+    else:
+      company=(company.string)
+
+    company=company.strip()
+------------------------------------------------------------------------------------- 회사명 따왔고
+
+    location=html.find("div", {"class":"recJobLoc"})["data-rc-loc"]       <----- 이런거 찾아내는게 어려움
+    print(location)
+    
+------------------------------------------------------------------------------------- 회사 장소 따올라고 테스트하는 중
+    return {'title':title_anchor, 'company': company, 'location':location}
+
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  for result in results:
+    job = extract_job(result)
+    jobs.append(job)
+  return jobs 
+
+-----------------------------------
+# 결과 : 아주좋아
+
+대한민국
+인천 연수구
+성남 분당구
+대한민국
+대한민국
+천안 서북구
+경기도
+대전 유성구
+광주 광산구
+경기도
+대한민국
+충청북도 청주
+대전 유성구
+인천 서구
+광주 광산구
+대한민국
+경기도 성남
+성남 판교역
+대한민국
+대한민국
+과천 과천시
+대한민국
+대한민국
+서울 강남구
+서울 마포구
+서울
+경기도 성남
+성남 분당구
+서울 동대문구
+대한민국
+대구 달성군
+서울
+인천 연수구
+서울
+성남 분당구
+서울
+경기도
+서울 중구
+경기도 평택
+서울
+대한민국
+성남 분당구
+대한민국
+서울특별시
+서울 논현동
+성남 중원구
+성남 분당구
+대한민국
+성남 분당구
+서울 강서구
