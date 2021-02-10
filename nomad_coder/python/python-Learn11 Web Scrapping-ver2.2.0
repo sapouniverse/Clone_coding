@@ -47,6 +47,9 @@ def extract_job(html):
 
     job_id = html["data-jk"]        <---------- 공고문을 클릭하면 새로운 id가 부여되면서, 회사 링크로 연결된다는 규칙을 보고 id를 추출함.
     
+## 미국 indeed는 아이디만 있는데 한국 indeed에는 html에 class="title" 안에 하이퍼링크가 href라고 명시되어 있어서 
+## https://kr.indeed.com{job_id}로 바로 넘겨주면 되기 때문에 
+
 
     return {
         'title': title_anchor,
