@@ -1,0 +1,673 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+max_indeed_pages=extract_indeed_pages()
+
+indeed_jobs=extract_indeed_jobs(max_indeed_pages)
+
+print(indeed_jobs)
+
+
+
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL = f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+
+def extract_indeed_pages():
+    result = requests.get(INDEED_URL)
+    soup = BeautifulSoup(result.text, "html.parser")
+    pagination = soup.find("div", {"class": "pagination"})
+
+    pages = pagination.find_all('a')
+    spans = []
+    for page in pages[:-1]:
+        spans.append(int(page.string))
+
+    max_page = spans[-1]
+
+    return max_page
+
+
+def extract_job(html):
+    title = (html.find("h2", {"class": "title"}))
+    title_anchor = title.find("a")["title"]
+
+    company = html.find("span", {"class": "company"})
+    company_anchor = company.find("a")
+
+    if company_anchor is not None:
+        company = (company_anchor.string)
+    else:
+        company = (company.string)
+
+    company = company.strip()
+
+    location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
+
+    job_id = html.find("h2",{"class":"title"}).find("a")["href"]   <--------- 대한민국은 좀 달라서 수정함
+    
+
+    return {
+        'title': title_anchor,
+        'company': company,
+        'location': location,
+        "link": f"http://kr.ideed.com/{job_id}"    <--------- 여기도 수정함
+    }
+
+
+def extract_indeed_jobs(last_pages):
+    jobs = []
+    for page in range(last_pages):      <---------- for문을 드디어 살려냄
+
+      print(f"Scrapping page {page}")   <-------- 프로그램이 잘 돌아가고 있는지 보기 위한 개인적인 취향
+
+
+      result = requests.get(f"{INDEED_URL}&start={page*LIMIT}")  <------ 0 에서 page로 수정함. 그래서 전체 다 나옴
+      soup = BeautifulSoup(result.text, "html.parser")
+      results = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})
+      for result in results:
+          job = extract_job(result)
+          jobs.append(job)
+    return jobs
+
+-------------------------------------------
+# 결과 : 잘 나온거겠지?
+
+Scrapping page 0
+Scrapping page 1
+Scrapping page 2
+Scrapping page 3
+Scrapping page 4
+[{'title': '데이터 분석가/사이언티스트(신입/인턴 가능)', 'company': '쏘카', 'loca
+tion': '대한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=55584c627df1acaa&fccid
+=ebcd554962f400ec&vjs=3'}, {'title': '2021년 각 부문별 경력직 공개', 'company': '
+SK디앤디㈜', 'location': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=6
+0495f8f583de7aa&fccid=80ab84e7bdd605f9&vjs=3'}, {'title': '2021년 상반기 R&D 개발
+자 (병역특례 가능/경력 무관)', 'company': '네오스텍', 'location': '인천 연수구',
+'link': 'http://kr.ideed.com//rc/clk?jk=754be9e3d78fa802&fccid=6ec20471817e2f20&v
+js=3'}, {'title': '빅데이터, 인공지능(AI) 외 신입/경력 인턴', 'company': '스칼라
+웍스', 'location': '대한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=dfb20fa220
+f3c478&fccid=d1224297334bfd66&vjs=3'}, {'title': 'Field Application YieldStar Com
+petence Engineer', 'company': 'ASML', 'location': '대한민국', 'link': 'http://kr.
+ideed.com//rc/clk?jk=3ee73b74de360c58&fccid=57ed5f0210b0681a&vjs=3'}, {'title': '
+2021년(주)쎄트렉아이 상반기 각 부문 신입/경력직', 'company': '쎄트렉아이', 'locat
+ion': '대전 유성구', 'link': 'http://kr.ideed.com//rc/clk?jk=8d018b3956bbea98&fcc
+id=d24251dc81833086&vjs=3'}, {'title': '2021년도 국토안전관리원 제기간제 근로자',
+ 'company': '국토안전관리원', 'location': '경기도', 'link': 'http://kr.ideed.com/
+/rc/clk?jk=c9f2f9cfc6bd0f16&fccid=bcb5ecbf630eb0fa&vjs=3'}, {'title': 'Data Scien
+tist', 'company': 'Garrett Advancing Motion', 'location': '경기도', 'link': 'http
+://kr.ideed.com//rc/clk?jk=da5d4dd560fb6f85&fccid=d9bafbf876cd0b62&vjs=3'}, {'tit
+le': '2021년 2월 경력사원', 'company': '세메스', 'location': '천안 서북구', 'link
+': 'http://kr.ideed.com//rc/clk?jk=49486aa340e1db38&fccid=8c74b18b7e32a069&vjs=3'
+}, {'title': '(광주취업맛집1위)2021년도 국비 기술교육생', 'company': '대한상공회
+의소 광주인력개발원', 'location': '광주 광산구', 'link': 'http://kr.ideed.com//rc
+/clk?jk=b95d00f1145e5ef3&fccid=4746daf5fe536ea2&vjs=3'}, {'title': '[NICE평가정보
+] 2021년 상반기 수시', 'company': '나이스평가정보', 'location': '대한민국', 'link
+': 'http://kr.ideed.com//rc/clk?jk=56e128e4011f9d01&fccid=1eee1d17fecc4bbe&vjs=3'
+}, {'title': '2021년 IITP 주관 글로벌핵심인재양성 지원사업', 'company': '정보통신
+기획평가원', 'location': '대전 유성구', 'link': 'http://kr.ideed.com//rc/clk?jk=e
+fb69a29d8bd7514&fccid=0c77e931bbae40ba&vjs=3'}, {'title': 'Data Scientist (KOREA)
+', 'company': 'No Deviation Pte Ltd', 'location': '충청북도 청주', 'link': 'http:
+//kr.ideed.com//company/NO-DEVIATION-PTE.-LTD./jobs/Data-Scientist-0d207415a075d2
+1c?fccid=1685f7430879dfc6&vjs=3'}, {'title': '데이터 분석 및 컨설팅 분야 (Python,
+ SAS, 빅데이터) 경력직', 'company': '한국정보기술단', 'location': '과천 과천시',
+'link': 'http://kr.ideed.com//rc/clk?jk=9fe4755841bec8ce&fccid=99925e8e7b9604cc&v
+js=3'}, {'title': 'Field Application Engineer', 'company': 'Quectel Wireless Solu
+tion Co,.LTD', 'location': '경기도 성남', 'link': 'http://kr.ideed.com//company/Q
+uectel-Wireless-Solution-Co,.LTD/jobs/Field-Application-Engineer-68c314d4a02b84a6
+?fccid=08da457acaf95bc8&vjs=3'}, {'title': 'SM파견 웹개발자', 'company': '유저해
+빗', 'location': '인천 서구', 'link': 'http://kr.ideed.com//rc/clk?jk=69e29038ecc
+0f40f&fccid=95c773635e68072c&vjs=3'}, {'title': '2021년 (신입) 전문연구요원 모집'
+, 'company': 'NHN', 'location': '성남 판교역', 'link': 'http://kr.ideed.com//rc/c
+lk?jk=9acc17c535b42959&fccid=a72ebaf825acf7af&vjs=3'}, {'title': '2021년도 한국알
+프스 수시', 'company': '한국알프스', 'location': '광주 광산구', 'link': 'http://k
+r.ideed.com//rc/clk?jk=0902a0487b3b69a9&fccid=c6fb677a631c5147&vjs=3'}, {'title':
+ '프랭클린템플턴투신운용 Junior Trader (Quant base 필수)', 'company': '프랭클린템
+플턴투신', 'location': '대한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=4adac8
+923476d038&fccid=bab92f71c1e85edd&vjs=3'}, {'title': '2021년 상반기 Python 경력',
+ 'company': '매크로액트', 'location': '성남 분당구', 'link': 'http://kr.ideed.com
+//rc/clk?jk=0592fae45af22542&fccid=6b97aba1037c0b00&vjs=3'}, {'title': '2021년 한
+화시스템 방산부문 경력사원', 'company': '한화시스템', 'location': '성남 분당구',
+'link': 'http://kr.ideed.com//rc/clk?jk=dd6837145722038a&fccid=46ba4635611e86ea&v
+js=3'}, {'title': 'Engr, Apps Dev 2', 'company': 'KLA-Tencor', 'location': '대한
+민국', 'link': 'http://kr.ideed.com//rc/clk?jk=ab38178e6071aa0f&fccid=c8fc142c282
+86059&vjs=3'}, {'title': '2021 토스 전 계열사 대규모', 'company': '비바리퍼블리카
+', 'location': '서울 강남구', 'link': 'http://kr.ideed.com//rc/clk?jk=39e99c8ed1d
+40a8f&fccid=17dc934b27d58446&vjs=3'}, {'title': 'Application Engineer Consultant
+- HAV', 'company': 'Mentor Graphics (Korea) LLC', 'location': '경기도 성남', 'lin
+k': 'http://kr.ideed.com//rc/clk?jk=68486bb7da29a05b&fccid=3b89b9ec324f96c8&vjs=3
+'}, {'title': '[타다]데이터 분석가/사이언티스트', 'company': '쏘카', 'location':
+'대한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=3330430ae94277db&fccid=ebcd55
+4962f400ec&vjs=3'}, {'title': '2021 Market Data Analyst - Seoul', 'company': 'Blo
+omberg', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=e8a4630bec07
+83e8&fccid=f770da67b3b51c62&vjs=3'}, {'title': '[이마트] 이마트 Data Scientist 경
+력직 모집', 'company': '신세계', 'location': '대한민국', 'link': 'http://kr.ideed
+.com//rc/clk?jk=106e2372b51da4be&fccid=eed009678593e037&vjs=3'}, {'title': '2021
+년 2월 IT분야 경력직원', 'company': '우리에프아이에스', 'location': '서울 마포구'
+, 'link': 'http://kr.ideed.com//rc/clk?jk=51a9e497c5eef66c&fccid=55bdd8211be46c4f
+&vjs=3'}, {'title': '[전문연구요원] 상시 (전직)', 'company': '네이버랩스', 'locat
+ion': '경기도', 'link': 'http://kr.ideed.com//rc/clk?jk=14b591547a3b9df5&fccid=d3
+0455f17633cf87&vjs=3'}, {'title': '빅데이터 분석(머신러닝/딥러닝) 컨설턴트 정규직
+', 'company': '디앤아이컨설팅', 'location': '서울 동대문구', 'link': 'http://kr.i
+deed.com//rc/clk?jk=e7cc2dd53f8b03b7&fccid=f849b591d263f16d&vjs=3'}, {'title': 'E
+ngr, Tech Supp 3', 'company': 'KLA-Tencor', 'location': '대한민국', 'link': 'http
+://kr.ideed.com//rc/clk?jk=233bbfd9781e846d&fccid=c8fc142c28286059&vjs=3'}, {'tit
+le': '[전문연구요원] 빅데이터 엔지니어(신입/경력)', 'company': '웹젠', 'location'
+: '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=3259e28d21f56288&fccid=6
+e2a9dddd86c4648&vjs=3'}, {'title': 'Sr Systems Administrator I', 'company': 'Rayt
+heon Intelligence & Space', 'location': '대한민국', 'link': 'http://kr.ideed.com/
+/rc/clk?jk=78f5465432356e17&fccid=03e5fef1f1c1b85d&vjs=3'}, {'title': 'AI/빅데이
+터/클라우드 분야 (인재 Pool)', 'company': 'LG유플러스', 'location': '서울', 'link
+': 'http://kr.ideed.com//rc/clk?jk=be95b5718905880f&fccid=6c9206aa5a609175&vjs=3'
+}, {'title': 'Applied Data Scientist', 'company': 'dunnhumby', 'location': '서울'
+, 'link': 'http://kr.ideed.com//rc/clk?jk=f10a132f53b6307d&fccid=36801496409e6dc9
+&vjs=3'}, {'title': '전사 생산기술분야 경력사원', 'company': 'LG이노텍', 'locatio
+n': '경기도 평택', 'link': 'http://kr.ideed.com//rc/clk?jk=7d85656bf08b8bf2&fccid
+=6ecf392a15407b3e&vjs=3'}, {'title': '2021 Global Data Internship - Seoul (Korean
+ Speaker)', 'company': 'Bloomberg', 'location': '서울', 'link': 'http://kr.ideed.
+com//rc/clk?jk=18f62dc644a89e0c&fccid=f770da67b3b51c62&vjs=3'}, {'title': '지능형
+자동차부품진흥원 인력', 'company': '지능형자동차부품진흥원', 'location': '대구 달
+성군', 'link': 'http://kr.ideed.com//rc/clk?jk=fd0194167a01fed0&fccid=e754c4daa6a
+a41e0&vjs=3'}, {'title': '[카카오커머스] 기술직군', 'company': '카카오커머스', 'l
+ocation': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=52f8fb3f7e662c5d
+&fccid=b1f5de6cae96f6c2&vjs=3'}, {'title': '[4년제 대졸자 취업연계과정] 융합 SW
+바이오 분야, 전공무관, 취업율 92.7', 'company': '한국폴리텍대학분당융합기술교육원
+', 'location': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=24f7f205ae5
+89c18&fccid=0e6cbd3a7d3c7896&vjs=3'}, {'title': '(주)신세계아이앤씨 경력사원 상시
+', 'company': '신세계아이앤씨', 'location': '서울 중구', 'link': 'http://kr.ideed
+.com//rc/clk?jk=b5b88516a299bbb2&fccid=7009e9adee12ff99&vjs=3'}, {'title': '펌웨
+어, C·C++ 경력 계약직', 'company': '아르비존', 'location': '인천 연수구', 'link'
+: 'http://kr.ideed.com//rc/clk?jk=7a7e2f032c8599f9&fccid=0245d3ec47035b6e&vjs=3'}
+, {'title': 'Life Actuarial Analyst (Intern) - Korea', 'company': 'Willis Towers
+Watson', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=b9b5a48d2121
+caca&fccid=52f90de7b5346a08&vjs=3'}, {'title': 'Software Engineer - AI', 'company
+': 'GE Appliances', 'location': '경기도 성남', 'link': 'http://kr.ideed.com//rc/c
+lk?jk=b6f60e1ac5501c9c&fccid=6a7f2fa034a3fd36&vjs=3'}, {'title': '사내 및 서비스
+보안 담당자 (경력)', 'company': '네오위즈', 'location': '대한민국', 'link': 'http
+://kr.ideed.com//rc/clk?jk=cd40cf786e32f325&fccid=a4f571f3a628be3e&vjs=3'}, {'tit
+le': '[각 분야별] Java, MySQL, Python 외 정규직', 'company': '로제타텍', 'locatio
+n': '성남 중원구', 'link': 'http://kr.ideed.com//rc/clk?jk=22880c1154a12433&fccid
+=26a0e6271e2baf16&vjs=3'}, {'title': 'AI 분야 경력', 'company': 'LG CNS', 'locati
+on': '서울특별시', 'link': 'http://kr.ideed.com//rc/clk?jk=c8bf4fa58999927f&fccid
+=9635ff240e3de5f6&vjs=3'}, {'title': '데이터 엔지니어(신입/경력)', 'company': '쏘
+카', 'location': '대한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=05aa5498d84c
+58e1&fccid=ebcd554962f400ec&vjs=3'}, {'title': '데이터 사이언스(데이터 모델링 및
+추천 모델링)', 'company': 'NHN', 'location': '성남 판교역', 'link': 'http://kr.id
+eed.com//rc/clk?jk=da5c549bf1a76ded&fccid=a72ebaf825acf7af&vjs=3'}, {'title': 'De
+sign Consultant, Staff', 'company': 'Synopsys', 'location': '대한민국', 'link': '
+http://kr.ideed.com//rc/clk?jk=7e9a745cd8bdcbe3&fccid=6ce9eba87609c3e9&vjs=3'}, {
+'title': 'Developer / Designer recruit', 'company': '마이뮤직테이스트', 'location
+': '서울 논현동', 'link': 'http://kr.ideed.com//rc/clk?jk=55a19c92c845685e&fccid=
+74d05cee5b52f133&vjs=3'}, {'title': 'Perception Software Engineer - Autonomous Ve
+hicles', 'company': 'NVIDIA', 'location': '대한민국', 'link': 'http://kr.ideed.co
+m//rc/clk?jk=94e6b51a16f4a0f6&fccid=c267f29f0f85e8b8&vjs=3'}, {'title': '하드웨어
+, 소프트웨어 외 신입/경력 정규직', 'company': '유닉트', 'location': '경기도 양주'
+, 'link': 'http://kr.ideed.com//rc/clk?jk=7639fede84396f4a&fccid=ef45ddb4d90fa864
+&vjs=3'}, {'title': '사물인터넷(IoT) 개발자 (하드웨어 및 소프트웨어)', 'company':
+ '큐빅스', 'location': '경기도 파주', 'link': 'http://kr.ideed.com//rc/clk?jk=a4a
+de495ab488c6f&fccid=b5f62c3a6cfa7f3e&vjs=3'}, {'title': '전문연구요원 (병역특례)
+수시 (AI / HW 분야)', 'company': '딥엑스', 'location': '성남 분당구', 'link': 'ht
+tp://kr.ideed.com//rc/clk?jk=78e99625e5de3c95&fccid=e34932b8232a173b&vjs=3'}, {'t
+itle': '데이터 분야 경력', 'company': 'LG CNS', 'location': '서울', 'link': 'http
+://kr.ideed.com//rc/clk?jk=010d38b18b07b6bb&fccid=9635ff240e3de5f6&vjs=3'}, {'tit
+le': '스테코 부문별 신입 및 경력사원', 'company': '스테코', 'location': '천안 서
+북구', 'link': 'http://kr.ideed.com//rc/clk?jk=df607996134e60ff&fccid=eaff5feec88
+e83e3&vjs=3'}, {'title': '웹개발, Python 외 신입/경력 계약직', 'company': '쿠바로
+엠앤씨', 'location': '서울 강서구', 'link': 'http://kr.ideed.com//rc/clk?jk=84fd9
+f9deb6105b0&fccid=e29423b79ddda10d&vjs=3'}, {'title': '웹개발자, 모바일앱개발 외
+신입/경력 정규직, 계약직', 'company': '다온에스엔씨', 'location': '서울 광진구',
+'link': 'http://kr.ideed.com//rc/clk?jk=79c3fd29f2a08496&fccid=e20330dcd63acb35&v
+js=3'}, {'title': '[고경력자의 경우 시간단축] 홈페이지 개발 및 관리 웹프로그래머'
+, 'company': '규', 'location': '대한민국', 'link': 'http://kr.ideed.com//rc/clk?j
+k=44b27e9dde454c6a&fccid=dd616958bd9ddc12&vjs=3'}, {'title': '추천 시스템 소프트
+웨어 엔지니어', 'company': '카카오', 'location': '성남 판교역', 'link': 'http://k
+r.ideed.com//rc/clk?jk=07375dc4e800dfa9&fccid=32b9af632cf3b9f9&vjs=3'}, {'title':
+ '데이터 분석가 모집', 'company': '카카오', 'location': '성남 판교역', 'link': 'h
+ttp://kr.ideed.com//rc/clk?jk=092d062a6faa7139&fccid=32b9af632cf3b9f9&vjs=3'}, {'
+title': '글로벌 소셜카지노 부문 사업PM', 'company': '네오위즈', 'location': '대한
+민국', 'link': 'http://kr.ideed.com//rc/clk?jk=4665562997b87ff0&fccid=a4f571f3a62
+8be3e&vjs=3'}, {'title': '에너지경제연구원 위촉연구원(에너지통계연구팀)', 'compan
+y': '에너지경제연구원', 'location': '울산광역시', 'link': 'http://kr.ideed.com//r
+c/clk?jk=4042ba406253da29&fccid=e5e59ba991b74334&vjs=3'}, {'title': '[ 아이콘트롤
+스 ] 2020년 경력 직원 (기술연구소) 연구개발부문', 'company': 'HDC아이콘트롤스', '
+location': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=7385b69da2c8d6c
+f&fccid=9c334df5513649f0&vjs=3'}, {'title': 'FPGA 플랫폼 엔지니어 (딥러닝 하드웨
+어 프로세서 개발)', 'company': '딥엑스', 'location': '성남 분당구', 'link': 'http
+://kr.ideed.com//rc/clk?jk=e5448ffc7d6ecf02&fccid=e34932b8232a173b&vjs=3'}, {'tit
+le': '21년 전문연구요원 (AI엔지니어)', 'company': 'Nexon', 'location': '성남 분당
+구', 'link': 'http://kr.ideed.com//rc/clk?jk=69ab0f58743cb713&fccid=aba87288e4cc3
+687&vjs=3'}, {'title': '연구소 개발부문 연구원 직원 (회로설계/하드웨어설계/머신비
+전/이미지프로세싱)', 'company': '모든', 'location': '경기도 광명', 'link': 'http:
+//kr.ideed.com//rc/clk?jk=793d3bdf17f3593f&fccid=439b0412f66a75cd&vjs=3'}, {'titl
+e': '글로벌 소셜카지노 서비스 해외사업 담당자 (경력)', 'company': '네오위즈', 'lo
+cation': '대한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=57dead75c6dee2c1&fcc
+id=a4f571f3a628be3e&vjs=3'}, {'title': '2월 11번가 Backend 개발 경력공채', 'compa
+ny': '십일번가', 'location': '서울 중구', 'link': 'http://kr.ideed.com//rc/clk?jk
+=42006c8f26b8f263&fccid=54911ff2dce6c429&vjs=3'}, {'title': '[EY한영] 금융감사본
+부 Data Analytics 전문 경력직 모집', 'company': 'Ernst & Young', 'location': '대
+한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=e934bb33ef71dacb&fccid=1544766d4
+c2915b0&vjs=3'}, {'title': '정보보안 담당자', 'company': 'Nexon', 'location': '성
+남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=eeb9fe1c361f0758&fccid=aba872
+88e4cc3687&vjs=3'}, {'title': 'Modem QA Contractor', 'company': '聯發科技', 'loca
+tion': '경기도 성남', 'link': 'http://kr.ideed.com//rc/clk?jk=bd5ce1a809ec610a&fc
+cid=d545b7e05f2306ac&vjs=3'}, {'title': 'MI(Market Intelligence)담당 마케팅 전략
+경력사원', 'company': 'LG전자', 'location': '서울 영등포구', 'link': 'http://kr.i
+deed.com//rc/clk?jk=54e0d08c99dcf507&fccid=9702ca14c9a11940&vjs=3'}, {'title': '
+추천 통계분석/데이터사이언티스트', 'company': '카카오', 'location': '성남 판교역'
+, 'link': 'http://kr.ideed.com//rc/clk?jk=bfe0f5ac4f32ec89&fccid=32b9af632cf3b9f9
+&vjs=3'}, {'title': '[Janssen] Data Scientist', 'company': 'Johnson & Johnson Fam
+ily of Companies', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=4b
+d70fb8a220d90d&fccid=0bed8e17bc113980&vjs=3'}, {'title': '퀀트운용팀 (사원-대리급
+)', 'company': '신한비엔피파리바자산운용', 'location': '대한민국', 'link': 'http:
+//kr.ideed.com//rc/clk?jk=9040dba1c8db2a5d&fccid=3e2ea46f3238fe0e&vjs=3'}, {'titl
+e': '보안', 'company': 'NHN', 'location': '성남 판교역', 'link': 'http://kr.ideed
+.com//rc/clk?jk=810816c790317a08&fccid=a72ebaf825acf7af&vjs=3'}, {'title': '[KSTE
+C] 2021년 경력 사원 (SW개발자)', 'company': '지식시스템', 'location': '성남 분당
+구', 'link': 'http://kr.ideed.com//rc/clk?jk=8525eb04feb95444&fccid=3061a9a0f5168
+def&vjs=3'}, {'title': '솔루션 개발자, 품질인력 채용', 'company': '한화그룹', 'lo
+cation': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=ddd1f037549e47a2&fccid=b
+d0dc1817223394f&vjs=3'}, {'title': '빅데이터, Python 외 신입 정규직', 'company':
+'주)씽크풀', 'location': '서울 영등포구', 'link': 'http://kr.ideed.com//rc/clk?jk
+=f91bdb1160ad64d2&fccid=3254e385986adc64&vjs=3'}, {'title': '[대성] 개발자 채용 |
+ 앱개발,Java,Python,objective', 'company': '대성 관심기업', 'location': '전주 팔
+복동', 'link': 'http://kr.ideed.com//rc/clk?jk=5d4ef5faadd96b30&fccid=4b92994439d
+7bc47&vjs=3'}, {'title': '[상시 ] Data Scientist (대리급/과-차장급/정규직)', 'com
+pany': '라이나생명보험', 'location': '서울 종로구', 'link': 'http://kr.ideed.com/
+/rc/clk?jk=e9ac1a8708b8e784&fccid=ecbbeac4938b074a&vjs=3'}, {'title': '[개발자]
+꿈 찾아드립니다. 저희와 함께하세요.', 'company': 'ICON', 'location': '서울', 'lin
+k': 'http://kr.ideed.com//rc/clk?jk=7e94b666d8fbe2d0&fccid=f820ccda05bb7535&vjs=3
+'}, {'title': '[웹젠] 보안솔루션 운영(경력)', 'company': '웹젠', 'location': '성
+남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=c74b8591c7e59774&fccid=6e2a9d
+ddd86c4648&vjs=3'}, {'title': '카카오 데이터의 가치를 발굴할 데이터 분석가 모집',
+ 'company': '카카오', 'location': '성남 판교역', 'link': 'http://kr.ideed.com//rc
+/clk?jk=2b2dcd3ffe3d53df&fccid=32b9af632cf3b9f9&vjs=3'}, {'title': 'Software Arch
+itecture 설계 엔지니어', 'company': '딥엑스', 'location': '성남 분당구', 'link':
+'http://kr.ideed.com//rc/clk?jk=7df915e1f0f86b2d&fccid=e34932b8232a173b&vjs=3'},
+{'title': '링크캠퍼스 웹개발, 웹마스터 외 신입/경력 정규직', 'company': '링크캠퍼
+스', 'location': '광주 동구', 'link': 'http://kr.ideed.com//rc/clk?jk=73d2d489b37
+dcf4a&fccid=89d494f1287eb583&vjs=3'}, {'title': '현대무벡스 경력사원 상시', 'comp
+any': '현대무벡스', 'location': '서울 종로구', 'link': 'http://kr.ideed.com//rc/c
+lk?jk=d4c52ba1a491a8b9&fccid=2e754711a96724c8&vjs=3'}, {'title': '[Search] Knowle
+dge Base Applications (신입)', 'company': '네이버', 'location': '서울', 'link': '
+http://kr.ideed.com//rc/clk?jk=23dfc13905f7fcc0&fccid=412ff571bced2587&vjs=3'}, {
+'title': '21년 상반기 현대오트론 경력사원 수시', 'company': '현대오트론', 'locati
+on': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=e91a6a5eb66c641f&fccid=1a118
+7c71168125e&vjs=3'}, {'title': '메시지발송 플랫폼 개발자', 'company': 'Nexon', 'l
+ocation': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=eaee1538d8cc832f
+&fccid=aba87288e4cc3687&vjs=3'}, {'title': 'DGIST 2019년 제1차 계약직원 공개채용
+공고', 'company': '대구경북과학기술원', 'location': '대구 현풍면', 'link': 'http:
+//kr.ideed.com//rc/clk?jk=4cd34228af5013fd&fccid=a0e87e3780944019&vjs=3'}, {'titl
+e': '[취업연계 무료교육] 차세대 스마트공장 현장 엔지니어 전문가 양성과정 수강생',
+ 'company': '한국산업기술협회', 'location': '서울 금천구', 'link': 'http://kr.ide
+ed.com//rc/clk?jk=5c88acd09f153fc3&fccid=5a55c77140927a52&vjs=3'}, {'title': '[단
+기계약직] 인공지능 기술 개발을 위한 언어 데이터 구축자 모집', 'company': '엔씨소
+프트', 'location': '성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=9ccd0db
+79695e27e&fccid=a1e4e21b1f33cf40&vjs=3'}, {'title': '소형전지사업부/기술혁신센터'
+, 'company': '삼성SDI', 'location': '충청남도 천안', 'link': 'http://kr.ideed.com
+//rc/clk?jk=089931931a0474d5&fccid=6c70210beddc1b13&vjs=3'}, {'title': '추천 시스
+템 연구/개발', 'company': '카카오', 'location': '성남 판교역', 'link': 'http://kr
+.ideed.com//rc/clk?jk=be6c1f03fa566f8e&fccid=32b9af632cf3b9f9&vjs=3'}, {'title':
+'연구개발, it개발 신입/경력 정규직', 'company': '포엔', 'location': '대전 유성구'
+, 'link': 'http://kr.ideed.com//rc/clk?jk=c3c9f36cd3a8c314&fccid=3f086c20476ed682
+&vjs=3'}, {'title': '지표구축', 'company': '아프리카TV', 'location': '경기도 성남
+', 'link': 'http://kr.ideed.com//rc/clk?jk=e0e37aaebc73dde3&fccid=bc48816053af06b
+3&vjs=3'}, {'title': 'Native Korean Speaking Software QA Test Engineer', 'company
+': 'TikTok', 'location': '서울 종로3가역', 'link': 'http://kr.ideed.com//company/
+TikTok/jobs/Native-Korean-Speaking-Software-QA-Test-Engineer-c0c6a53781018daf?fcc
+id=37ff52cccd8963bc&vjs=3'}, {'title': '데이터 분석/처리 플랫폼 개발', 'company':
+ 'NHN', 'location': '성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=46975e
+e759c13b8a&fccid=a72ebaf825acf7af&vjs=3'}, {'title': '콘텐츠서비스개발- 데이터엔
+지니어', 'company': 'Nexon', 'location': '성남 분당구', 'link': 'http://kr.ideed.
+com//rc/clk?jk=a4b72e38fb50bde0&fccid=aba87288e4cc3687&vjs=3'}, {'title': 'NAVER
+IDC 서버 운영/관리(가산)', 'company': 'NIT Service', 'location': '서울 가산동', '
+link': 'http://kr.ideed.com//rc/clk?jk=70fccff4d30cb6bf&fccid=f85375bceacb7147&vj
+s=3'}, {'title': '[넥슨·엔씨소프트등] 자바·파이썬 응용SW 개발자 양성교육 · 동
+종업계 신입 초봉5천1', 'company': '한국직업전문학교', 'location': '서울 구로구',
+'link': 'http://kr.ideed.com//rc/clk?jk=4698c0e2364b5576&fccid=6007d6f6e2003d79&v
+js=3'}, {'title': '네모파트너즈비에이 데이터 분석가 신입,경력', 'company': '네모
+파트너즈비에이', 'location': '서울 영등포구', 'link': 'http://kr.ideed.com//rc/cl
+k?jk=3fbbb0a082dd1ff9&fccid=b389256e3a4fa634&vjs=3'}, {'title': 'AML 데이터 분석/
+모델링 전문가 모집', 'company': '네이버파이낸셜', 'location': '성남 정자동', 'lin
+k': 'http://kr.ideed.com//rc/clk?jk=f0df38dd41b4447f&fccid=27707db6e1b5bf22&vjs=3
+'}, {'title': 'Field AI Engineer', 'company': 'Graphcore', 'location': '서울', 'l
+ink': 'http://kr.ideed.com//rc/clk?jk=9e1861e691426a98&fccid=9e36b3674558427d&vjs
+=3'}, {'title': '[Search] 파파고 머신러닝(자연어처리, 컴퓨터비전) 엔지니어 신입/
+경력', 'company': '네이버', 'location': '서울', 'link': 'http://kr.ideed.com//rc/
+clk?jk=e9d6c53d8915adf6&fccid=412ff571bced2587&vjs=3'}, {'title': '데이터 가치를
+함께 발굴하실 머신러닝, 통계 모델링 전문가 모집', 'company': '카카오', 'location'
+: '성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=d1e75364ef505c68&fccid=3
+2b9af632cf3b9f9&vjs=3'}, {'title': '[브랜디] 경영본부/사업본부/개발직군 신입 및
+경력', 'company': '브랜디', 'location': '서울 강남구', 'link': 'http://kr.ideed.c
+om//rc/clk?jk=cd5ca556791f1f79&fccid=2993437959ad6c7a&vjs=3'}, {'title': 'MongoDB
+ Engineer 모집', 'company': '카카오', 'location': '성남 판교역', 'link': 'http://
+kr.ideed.com//rc/clk?jk=2695294aea6dc3b6&fccid=32b9af632cf3b9f9&vjs=3'}, {'title'
+: 'MD, 플랫폼 개발자', 'company': '슬래디티', 'location': '경기도 의정부', 'link'
+: 'http://kr.ideed.com//rc/clk?jk=f5b0e4923baeca2f&fccid=ba15674a65881262&vjs=3'}
+, {'title': '데이터 분석', 'company': '아프리카TV', 'location': '경기도 성남', 'l
+ink': 'http://kr.ideed.com//rc/clk?jk=7fdcd7a7457b1e93&fccid=bc48816053af06b3&vjs
+=3'}, {'title': '데이터 분석 솔루션 기반 웹프로그래머(Java, JSP, Python, R)', 'co
+mpany': '비즈플러그', 'location': '서울 송파구', 'link': 'http://kr.ideed.com//rc
+/clk?jk=4ac4e8a20b8c6dec&fccid=d4457e5b0c28554b&vjs=3'}, {'title': 'Field Applica
+tion Overlay Competence Engineer', 'company': 'ASML', 'location': '경기도 평택',
+'link': 'http://kr.ideed.com//rc/clk?jk=1e55c69312e7685f&fccid=57ed5f0210b0681a&v
+js=3'}, {'title': 'NAVER IDC 서버 운영/관리(춘천)', 'company': 'NIT Service', 'lo
+cation': '춘천 동면', 'link': 'http://kr.ideed.com//rc/clk?jk=de567c4b6b588c4c&fc
+cid=f85375bceacb7147&vjs=3'}, {'title': 'NAVER IDC 서버 운영/관리(평촌/부산)', 'c
+ompany': 'NIT Service', 'location': '안양 동안구', 'link': 'http://kr.ideed.com//
+rc/clk?jk=18b288e9021d899f&fccid=f85375bceacb7147&vjs=3'}, {'title': '[AI R&D] ML
+ 엔지니어 모집', 'company': '엔씨소프트', 'location': '성남 판교역', 'link': 'htt
+p://kr.ideed.com//rc/clk?jk=4f61daa017b07bae&fccid=a1e4e21b1f33cf40&vjs=3'}, {'ti
+tle': '[TmaxBI/기술] 빅데이터 플랫폼 QA', 'company': '티맥스소프트', 'location':
+'성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=8dfcac57b93113ea&fccid=445
+576e2a7ced0d6&vjs=3'}, {'title': 'Linux/Python/PHP/MySQL/백엔드 정규직 경력', 'co
+mpany': '일루미나리안', 'location': '용인 보정동', 'link': 'http://kr.ideed.com//
+rc/clk?jk=04d685fc70b67d4e&fccid=f29c2f5a0f8ffa9d&vjs=3'}, {'title': '데이터 엔지
+니어 및 사이언티스트', 'company': '카카오', 'location': '성남 판교역', 'link': 'h
+ttp://kr.ideed.com//rc/clk?jk=d8a8869ab092f731&fccid=32b9af632cf3b9f9&vjs=3'}, {'
+title': '(주)테라젠바이오 데이터과제팀 계약직', 'company': '테라젠바이오', 'locat
+ion': '수원 영통구', 'link': 'http://kr.ideed.com//rc/clk?jk=b4c6146c52b4dc2b&fcc
+id=b3f542232194f2f7&vjs=3'}, {'title': '[빅데이터플랫폼] 데이터 엔지니어', 'compa
+ny': '한국카카오은행', 'location': '성남 분당구', 'link': 'http://kr.ideed.com//r
+c/clk?jk=927439a84026234e&fccid=aea6a13a3459fdb2&vjs=3'}, {'title': '[한국컴패션]
+ 데이터분석가 정규직 #사무직', 'company': '서울', 'location': '서울 한남동', 'lin
+k': 'http://kr.ideed.com//rc/clk?jk=bffe438c88d567ad&fccid=02f0cd55038d8c2f&vjs=3
+'}, {'title': '금융 데이터 분석 엔진, 로보어드바이저 개발자', 'company': '에스비
+씨엔', 'location': '서울 영등포구', 'link': 'http://kr.ideed.com//rc/clk?jk=649cc
+f047c868778&fccid=7c743c071619900d&vjs=3'}, {'title': '퀀트 개발자 (Quant Develop
+er)', 'company': 'ATZ Inc.', 'location': '서울', 'link': 'http://kr.ideed.com//co
+mpany/ATZ-Inc./jobs/%ED%80%80%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90-27ea6faf6a8516
+fd?fccid=54c84e9e653ca7ce&vjs=3'}, {'title': '[정규직] 금융 신규사업(AI예측기반 D
+ata사업) 데이터 분석 전문인력', 'company': 'SK 씨앤씨', 'location': '서울', 'link
+': 'http://kr.ideed.com//rc/clk?jk=996aed4fb9a166e0&fccid=6991c09e6a2880e2&vjs=3'
+}, {'title': '데이터 사이언티스트를 지향하는 데이터 엔지니어 모집', 'company': '
+카카오', 'location': '성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=385c5
+8c7ced1d77b&fccid=32b9af632cf3b9f9&vjs=3'}, {'title': '전문연구요원 (병역특례) 수
+시 (AI / SW 분야)', 'company': '딥엑스', 'location': '성남 분당구', 'link': 'http
+://kr.ideed.com//rc/clk?jk=d83fc0dd2641f483&fccid=e34932b8232a173b&vjs=3'}, {'tit
+le': '신한AI 인공지능(AI) 인력', 'company': '신한에이아이', 'location': '서울 영
+등포구', 'link': 'http://kr.ideed.com//rc/clk?jk=a2b8aae664300392&fccid=1b0866e30
+930a45e&vjs=3'}, {'title': '[빅데이터분석] 데이터 사업 기획 및 운영 담당자', 'com
+pany': '한국카카오은행', 'location': '성남 분당구', 'link': 'http://kr.ideed.com/
+/rc/clk?jk=f258bcb2c6f24dc9&fccid=aea6a13a3459fdb2&vjs=3'}, {'title': '[대구] 빅
+데이터 개발 연구원', 'company': '드림아이디어소프트', 'location': '대구 동구', 'l
+ink': 'http://kr.ideed.com//rc/clk?jk=623d7d0a12068235&fccid=b3a0ba7164b7ac7d&vjs
+=3'}, {'title': 'Python Programmer', 'company': 'Mofac', 'location': '서울 서초구
+', 'link': 'http://kr.ideed.com//rc/clk?jk=df21e3bb5d773616&fccid=6cddb172d498d15
+c&vjs=3'}, {'title': '기술 인턴 인공지능 응용 연구/개발 인턴', 'company': '써로마
+인드로보틱스', 'location': '서울 관악구', 'link': 'http://kr.ideed.com//rc/clk?jk
+=71c47ac87bb4087e&fccid=230e414668234579&vjs=3'}, {'title': '[교보라이프플래닛생
+명] 서비스기획/개발부문 신입/경력', 'company': '교보라이프플래닛생명보험', 'locat
+ion': '서울 영등포구', 'link': 'http://kr.ideed.com//rc/clk?jk=bf5c07ed37d6a417&f
+ccid=51072b5481eec4d0&vjs=3'}, {'title': '데이터 사이언티스트 모집', 'company': '
+카카오', 'location': '성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=0064d
+eb5fa9cbce0&fccid=32b9af632cf3b9f9&vjs=3'}, {'title': 'Customer Operations Engine
+ering Manager', 'company': 'Success Korea', 'location': '대한민국', 'link': 'http
+://kr.ideed.com//rc/clk?jk=8a15326f80e07c08&fccid=d29ddc820620b02e&vjs=3'}, {'tit
+le': '웹개발_경력자(3년 이상)', 'company': '더핏', 'location': '수원 권선구', 'li
+nk': 'http://kr.ideed.com//rc/clk?jk=c6824f6f0c312d01&fccid=bba4274be8f45cfb&vjs=
+3'}, {'title': '(주)에이쳐 인공지능(AI) 프로그래밍 교육 커리큘럼 기획 및 컨텐츠
+개발', 'company': '에이쳐', 'location': '용인 처인구', 'link': 'http://kr.ideed.c
+om//rc/clk?jk=46040f2836467e84&fccid=247b2017d36c7036&vjs=3'}, {'title': '광학솔
+루션사업부 경력사원 (렌즈개발/Actuator개발/Digital Transformation 분야)', 'compan
+y': 'LG이노텍', 'location': '경기도 안산', 'link': 'http://kr.ideed.com//rc/clk?j
+k=34e05b9e4079e7d6&fccid=6ecf392a15407b3e&vjs=3'}, {'title': '플랫폼쉴드 시스템
+개발', 'company': 'Nexon', 'location': '성남 분당구', 'link': 'http://kr.ideed.co
+m//rc/clk?jk=b2661d357cf26c8f&fccid=aba87288e4cc3687&vjs=3'}, {'title': '게임 데
+이터 분석가', 'company': '쿡앱스', 'location': '성남 분당구', 'link': 'http://kr.
+ideed.com//rc/clk?jk=5a299cf580491445&fccid=f03a85dc12a1bd6e&vjs=3'}, {'title': '
+Data Science 컨설턴트 - 글로벌 컨설팅펌', 'company': '에스에프인촌', 'location':
+'서울 서초구', 'link': 'http://kr.ideed.com//rc/clk?jk=da707a546a13ee22&fccid=629
+bf66c8ed71fe3&vjs=3'}, {'title': 'IT 개발자(백엔드) 경력직', 'company': '스포츠데
+이터에볼루션', 'location': '경기도 파주', 'link': 'http://kr.ideed.com//rc/clk?jk
+=e15972f6e01cb7dc&fccid=bf31cda7cfd9684f&vjs=3'}, {'title': 'System SW 엔지니어',
+ 'company': '딥엑스', 'location': '성남 분당구', 'link': 'http://kr.ideed.com//rc
+/clk?jk=fc037709d0770796&fccid=e34932b8232a173b&vjs=3'}, {'title': 'Field Applica
+tion Engineer (FAE) – Korea/Asia', 'company': 'LUCID Vision Labs', 'location': '
+대한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=06995d4800ce38f3&fccid=7981d86
+1c3c6e79b&vjs=3'}, {'title': '시스템엔지니어 신입/경력 정규직', 'company': '메에
+먼트', 'location': '서울 강남구', 'link': 'http://kr.ideed.com//rc/clk?jk=5a349ec
+d72559c9f&fccid=87c1e27bb6139d2a&vjs=3'}, {'title': '기술연구소 정규직 연력(Java,
+ Python, 기타)및 개발자 (신입,경력)', 'company': '파인씨앤아이', 'location': '서
+울 송파구', 'link': 'http://kr.ideed.com//rc/clk?jk=504b2c9de66ef96d&fccid=d6bec4
+7206b6a818&vjs=3'}, {'title': '화장품 회사 데이터 사이언티스트', 'company': '에이
+치앤티어세스', 'location': '서울 서초구', 'link': 'http://kr.ideed.com//rc/clk?jk
+=8d208778abed5b56&fccid=df3a3f13d25dcd10&vjs=3'}, {'title': '[취업연계교육]전액무
+료 IT교육받고 취업하자', 'company': '휴먼교육센터', 'location': '청주 흥덕구', 'l
+ink': 'http://kr.ideed.com//rc/clk?jk=ce3e13c2bc8da256&fccid=47930bf87393d845&vjs
+=3'}, {'title': 'Consultant - Identity & Security', 'company': 'Microsoft', 'loca
+tion': '대한민국', 'link': 'http://kr.ideed.com//rc/clk?jk=f71d35f5dff01c45&fccid
+=734cb5a01ee60f80&vjs=3'}, {'title': '(전액무료) 청년장애인 IT 인재육성 씨앗(SIAT
+) 교육 추가 / 교육부터 취업까지', 'company': '중앙에이치티에이', 'location': '성
+남 수정구', 'link': 'http://kr.ideed.com//rc/clk?jk=e36b5d6e4b5e5a88&fccid=d922b6
+ff5b01e560&vjs=3'}, {'title': '2020년 하반기 영업/기획/마케팅/개발 부문', 'compan
+y': '아우토크립트', 'location': '서울 영등포구', 'link': 'http://kr.ideed.com//rc
+/clk?jk=4e91309fc89e9534&fccid=70a92c8954e2b950&vjs=3'}, {'title': '필드 서포트
+엔지니어 (Software support)', 'company': '반도체 장비 (전공정)', 'location': '경
+기도 수원', 'link': 'http://kr.ideed.com//company/Aims-International/jobs/%ED%95%
+84%EB%93%9C-%EC%84%9C%ED%8F%AC%ED%8A%B8-%EC%97%94%EC%A7%80%EB%8B%88%EC%96%B4-9cc8
+068806968188?fccid=def328ffc9620ff6&vjs=3'}, {'title': '(주)엘솔루 웹 개발자', 'c
+ompany': '㈜엘솔루', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=
+99695c193990e56a&fccid=35c61db9f1514baf&vjs=3'}, {'title': '지스트 블록체인인터넷
+경제연구센터 계약직(연구원)', 'company': '광주과학기술원', 'location': '광주 북구
+', 'link': 'http://kr.ideed.com//rc/clk?jk=cd2ef993ee5c8d3f&fccid=617504e50635942
+6&vjs=3'}, {'title': 'Java, Python 영상툴 개발자', 'company': '에이아이메이커', '
+location': '서울 마곡동', 'link': 'http://kr.ideed.com//rc/clk?jk=cae2de07045cfb2
+b&fccid=5347ade40d1c0654&vjs=3'}, {'title': 'Data Scientist', 'company': 'Toss',
+'location': '서울 강남구', 'link': 'http://kr.ideed.com//rc/clk?jk=7af6301dc691d3
+ab&fccid=18c4935c8ec646d5&vjs=3'}, {'title': '각 분야별 인재 Pool 등록', 'company
+': '지투알', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=e631d46f
+39019d13&fccid=bc5ebec5dc29475c&vjs=3'}, {'title': 'Solutions Engineer', 'company
+': 'f5', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=661a80939b1a
+cd30&fccid=9b3ae8c6fdf5bade&vjs=3'}, {'title': 'Software Engineer, Machine Learni
+ng', 'company': 'Google', 'location': '서울', 'link': 'http://kr.ideed.com//rc/cl
+k?jk=4f319862856fe9c1&fccid=a5b4499d9e91a5c6&vjs=3'}, {'title': '정보전략 담당자
+모집', 'company': '넷마블', 'location': '서울 구로구', 'link': 'http://kr.ideed.c
+om//rc/clk?jk=70767c5d54149524&fccid=e696d83fde5c0f20&vjs=3'}, {'title': 'Data Sc
+ientist', 'company': 'Motion2AI', 'location': '서울', 'link': 'http://kr.ideed.co
+m//rc/clk?jk=74b3d3c938870be2&fccid=35f6dee5a4adf138&vjs=3'}, {'title': '시스템
+엔지니어링', 'company': 'NHN', 'location': '성남 판교역', 'link': 'http://kr.idee
+d.com//rc/clk?jk=5cb14c0712a6c4c1&fccid=a72ebaf825acf7af&vjs=3'}, {'title': '[AI
+R&D] 플랫폼 개발 엔지니어 모집', 'company': '엔씨소프트', 'location': '성남 판교
+역', 'link': 'http://kr.ideed.com//rc/clk?jk=52d863eb7e90b1af&fccid=a1e4e21b1f33c
+f40&vjs=3'}, {'title': 'Application Engineer South Korea (Physics, EE)', 'company
+': 'Zurich Instruments', 'location': '대한민국', 'link': 'http://kr.ideed.com//rc
+/clk?jk=444320d2e49672dc&fccid=392ed95de5acb930&vjs=3'}, {'title': 'Data Scientis
+t(CSS 모델링)', 'company': 'Toss', 'location': '서울 강남구', 'link': 'http://kr.
+ideed.com//rc/clk?jk=3933762f9f06df56&fccid=18c4935c8ec646d5&vjs=3'}, {'title': '
+[이마트] 이마트 ML Engineer 경력직 모집', 'company': '신세계', 'location': '대한
+민국', 'link': 'http://kr.ideed.com//rc/clk?jk=7f3e824eab01a741&fccid=eed00967859
+3e037&vjs=3'}, {'title': '자연어처리(NLP) 개발자', 'company': '바운티팜', 'locati
+on': '서울 서초구', 'link': 'http://kr.ideed.com//rc/clk?jk=35e009befbd56015&fcci
+d=4e54cd10e1f8dd0f&vjs=3'}, {'title': 'Plat.B 추진단 AID팀 Machine Learning&AI 정
+규직', 'company': '이투스교육', 'location': '서울 강남구', 'link': 'http://kr.ide
+ed.com//rc/clk?jk=f611a72cc9b1761e&fccid=b84d68241bed601b&vjs=3'}, {'title': '리
+서치분야 석사이상 경력직', 'company': '케이지제로인', 'location': '대한민국', 'li
+nk': 'http://kr.ideed.com//rc/clk?jk=b602108c31558329&fccid=bfdba13fe070a19e&vjs=
+3'}, {'title': 'Machine Learning Researcher – On-device AI theory and algorithm',
+ 'company': 'Qualcomm Korea YH', 'location': '서울', 'link': 'http://kr.ideed.com
+//rc/clk?jk=c2f5f53dc48263eb&fccid=fc9fc27463afa4d7&vjs=3'}, {'title': '[검색] 프
+론트엔드 엔지니어 (전문연구요원 가능)', 'company': '버즈니', 'location': '서울',
+'link': 'http://kr.ideed.com//rc/clk?jk=5bfcdbb81dd0d7be&fccid=a72d6e5a17d52b40&v
+js=3'}, {'title': 'Healthcare Real World Data Analyst 담당자', 'company': 'IQVIA'
+, 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=a746de9c7a6168ef&fc
+cid=6b7a1dfe07e7f037&vjs=3'}, {'title': '인공지능(AI) 프로그래밍 교육 소프트웨어
+시니어 개발자', 'company': '에이쳐', 'location': '용인 처인구', 'link': 'http://k
+r.ideed.com//rc/clk?jk=efb97a2335823cbd&fccid=247b2017d36c7036&vjs=3'}, {'title':
+ 'Application Engineer ( Silicondash)', 'company': 'Synopsys', 'location': '서울'
+, 'link': 'http://kr.ideed.com//rc/clk?jk=3c516818303c4d51&fccid=6ce9eba87609c3e9
+&vjs=3'}, {'title': '데이터 엔지니어', 'company': 'RIDI Corp', 'location': '서울'
+, 'link': 'http://kr.ideed.com//rc/clk?jk=733c04bade808d8a&fccid=ba4215b904dee414
+&vjs=3'}, {'title': 'eBeam System Engineer for R&D Extension Korea', 'company': '
+Applied Materials Inc.', 'location': '경기도 화성', 'link': 'http://kr.ideed.com/
+/rc/clk?jk=25a21ebfa5410f05&fccid=6c6f37e2a6cb4c55&vjs=3'}, {'title': 'Security E
+ngineer (모의해킹/취약점 점검)', 'company': 'Toss', 'location': '서울 강남구', 'l
+ink': 'http://kr.ideed.com//rc/clk?jk=241ae1e7499c461c&fccid=18c4935c8ec646d5&vjs
+=3'}, {'title': 'MBC 방송IT센터 소프트웨어 개발 담당', 'company': '문화방송', 'lo
+cation': '서울 마포구', 'link': 'http://kr.ideed.com//rc/clk?jk=ae8d56c7b5aa16c7&
+fccid=3c09ef7790507811&vjs=3'}, {'title': '게임이상탐지 분석/개발', 'company': 'N
+exon', 'location': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=4ec305f
+59ce64060&fccid=aba87288e4cc3687&vjs=3'}, {'title': '[신입,경력] application 개발
+자', 'company': '유즈브레인넷', 'location': '서울 구로구', 'link': 'http://kr.ide
+ed.com//rc/clk?jk=54203780e0d8532a&fccid=5d8374a78ac7c654&vjs=3'}, {'title': '기
+업부설연구소 연구원 경력 정규직', 'company': '이룸에스엔에스', 'location': '경기
+도 부천', 'link': 'http://kr.ideed.com//rc/clk?jk=7a4a03e57d1263a2&fccid=56bc9ace
+a1bc8fe0&vjs=3'}, {'title': '[신입/경력] 이미지 OCR(문자인식), 이미지 딥러닝 S/W
+개발', 'company': '코드원시스템', 'location': '서울 송파구', 'link': 'http://kr.i
+deed.com//rc/clk?jk=97aa2b00fda87ad6&fccid=cba7fbecb819d352&vjs=3'}, {'title': '
+엔미디어플랫폼 데이터베이스 관리자 (DBA) 인재 안내', 'company': '리더스소프트', '
+location': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=d0ca27a97ddf91f
+9&fccid=899ef09e06ec4d9d&vjs=3'}, {'title': '[이마트] 이마트 Data Engineer 경력직
+ 모집', 'company': '신세계', 'location': '대한민국', 'link': 'http://kr.ideed.com
+//rc/clk?jk=e61c9e2f3acea4ad&fccid=eed009678593e037&vjs=3'}, {'title': '경험최적
+화파트 - 머신러닝 엔지니어', 'company': 'Nexon', 'location': '성남 분당구', 'link
+': 'http://kr.ideed.com//rc/clk?jk=7bf179a290a157b2&fccid=aba87288e4cc3687&vjs=3'
+}, {'title': '8퍼센트 개발자 (신입/경력)', 'company': '8퍼센트', 'location': '서
+울 종로구', 'link': 'http://kr.ideed.com//rc/clk?jk=8af26b37623864c4&fccid=ac216a
+9ae7b75c06&vjs=3'}, {'title': '[청년디지털일자리] 파이썬(Excel 활용) 업무 전자 부
+품 등록/관리', 'company': '성호전자', 'location': '서울 금천구', 'link': 'http://
+kr.ideed.com//rc/clk?jk=9a0695002b7ffb96&fccid=4fd0203170a0792b&vjs=3'}, {'title'
+: '[인재풀] 아티스트', 'company': 'Electronic Arts', 'location': '서울', 'link':
+'http://kr.ideed.com//rc/clk?jk=aac8e9355cb855ac&fccid=617d7f961cfcf54a&vjs=3'},
+{'title': 'Lead Product Engineer - Liberate', 'company': 'Cadence Design Systems'
+, 'location': '경기도', 'link': 'http://kr.ideed.com//rc/clk?jk=ffac42e32db26233&
+fccid=391006290e845887&vjs=3'}, {'title': '에이쳐 인공지능(AI) 프로그래밍 교육 커
+리큘럼 기획 및 컨텐츠 개발', 'company': '에이쳐', 'location': '용인 처인구', 'lin
+k': 'http://kr.ideed.com//rc/clk?jk=1393e3df4db66927&fccid=247b2017d36c7036&vjs=3
+'}, {'title': '클라우드 오퍼레이션 엔지니어', 'company': 'NHN SOFT', 'location':
+'성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=8bcc7807085700a7&fccid=a72
+ebaf825acf7af&vjs=3'}, {'title': 'Machine Learning Researcher – Audio and Speech'
+, 'company': 'Qualcomm Korea YH', 'location': '서울', 'link': 'http://kr.ideed.co
+m//rc/clk?jk=aea07d26df8ae423&fccid=fc9fc27463afa4d7&vjs=3'}, {'title': '(주)넷타
+겟 연구원 (웹프론트엔드 개발자)', 'company': '넷타겟', 'location': '대전 유성구',
+ 'link': 'http://kr.ideed.com//rc/clk?jk=0feb2770202a5be1&fccid=276b39459af9d7fa&
+vjs=3'}, {'title': 'SW 개발 경력 정규직', 'company': '협성기전', 'location': '성
+남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=cf795963bfb65815&fccid=b6b9ba
+fffcbdb9e1&vjs=3'}, {'title': '소프트웨어 부문', 'company': '맥시멈코퍼레이션', '
+location': '경상남도 진주', 'link': 'http://kr.ideed.com//rc/clk?jk=8df5412c2beb1
+97f&fccid=3099ae832a98fd31&vjs=3'}, {'title': '카카오 분산 기술 플랫폼 개발자 모
+집', 'company': '카카오', 'location': '성남 판교역', 'link': 'http://kr.ideed.com
+//rc/clk?jk=85e44b7572a7c332&fccid=32b9af632cf3b9f9&vjs=3'}, {'title': '인공지능(
+AI) 프로그래밍 교육 소프트웨어 개발자', 'company': '에이쳐', 'location': '용인 처
+인구', 'link': 'http://kr.ideed.com//rc/clk?jk=bf5a5e4d012fbbbe&fccid=247b2017d36
+c7036&vjs=3'}, {'title': '(주)트윔 개발자(경력직) 빅데이터,영상처리,머신비전/AI
+딥러닝', 'company': '트윔', 'location': '경기도 화성', 'link': 'http://kr.ideed.c
+om//rc/clk?jk=a0dda478567db352&fccid=8236169ab3bd9551&vjs=3'}, {'title': '자율주
+행로봇 S/W 개발자', 'company': '㈜퓨처로봇', 'location': '성남 분당구', 'link': '
+http://kr.ideed.com//rc/clk?jk=64edfbfd65a20197&fccid=e3a5405dfd9b1d92&vjs=3'}, {
+'title': '[KSTEC] 통계/Analytics 경력사���', 'company': '지식시스템', 'locatio
+n': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=a364452e977d6063&fccid
+=3061a9a0f5168def&vjs=3'}, {'title': '테크빌더팀 웹어플리케이션 개발자 (백앤드/프
+론트앤드)', 'company': 'Nexon', 'location': '성남 분당구', 'link': 'http://kr.ide
+ed.com//rc/clk?jk=9d9f5827c98272c9&fccid=aba87288e4cc3687&vjs=3'}, {'title': '(주
+)쓰리에치솔루션 부문별 신입/경력 직원', 'company': '쓰리에치솔루션', 'location':
+'청주 흥덕구', 'link': 'http://kr.ideed.com//rc/clk?jk=bc4c4f6e75fc8a77&fccid=27b
+bf867ea1561c9&vjs=3'}, {'title': 'Data Analyst', 'company': 'Toss', 'location': '
+서울 강남구', 'link': 'http://kr.ideed.com//rc/clk?jk=e393fa440b668be7&fccid=18c4
+935c8ec646d5&vjs=3'}, {'title': 'AI 개발자', 'company': '넷아이디', 'location': '
+서울 강남구', 'link': 'http://kr.ideed.com//rc/clk?jk=b8c6ad4bd3f32e3d&fccid=2274
+e7a2ca7cc2c7&vjs=3'}, {'title': 'RTL 기반 HW IP 설계 엔지니어 (딥러닝 하드웨어 프
+로세서 개발)', 'company': '딥엑스', 'location': '성남 분당구', 'link': 'http://kr
+.ideed.com//rc/clk?jk=6ede042ebe53ba49&fccid=e34932b8232a173b&vjs=3'}, {'title':
+'SW(모바일앱 및 웹개발) 신입/경력 정규직 개발자', 'company': '더조인', 'location'
+: '서울 강남구', 'link': 'http://kr.ideed.com//rc/clk?jk=31c8ae4a133b5147&fccid=7
+98b074e3c8f585c&vjs=3'}, {'title': 'Data Analytics 분야 컨설턴트 - 글로벌 컨설팅F
+irm', 'company': '에스에프인촌', 'location': '서울', 'link': 'http://kr.ideed.com
+//rc/clk?jk=d82f4988f7cedc22&fccid=629bf66c8ed71fe3&vjs=3'}, {'title': '(주)신세
+계아이앤씨 AI/클라우드 부문 상시', 'company': '신세계아이앤씨', 'location': '서울
+ 중구', 'link': 'http://kr.ideed.com//rc/clk?jk=01296857655fc85f&fccid=7009e9adee
+12ff99&vjs=3'}, {'title': 'AML 데이터 분석/모델링 전문가', 'company': '네이버', '
+location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=30352a55b8205ca8&fccid
+=412ff571bced2587&vjs=3'}, {'title': '머신러닝 개발자 모집', 'company': '넷마블',
+ 'location': '서울 구로구', 'link': 'http://kr.ideed.com//rc/clk?jk=481f953ccaa4b
+c96&fccid=e696d83fde5c0f20&vjs=3'}, {'title': '생명정보학자(연구원, 분석가) 신입/
+경력 계약직', 'company': '고려대학교산학협력단', 'location': '서울 성북구', 'link
+': 'http://kr.ideed.com//rc/clk?jk=6d27fdce96fe586d&fccid=7dd7a1fe98ff73ca&vjs=3'
+}, {'title': '퍼즐데이터 역량있는 데이터 분석가', 'company': '주식회사퍼즐데이터'
+, 'location': '서울 역삼동', 'link': 'http://kr.ideed.com//rc/clk?jk=116009dbf592
+11ed&fccid=bbae7241cc714540&vjs=3'}, {'title': '[데이터 플랫폼]데이터 엔지니어 (
+전문연구요원 가능)', 'company': '버즈니', 'location': '서울', 'link': 'http://kr.
+ideed.com//rc/clk?jk=ceb8243bc8ae3c35&fccid=a72d6e5a17d52b40&vjs=3'}, {'title': '
+[NIT Service] NAVER IDC 서버 운영/관리(가산)', 'company': '엔아이티서비스', 'loca
+tion': '서울 금천구', 'link': 'http://kr.ideed.com//rc/clk?jk=3c2a60ffd9a25a10&fc
+cid=d389f1042b660837&vjs=3'}, {'title': '신약개발 및 프론트엔드/백엔드 개발자', '
+company': '아론티어', 'location': '서울 서초구', 'link': 'http://kr.ideed.com//rc
+/clk?jk=25bd2e9729d88096&fccid=f7ee2929fe1b59a8&vjs=3'}, {'title': '금융 AI 기술
+연구 개발자 모집', 'company': '엔씨소프트', 'location': '성남 판교역', 'link': 'h
+ttp://kr.ideed.com//rc/clk?jk=e7346aa4ba6c1633&fccid=a1e4e21b1f33cf40&vjs=3'}, {'
+title': 'Data Engineer(신입)', 'company': 'PUBG', 'location': '서울', 'link': 'ht
+tp://kr.ideed.com//rc/clk?jk=210243e0776dc26f&fccid=403118030354e1f2&vjs=3'}, {'t
+itle': '[AI R&D] 데이터 엔지니어 모집', 'company': '엔씨소프트', 'location': '성
+남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=11fa90db108dc242&fccid=a1e4e2
+1b1f33cf40&vjs=3'}, {'title': 'Software Development Engineer', 'company': 'Mentor
+ Graphics (Korea) LLC', 'location': '경기도 성남', 'link': 'http://kr.ideed.com//
+rc/clk?jk=914578ba5310e818&fccid=3b89b9ec324f96c8&vjs=3'}, {'title': '보안 모니터
+링 시스템 개발 및 운영 담당자 모집', 'company': '카카오', 'location': '성남 판교
+역', 'link': 'http://kr.ideed.com//rc/clk?jk=d13fce11058e6cf1&fccid=32b9af632cf3b
+9f9&vjs=3'}, {'title': '데이터 사이언스 전문가 및 머신러닝 전문가 모집', 'company
+': '카카오', 'location': '성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=8
+5929aac498299cc&fccid=32b9af632cf3b9f9&vjs=3'}, {'title': '고등광기술연구소 전문
+연구요원', 'company': '광주과학기술원', 'location': '광주 북구', 'link': 'http://
+kr.ideed.com//rc/clk?jk=7c19ff88836f8869&fccid=617504e506359426&vjs=3'}, {'title'
+: '[대기업 계열사] 데이터 분석 전문가', 'company': 'TrueHR', 'location': '서울 중
+구', 'link': 'http://kr.ideed.com//rc/clk?jk=6544800fd0e099e1&fccid=402d24bb8b23c
+516&vjs=3'}, {'title': '엔미디어플랫폼 데이터베이스 관리자 (DBA) 인재 안내', 'com
+pany': '엔미디어플랫폼', 'location': '성남 분당구', 'link': 'http://kr.ideed.com/
+/rc/clk?jk=32b86c150b70d92a&fccid=2cfb127a9d7ab3bc&vjs=3'}, {'title': '챗봇 플랫
+폼 개발자 모집', 'company': '카카오', 'location': '성남 판교역', 'link': 'http://
+kr.ideed.com//rc/clk?jk=20d40ee61adffeca&fccid=32b9af632cf3b9f9&vjs=3'}, {'title'
+: '[검색] 백엔드 엔지니어 (전문연구요원 가능)', 'company': '버즈니', 'location':
+'서울', 'link': 'http://kr.ideed.com//rc/clk?jk=9fe3ec26cead9adc&fccid=a72d6e5a17
+d52b40&vjs=3'}, {'title': 'TOAST Cloud 운영 및 기술지원', 'company': 'NHN', 'loca
+tion': '성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=ad07d6a330fb619a&fc
+cid=a72ebaf825acf7af&vjs=3'}, {'title': 'Web Full-Stack Engineer', 'company': 'NV
+IDIA', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=edf8d34357ba07
+47&fccid=c267f29f0f85e8b8&vjs=3'}, {'title': '머신러닝 개발', 'company': 'Nexon',
+ 'location': '성남 분당구', 'link': 'http://kr.ideed.com//rc/clk?jk=a1d687cd59776
+360&fccid=aba87288e4cc3687&vjs=3'}, {'title': '[공통기술부문] AI / ML 엔지니어 (3
+년 이상)', 'company': '우아한 형제들', 'location': '서울 송파구', 'link': 'http:/
+/kr.ideed.com//rc/clk?jk=beaf31828719882c&fccid=d6ffeb3b4e007b90&vjs=3'}, {'title
+': '매칭 데이터분석', 'company': 'Nexon', 'location': '성남 분당구', 'link': 'htt
+p://kr.ideed.com//rc/clk?jk=15edcadd124ad99a&fccid=aba87288e4cc3687&vjs=3'}, {'ti
+tle': 'SW Engineer for R&D Extension Korea', 'company': 'Applied Materials Inc.',
+ 'location': '경기도 화성', 'link': 'http://kr.ideed.com//rc/clk?jk=fb3395b4ba6b4
+f61&fccid=6c6f37e2a6cb4c55&vjs=3'}, {'title': '자율주행연구팀 연구사원 (신입/경력
+)', 'company': '소네트', 'location': '대구 달성군', 'link': 'http://kr.ideed.com/
+/rc/clk?jk=02bcd7b6412d1db9&fccid=e5948a87839b9ef5&vjs=3'}, {'title': '카카오 광
+고 서비스 알고리즘 및 시스템 개발', 'company': '카카오', 'location': '성남 판교역
+', 'link': 'http://kr.ideed.com//rc/clk?jk=afe92c03320fe1b3&fccid=32b9af632cf3b9f
+9&vjs=3'}, {'title': 'TOAST Cloud 사업기획/영업', 'company': 'NHN', 'location': '
+성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?jk=6b86ea39985912b6&fccid=a72e
+baf825acf7af&vjs=3'}, {'title': '[AI/Lab] AI 백엔드 엔지니어 (전문연구요원 가능)'
+, 'company': '버즈니', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?j
+k=dbe3257e487e5814&fccid=a72d6e5a17d52b40&vjs=3'}, {'title': 'QA Technical Tester
+ (파견계약직)', 'company': 'Electronic Arts', 'location': '서울', 'link': 'http:/
+/kr.ideed.com//rc/clk?jk=7ec73f225cc61300&fccid=617d7f961cfcf54a&vjs=3'}, {'title
+': "[L'Oreal Korea] IT Business Analyst", 'company': "L'Oreal", 'location': '서울
+', 'link': 'http://kr.ideed.com//rc/clk?jk=db26147e9223e38a&fccid=ec8a0bd60be9a6f
+5&vjs=3'}, {'title': 'Back-end Engineer (Python)', 'company': 'Soomgo', 'location
+': '서울 강남구', 'link': 'http://kr.ideed.com//rc/clk?jk=752a4b5d63eac97c&fccid=
+f9a401b2af6cde91&vjs=3'}, {'title': 'Field Applications Engineer, Audio', 'compan
+y': 'Dolby', 'location': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=7cb5c307
+6d1701db&fccid=5dd80d97ea739284&vjs=3'}, {'title': '머신러닝 엔지니어 모집', 'com
+pany': '카카오', 'location': '성남 판교역', 'link': 'http://kr.ideed.com//rc/clk?
+jk=269f9a96319ef19a&fccid=32b9af632cf3b9f9&vjs=3'}, {'title': 'FDS 데이터 분석 담
+당자', 'company': '네이버', 'location': '서울', 'link': 'http://kr.ideed.com//rc/
+clk?jk=b2ef9dc168ce46f0&fccid=412ff571bced2587&vjs=3'}, {'title': 'DBA 엔지니어',
+ 'company': '쏘카', 'location': '대한민국', 'link': 'http://kr.ideed.com//rc/clk?
+jk=d748c217f78dbd58&fccid=ebcd554962f400ec&vjs=3'}, {'title': '2021 상반기 인공지
+능(AI)/머신러닝 경력사원', 'company': '아프스', 'location': '서울 서초구', 'link'
+: 'http://kr.ideed.com//rc/clk?jk=aefe9fe982b7d1f0&fccid=fa566d88d886e1bb&vjs=3'}
+, {'title': 'Customer Engineer', 'company': 'Microsoft', 'location': '서울', 'lin
+k': 'http://kr.ideed.com//rc/clk?jk=7d4bc2a107c6669b&fccid=734cb5a01ee60f80&vjs=3
+'}, {'title': 'Technical Specialist', 'company': 'Microsoft', 'location': '서울',
+ 'link': 'http://kr.ideed.com//rc/clk?jk=f4c784e2cb1ecbbb&fccid=734cb5a01ee60f80&
+vjs=3'}, {'title': 'Sales Solution Engineer, AEC', 'company': 'ChilliConnect', 'l
+ocation': '서울', 'link': 'http://kr.ideed.com//rc/clk?jk=416aa4182daa101e&fccid=
+81b5c0b5042b8f0a&vjs=3'}, {'title': 'Internal Infra Engineer', 'company': 'Toss',
+ 'location': '서울 강남구', 'link': 'http://kr.ideed.com//rc/clk?jk=741cc6ac364ea
+9be&fccid=18c4935c8ec646d5&vjs=3'}]
