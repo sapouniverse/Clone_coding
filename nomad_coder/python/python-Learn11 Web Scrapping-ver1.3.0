@@ -1,0 +1,122 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+max_indeed_pages=extract_indeed_pages()
+extract_indeed_jobs(max_indeed_pages)
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL=f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(INDEED_URL)
+  soup = BeautifulSoup(result.text, "html.parser")
+  pagination=soup.find("div", {"class":"pagination"})
+  
+  pages=pagination.find_all('a')
+  spans=[]
+  for page in pages[:-1]:
+     spans.append(int(page.string))
+        
+  max_page = spans[-1]
+
+  return max_page
+
+def extract_job(html):
+    title=(html.find("h2", {"class": "title"}))       <---- 2. 여기를 html.으로 수정함
+    title_anchor=title.find("a")["title"]
+
+    company=html.find("span", {"class":"company"})        <---- 2. 여기를 html.으로 수정함
+    company_anchor=company.find("a")
+
+    if company_anchor is not None:
+      company=(company_anchor.string)
+    else:
+      company=(company.string)
+
+    company=company.strip()
+
+    return {'title':title_anchor, 'company': company}         <---- 3. 출력 방식을 바꾸면서 양식까지 만들었음
+
+
+def extract_indeed_jobs(last_pages):
+  jobs=[]
+  #for page in range(last_pages):
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  soup = BeautifulSoup(result.text, "html.parser")
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  for result in results:
+    job = extract_job(result)                                          <------ 1. 여기에 있던 애들을 싹 위로 빼서 def extract_job(html)로 다시 정의함
+    print(job)
+  return jobs 
+----------------------------------------------
+# 결과 : 양식을 
+
+{'title': '데이터 분석가/사이언티스트(신입/인턴 가능)', 'company': '쏘카'}
+{'title': '2021년 각 부문별 경력직 공개', 'company': 'SK디앤디㈜'}
+{'title': '2021년 상반기 R&D 개발자 (병역특례 가능/경력 무관)', 'company': '네오
+스텍'}
+{'title': '빅데이터, 인공지능(AI) 외 신입/경력 인턴', 'company': '스칼라웍스'}
+{'title': 'Field Application YieldStar Competence Engineer', 'company': 'ASML'}
+{'title': '2021년도 국토안전관리원 제기간제 근로자', 'company': '국토안전관리원'}
+
+{'title': '(광주취업맛집1위)2021년도 국비 기술교육생', 'company': '대한상공회의소
+ 광주인력개발원'}
+{'title': 'Data Scientist', 'company': 'Garrett Advancing Motion'}
+{'title': '2021년 2월 경력사원', 'company': '세메스'}
+{'title': '2021년(주)쎄트렉아이 상반기 각 부문 신입/경력직', 'company': '쎄트렉아
+이'}
+{'title': '2021년 IITP 주관 글로벌핵심인재양성 지원사업', 'company': '정보통신기
+획평가원'}
+{'title': 'Data Scientist (KOREA)', 'company': 'No Deviation Pte Ltd'}
+{'title': 'Field Application Engineer', 'company': 'Quectel Wireless Solution Co,
+.LTD'}
+{'title': 'SM파견 웹개발자', 'company': '유저해빗'}
+{'title': '[NICE평가정보] 2021년 상반기 수시', 'company': '나이스평가정보'}
+{'title': 'Engr, Apps Dev 2', 'company': 'KLA-Tencor'}
+{'title': '[타다]데이터 분석가/사이언티스트', 'company': '쏘카'}
+{'title': '2021년 (신입) 전문연구요원 모집', 'company': 'NHN'}
+{'title': '2021년도 한국알프스 수시', 'company': '한국알프스'}
+{'title': '프랭클린템플턴투신운용 Junior Trader (Quant base 필수)', 'company': '
+프랭클린템플턴투신'}
+{'title': '데이터 분석 및 컨설팅 분야 (Python, SAS, 빅데이터) 경력직', 'company':
+ '한국정보기술단'}
+{'title': '2021년 상반기 Python 경력', 'company': '매크로액트'}
+{'title': '2021 Market Data Analyst - Seoul', 'company': 'Bloomberg'}
+{'title': 'Engr, Tech Supp 3', 'company': 'KLA-Tencor'}
+{'title': 'Application Engineer Consultant - HAV', 'company': 'Mentor Graphics (K
+orea) LLC'}
+{'title': '[이마트] 이마트 Data Scientist 경력직 모집', 'company': '신세계'}
+{'title': 'Sr Systems Administrator I', 'company': 'Raytheon Intelligence & Space
+'}
+{'title': '2021 토스 전 계열사 대규모', 'company': '비바리퍼블리카'}
+{'title': '2021년 2월 IT분야 경력직원', 'company': '우리에프아이에스'}
+{'title': '[전문연구요원] 상시 (전직)', 'company': '네이버랩스'}
+{'title': '2021 Global Data Internship - Seoul (Korean Speaker)', 'company': 'Blo
+omberg'}
+{'title': 'Applied Data Scientist', 'company': 'dunnhumby'}
+{'title': 'AI/빅데이터/클라우드 분야 (인재 Pool)', 'company': 'LG유플러스'}
+{'title': '지능형자동차부품진흥원 인력', 'company': '지능형자동차부품진흥원'}
+{'title': '[각 분야별] Java, MySQL, Python 외 정규직', 'company': '로제타텍'}
+{'title': '빅데이터 분석(머신러닝/딥러닝) 컨설턴트 정규직', 'company': '디앤아이
+컨설팅'}
+{'title': '[카카오커머스] 기술직군', 'company': '카카오커머스'}
+{'title': '2021년 한화시스템 방산부문 경력사원', 'company': '한화시스템'}
+{'title': '[4년제 대졸자 취업연계과정] 융합 SW 바이오 분야, 전공무관, 취업율 92.7
+', 'company': '한국폴리텍대학분당융합기술교육원'}
+{'title': '(주)신세계아이앤씨 경력사원 상시', 'company': '신세계아이앤씨'}
+{'title': 'Design Consultant, Staff', 'company': 'Synopsys'}
+{'title': '전사 생산기술분야 경력사원', 'company': 'LG이노텍'}
+{'title': 'Life Actuarial Analyst (Intern) - Korea', 'company': 'Willis Towers Wa
+tson'}
+{'title': '[전문연구요원] 빅데이터 엔지니어(신입/경력)', 'company': '웹젠'}
+{'title': '사내 및 서비스 보안 담당자 (경력)', 'company': '네오위즈'}
+{'title': 'Software Engineer - AI', 'company': 'GE Appliances'}
+{'title': '펌웨어, C·C++ 경력 계약직', 'company': '아르비존'}
+{'title': 'Developer / Designer recruit', 'company': '마이뮤직테이스트'}
+{'title': 'Perception Software Engineer - Autonomous Vehicles', 'company': 'NVIDI
+A'}
+{'title': '에너지경제연구원 위촉연구원(에너지통계연구팀)', 'company': '에너지경제
+연구원'}
