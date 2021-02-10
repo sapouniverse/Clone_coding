@@ -1,8 +1,8 @@
 main.py
 from indeed import extract_indeed_pages, extract_indeed_jobs
 max_indeed_pages=extract_indeed_pages()
-indeed_jobs=extract_indeed_jobs(max_indeed_pages)  <---------- 이제서야 건들이게됨
-print(indeed_jobs)                                 <----------- 나와랏!
+indeed_jobs = extract_indeed_jobs(max_indeed_pages)  <--- 이제서야 건들이게됨
+print(indeed_jobs)                                 <----- 나와랏!            <-------- 8. 이렇게
 
 indeed.py
 import requests
@@ -25,7 +25,7 @@ def extract_indeed_pages():
 
   return max_page
 
-def extract_job(html):
+def extract_job(html):                                                      <----- 2. html인자를 받고, 여기서 html은 
     title=(html.find("h2", {"class": "title"}))
     title_anchor=title.find("a")["title"]
 
@@ -42,16 +42,16 @@ def extract_job(html):
     return {'title':title_anchor, 'company': company}
 
 
-def extract_indeed_jobs(last_pages):
+def extract_indeed_jobs(last_pages):                                        <------ 7. 이걸 통째로 불러와서 main에서 print하여 확인할거임
   jobs=[]
   #for page in range(last_pages):
-  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+  result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")                    <------ 3. html은 result를 의미하는데
   soup = BeautifulSoup(result.text, "html.parser")
-  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+  results=soup.find_all("div",{"class":"jobsearch-SerpJobCard"})            <------ 4. result는 request한 결과를 담은 인자다.
   for result in results:
-    job = extract_job(result)
-    jobs.append(job)             <----- 결국 의도는 job을 jobs에 넣는 일임
-  return jobs 
+    job = extract_job(result)                                                <----- 1. extract_job을 호출해서 
+    jobs.append(job)             <----- 결국 의도는 job을 jobs에 넣는 일임     <------ 5. job을 반환해서 jobs라는 array에 넣음
+  return jobs                                                                <------ 6. 그걸 return 한 것이쥬
   
   -------------------------------------
   # 결과 : list로 
