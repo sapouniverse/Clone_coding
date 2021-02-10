@@ -1,0 +1,172 @@
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+max_indeed_pages=extract_indeed_pages()
+
+indeed_jobs=extract_indeed_jobs(max_indeed_pages)
+
+print(indeed_jobs)    <----------------------------------- 잘 붙었는지 확인해볼까요?
+
+
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL = f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+
+def extract_indeed_pages():
+    result = requests.get(INDEED_URL)
+    soup = BeautifulSoup(result.text, "html.parser")
+    pagination = soup.find("div", {"class": "pagination"})
+
+    pages = pagination.find_all('a')
+    spans = []
+    for page in pages[:-1]:
+        spans.append(int(page.string))
+
+    max_page = spans[-1]
+
+    return max_page
+
+
+def extract_job(html):
+    title = (html.find("h2", {"class": "title"}))
+    title_anchor = title.find("a")["title"]
+
+    company = html.find("span", {"class": "company"})
+    company_anchor = company.find("a")
+
+    if company_anchor is not None:
+        company = (company_anchor.string)
+    else:
+        company = (company.string)
+
+    company = company.strip()
+
+    location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
+
+    job_id = html["data-jk"]        <---------- 공고문을 클릭하면 새로운 id가 부여되면서, 회사 링크로 연결된다는 규칙을 보고 id를 추출함.
+    
+
+    return {
+        'title': title_anchor,
+        'company': company,
+        'location': location,
+        "link": f"http://www.ideed.com/viewjob?jk={job_id}"      <----- 추출한 id를 기반으로 맨 뒤에 회사 링크까지 덧붙이는 작업
+    }
+
+
+def extract_indeed_jobs(last_pages):
+    jobs = []
+    #for page in range(last_pages):
+    result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
+    soup = BeautifulSoup(result.text, "html.parser")
+    results = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})
+    for result in results:
+        job = extract_job(result)
+        jobs.append(job)
+    return jobs
+
+------------------------------------------------------------
+# 결과 : 잘 붙었군요
+
+[{'title': '데이터 분석가/사이언티스트(신입/인턴 가능)', 'company': '쏘카', 'loca
+tion': '대한민국', 'link': 'http://www.ideed.com/viewjob?jk=55584c627df1acaa'}, {
+'title': '2021년 각 부문별 경력직 공개', 'company': 'SK디앤디㈜', 'location': '성
+남 분당구', 'link': 'http://www.ideed.com/viewjob?jk=60495f8f583de7aa'}, {'title'
+: '2021년 상반기 R&D 개발자 (병역특례 가능/경력 무관)', 'company': '네오스텍', 'l
+ocation': '인천 연수구', 'link': 'http://www.ideed.com/viewjob?jk=754be9e3d78fa80
+2'}, {'title': '빅데이터, 인공지능(AI) 외 신입/경력 인턴', 'company': '스칼라웍스
+', 'location': '대한민국', 'link': 'http://www.ideed.com/viewjob?jk=dfb20fa220f3c
+478'}, {'title': 'Field Application YieldStar Competence Engineer', 'company': 'A
+SML', 'location': '대한민국', 'link': 'http://www.ideed.com/viewjob?jk=3ee73b74de
+360c58'}, {'title': '2021년도 국토안전관리원 제기간제 근로자', 'company': '국토안
+전관리원', 'location': '경기도', 'link': 'http://www.ideed.com/viewjob?jk=c9f2f9c
+fc6bd0f16'}, {'title': 'Data Scientist', 'company': 'Garrett Advancing Motion', '
+location': '경기도', 'link': 'http://www.ideed.com/viewjob?jk=da5d4dd560fb6f85'},
+ {'title': '2021년 2월 경력사원', 'company': '세메스', 'location': '천안 서북구',
+ 'link': 'http://www.ideed.com/viewjob?jk=49486aa340e1db38'}, {'title': '2021년(
+주)쎄트렉아이 상반기 각 부문 신입/경력직', 'company': '쎄트렉아이', 'location': '
+대전 유성구', 'link': 'http://www.ideed.com/viewjob?jk=8d018b3956bbea98'}, {'titl
+e': '(광주취업맛집1위)2021년도 국비 기술교육생', 'company': '대한상공회의소 광주
+인력개발원', 'location': '광주 광산구', 'link': 'http://www.ideed.com/viewjob?jk=
+b95d00f1145e5ef3'}, {'title': '[NICE평가정보] 2021년 상반기 수시', 'company': '나
+이스평가정보', 'location': '대한민국', 'link': 'http://www.ideed.com/viewjob?jk=5
+6e128e4011f9d01'}, {'title': '2021년 IITP 주관 글로벌핵심인재양성 지원사업', 'com
+pany': '정보통신기획평가원', 'location': '대전 유성구', 'link': 'http://www.ideed
+.com/viewjob?jk=efb69a29d8bd7514'}, {'title': 'Data Scientist (KOREA)', 'company'
+: 'No Deviation Pte Ltd', 'location': '충청북도 청주', 'link': 'http://www.ideed.
+com/viewjob?jk=0d207415a075d21c'}, {'title': '데이터 분석 및 컨설팅 분야 (Python,
+ SAS, 빅데이터) 경력직', 'company': '한국정보기술단', 'location': '과천 과천시',
+'link': 'http://www.ideed.com/viewjob?jk=9fe4755841bec8ce'}, {'title': 'Field App
+lication Engineer', 'company': 'Quectel Wireless Solution Co,.LTD', 'location': '
+경기도 성남', 'link': 'http://www.ideed.com/viewjob?jk=68c314d4a02b84a6'}, {'titl
+e': 'SM파견 웹개발자', 'company': '유저해빗', 'location': '인천 서구', 'link': 'h
+ttp://www.ideed.com/viewjob?jk=69e29038ecc0f40f'}, {'title': '2021년 (신입) 전문
+연구요원 모집', 'company': 'NHN', 'location': '성남 판교역', 'link': 'http://www.
+ideed.com/viewjob?jk=9acc17c535b42959'}, {'title': '2021년도 한국알프스 수시', 'c
+ompany': '한국알프스', 'location': '광주 광산구', 'link': 'http://www.ideed.com/v
+iewjob?jk=0902a0487b3b69a9'}, {'title': '프랭클린템플턴투신운용 Junior Trader (Qu
+ant base 필수)', 'company': '프랭클린템플턴투신', 'location': '대한민국', 'link':
+ 'http://www.ideed.com/viewjob?jk=4adac8923476d038'}, {'title': '2021년 상반기 Py
+thon 경력', 'company': '매크로액트', 'location': '성남 분당구', 'link': 'http://w
+ww.ideed.com/viewjob?jk=0592fae45af22542'}, {'title': '2021년 한화시스템 방산부문
+ 경력사원', 'company': '한화시스템', 'location': '성남 분당구', 'link': 'http://w
+ww.ideed.com/viewjob?jk=dd6837145722038a'}, {'title': 'Engr, Apps Dev 2', 'compan
+y': 'KLA-Tencor', 'location': '대한민국', 'link': 'http://www.ideed.com/viewjob?j
+k=ab38178e6071aa0f'}, {'title': '2021 토스 전 계열사 대규모', 'company': '비바리
+퍼블리카', 'location': '서울 강남구', 'link': 'http://www.ideed.com/viewjob?jk=39
+e99c8ed1d40a8f'}, {'title': 'Application Engineer Consultant - HAV', 'company': '
+Mentor Graphics (Korea) LLC', 'location': '경기도 성남', 'link': 'http://www.idee
+d.com/viewjob?jk=68486bb7da29a05b'}, {'title': '[타다]데이터 분석가/사이언티스트'
+, 'company': '쏘카', 'location': '대한민국', 'link': 'http://www.ideed.com/viewjo
+b?jk=3330430ae94277db'}, {'title': '2021 Market Data Analyst - Seoul', 'company':
+ 'Bloomberg', 'location': '서울', 'link': 'http://www.ideed.com/viewjob?jk=e8a463
+0bec0783e8'}, {'title': '[이마트] 이마트 Data Scientist 경력직 모집', 'company':
+'신세계', 'location': '대한민국', 'link': 'http://www.ideed.com/viewjob?jk=106e23
+72b51da4be'}, {'title': '2021년 2월 IT분야 경력직원', 'company': '우리에프아이에
+스', 'location': '서울 마포구', 'link': 'http://www.ideed.com/viewjob?jk=51a9e497
+c5eef66c'}, {'title': '[전문연구요원] 상시 (전직)', 'company': '네이버랩스', 'loc
+ation': '경기도', 'link': 'http://www.ideed.com/viewjob?jk=14b591547a3b9df5'}, {'
+title': '빅데이터 분석(머신러닝/딥러닝) 컨설턴트 정규직', 'company': '디앤아이컨
+설팅', 'location': '서울 동대문구', 'link': 'http://www.ideed.com/viewjob?jk=e7cc
+2dd53f8b03b7'}, {'title': 'Engr, Tech Supp 3', 'company': 'KLA-Tencor', 'location
+': '대한민국', 'link': 'http://www.ideed.com/viewjob?jk=233bbfd9781e846d'}, {'tit
+le': '[전문연구요원] 빅데이터 엔지니어(신입/경력)', 'company': '웹젠', 'location'
+: '성남 분당구', 'link': 'http://www.ideed.com/viewjob?jk=3259e28d21f56288'}, {'t
+itle': 'Sr Systems Administrator I', 'company': 'Raytheon Intelligence & Space',
+'location': '대한민국', 'link': 'http://www.ideed.com/viewjob?jk=78f5465432356e17
+'}, {'title': 'AI/빅데이터/클라우드 분야 (인재 Pool)', 'company': 'LG유플러스', '
+location': '서울', 'link': 'http://www.ideed.com/viewjob?jk=be95b5718905880f'}, {
+'title': 'Applied Data Scientist', 'company': 'dunnhumby', 'location': '서울', 'l
+ink': 'http://www.ideed.com/viewjob?jk=f10a132f53b6307d'}, {'title': '전사 생산기
+술분야 경력사원', 'company': 'LG이노텍', 'location': '경기도 평택', 'link': 'http
+://www.ideed.com/viewjob?jk=7d85656bf08b8bf2'}, {'title': '2021 Global Data Inter
+nship - Seoul (Korean Speaker)', 'company': 'Bloomberg', 'location': '서울', 'lin
+k': 'http://www.ideed.com/viewjob?jk=18f62dc644a89e0c'}, {'title': '지능형자동차
+부품진흥원 인력', 'company': '지능형자동차부품진흥원', 'location': '대구 달성군',
+ 'link': 'http://www.ideed.com/viewjob?jk=fd0194167a01fed0'}, {'title': '[카카오
+커머스] 기술직군', 'company': '카카오커머스', 'location': '성남 분당구', 'link':
+'http://www.ideed.com/viewjob?jk=52f8fb3f7e662c5d'}, {'title': '펌웨어, C·C++ 경
+력 계약직', 'company': '아르비존', 'location': '인천 연수구', 'link': 'http://www
+.ideed.com/viewjob?jk=7a7e2f032c8599f9'}, {'title': '[4년제 대졸자 취업연계과정]
+융합 SW 바이오 분야, 전공무관, 취업율 92.7', 'company': '한국폴리텍대학분당융합기
+술교육원', 'location': '성남 분당구', 'link': 'http://www.ideed.com/viewjob?jk=24
+f7f205ae589c18'}, {'title': '(주)신세계아이앤씨 경력사원 상시', 'company': '신세
+계아이앤씨', 'location': '서울 중구', 'link': 'http://www.ideed.com/viewjob?jk=b5
+b88516a299bbb2'}, {'title': 'Life Actuarial Analyst (Intern) - Korea', 'company':
+ 'Willis Towers Watson', 'location': '서울', 'link': 'http://www.ideed.com/viewjo
+b?jk=b9b5a48d2121caca'}, {'title': 'Software Engineer - AI', 'company': 'GE Appli
+ances', 'location': '경기도 성남', 'link': 'http://www.ideed.com/viewjob?jk=b6f60
+e1ac5501c9c'}, {'title': '사내 및 서비스 보안 담당자 (경력)', 'company': '네오위
+즈', 'location': '대한민국', 'link': 'http://www.ideed.com/viewjob?jk=cd40cf786e3
+2f325'}, {'title': '[각 분야별] Java, MySQL, Python 외 정규직', 'company': '로제
+타텍', 'location': '성남 중원구', 'link': 'http://www.ideed.com/viewjob?jk=22880c
+1154a12433'}, {'title': 'AI 분야 경력', 'company': 'LG CNS', 'location': '서울특
+별시', 'link': 'http://www.ideed.com/viewjob?jk=c8bf4fa58999927f'}, {'title': '데
+이터 엔지니어(신입/경력)', 'company': '쏘카', 'location': '대한민국', 'link': 'ht
+tp://www.ideed.com/viewjob?jk=05aa5498d84c58e1'}, {'title': '데이터 사이언스(데이
+터 모델링 및 추천 모델링)', 'company': 'NHN', 'location': '성남 판교역', 'link':
+'http://www.ideed.com/viewjob?jk=da5c549bf1a76ded'}, {'title': 'Design Consultant
+, Staff', 'company': 'Synopsys', 'location': '대한민국', 'link': 'http://www.idee
+d.com/viewjob?jk=7e9a745cd8bdcbe3'}]
