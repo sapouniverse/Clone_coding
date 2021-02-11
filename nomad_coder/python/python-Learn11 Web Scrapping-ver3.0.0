@@ -76,7 +76,7 @@ def extract_indeed_jobs(last_pages):
     return jobs
 
 -------------------------------------------
-# 결과 : 잘 나온거겠지?
+# 결과 : 잘 나온거겠지? 우씨.. 홈페이지 이상해 
 
 Scrapping page 0
 Scrapping page 1
