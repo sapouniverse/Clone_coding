@@ -49,7 +49,7 @@ def extract_job(html):
 
     location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
 
-    job_id = html.find("h2",{"class":"title"}).find("a")["href"]   <--------- 대한민국은 좀 달라서 수정함
+    job_id = html.find("h2",{"class":"title"}).find("a")["href"]   <--------- 대한민국은 좀 달라서 수정함 # 근데 수정한게 틀린듯
     
 
     return {
