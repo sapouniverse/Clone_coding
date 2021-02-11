@@ -1,0 +1,85 @@
+main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+max_indeed_pages=extract_indeed_pages()
+
+indeed_jobs=extract_indeed_jobs(max_indeed_pages)
+
+print(indeed_jobs)
+
+
+
+
+
+indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+INDEED_URL = f"https://kr.indeed.com/jobs?q=python&limit={LIMIT}"
+
+
+def extract_indeed_pages():
+    result = requests.get(INDEED_URL)
+    soup = BeautifulSoup(result.text, "html.parser")
+    pagination = soup.find("div", {"class": "pagination"})
+
+    pages = pagination.find_all('a')
+    spans = []
+    for page in pages[:-1]:
+        spans.append(int(page.string))
+
+    max_page = spans[-1]
+
+    return max_page
+
+
+def extract_job(html):
+    title = (html.find("h2", {"class": "title"}))
+    title_anchor = title.find("a")["title"]
+--------------------------------------------------------------------  <---- company를 안 쓴 회사도 있어? 
+    company = html.find("span", {"class": "company"})
+    
+    
+    if company :                                                    <--- 있어서 나쁠건 없으니까 추가하긴 했는데, 당장 버그가 없어서 불필요해 보이는건 
+    
+    --------------------------------------                          <--- 근데 여기서 애초에 걸러준거 아니었나?
+    company_anchor = company.find("a")
+    if company_anchor is not None:
+        company = (company_anchor.string)                           <--- 위아래 if else로 묶어주는거면 이 부분은 싹 tap 처리 센스 지켜주기~
+    else:
+        company = (company.string)
+
+    company = company.strip()
+    --------------------------------------
+    
+    else:
+      company = None
+    
+--------------------------------------------------------------------
+    location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
+--------------------------------------------------------------------
+    job_id = html["data-jk"] 
+ 
+    return {
+        'title': title_anchor,
+        'company': company,
+        'location': location,
+        "link": f"http://kr.indeed.com/취업?q=python&limit=50&vjk={job_id}"
+    }
+
+
+def extract_indeed_jobs(last_pages):
+    jobs = []
+    for page in range(last_pages):
+
+      print(f"Scrapping page {page}")
+
+
+      result = requests.get(f"{INDEED_URL}&start={page*LIMIT}")
+      soup = BeautifulSoup(result.text, "html.parser")
+      results = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})
+      for result in results:
+          job = extract_job(result)
+          jobs.append(job)
+    return jobs
