@@ -1,0 +1,289 @@
+main.py
+
+from indeed import extract_indeed_pages, extract_indeed_jobs
+from stackoverflow import get_jobs as get_stackoverflow_jobs
+from save import save_to_file
+
+max_indeed_pages=extract_indeed_pages()
+indeed_jobs = extract_indeed_jobs(max_indeed_pages)
+
+#stackoverflow_jobs=get_stackoverflow_jobs()        <---------- 잘 작동하는지 일부만 볼거라서 일단 하나 끔
+
+jobs = indeed_jobs                                  <---------- 두 사이트를 합쳐서 보는게 최종 목적이지만 일단 지금은 하나만 볼게요
+save_to_file(jobs)                                  <---------- 4. 괄호 안에 jobs넣어서 
+
+
+
+
+
+save.py
+
+import csv
+
+def save_to_file(jobs):                  <----- 4. 괄호 안에 jobs넣어서 
+  file=open("jobs.csv", mode="w")        <---- 1. 파일을 열어줄거야. mode는 "쓰기" (읽기 모드도 있음) open하면 기존에 내용들은 싹 사라지고 그 위에 다시 얹는거임
+  writer=csv.writer(file)                <----- 2. 오픈한 파일을 file이라는 변수에 저장해서 csv로 작성해주는 writer를 만든거임
+  writer.writerow(["title", "company", "location", "link"])    <------ 3. 첫줄에 기록할 row는 제목, 회사명, 장소, 링크
+  for job in jobs:
+    writer.writerow(list(job.values()))   <----- 5. dictionary 기능 values(오직 값만 가져올 수 있음)
+    
+    <-------- print(type(job.values())) 해보면 array가 아니라 <class 'dict_values'> 라는걸 알 수 있다. 그래서 list로 받아주고
+    <-------- 그래서 for job in jobs 하면 jobs에 있는 각각의 job을 가지고 row를 작성할 것이라는 말
+     
+    
+  return
+  
+-------------------------
+# 결과 : indeed에 있는 것만 가져와도 
+
+title,company,location,link
+데이터 분석가/사이언티스트(신입/인턴 가능),쏘카,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=55584c627df1acaa
+EUV CS Competency Engineer,ASML,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=15eb7355628c349a
+Field Application YieldStar Competence Engineer,ASML,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=3ee73b74de360c58
+"빅데이터, 인공지능(AI) 외 신입/경력 인턴",스칼라웍스,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=dfb20fa220f3c478
+Data Scientist (KOREA),No Deviation Pte Ltd,충청북도 청주,http://kr.indeed.com/취업?q=python&limit=50&vjk=0d207415a075d21c
+2021년 IITP 주관 글로벌핵심인재양성 지원사업,정보통신기획평가원,대전 유성구,http://kr.indeed.com/취업?q=python&limit=50&vjk=efb69a29d8bd7514
+2021년도 국토안전관리원 제기간제 근로자,국토안전관리원,경기도,http://kr.indeed.com/취업?q=python&limit=50&vjk=c9f2f9cfc6bd0f16
+2021년(주)쎄트렉아이 상반기 각 부문 신입/경력직,쎄트렉아이,대전 유성구,http://kr.indeed.com/취업?q=python&limit=50&vjk=8d018b3956bbea98
+2021년 각 부문별 경력직 공개,SK디앤디㈜,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=60495f8f583de7aa
+(광주취업맛집1위)2021년도 국비 기술교육생,대한상공회의소 광주인력개발원,광주 광산구,http://kr.indeed.com/취업?q=python&limit=50&vjk=b95d00f1145e5ef3
+2021년 2월 경력사원,세메스,천안 서북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=49486aa340e1db38
+2021년도 한국알프스 수시,한국알프스,광주 광산구,http://kr.indeed.com/취업?q=python&limit=50&vjk=0902a0487b3b69a9
+프랭클린템플턴투신운용 Junior Trader (Quant base 필수),프랭클린템플턴투신,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=4adac8923476d038
+[NICE평가정보] 2021년 상반기 수시,나이스평가정보,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=56e128e4011f9d01
+Data Scientist,Garrett Advancing Motion,경기도,http://kr.indeed.com/취업?q=python&limit=50&vjk=da5d4dd560fb6f85
+"Engr, Tech Supp 3",KLA-Tencor,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=233bbfd9781e846d
+"Engr, Apps Dev 2",KLA-Tencor,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=ab38178e6071aa0f
+지능형자동차부품진흥원 인력,지능형자동차부품진흥원,대구 달성군,http://kr.indeed.com/취업?q=python&limit=50&vjk=fd0194167a01fed0
+[타다]데이터 분석가/사이언티스트,쏘카,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=3330430ae94277db
+2021년 2월 IT분야 경력직원,우리에프아이에스,서울 마포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=51a9e497c5eef66c
+2021 토스 전 계열사 대규모,비바리퍼블리카,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=39e99c8ed1d40a8f
+Sr Systems Administrator I,Raytheon Intelligence & Space,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=78f5465432356e17
+"[대성] 개발자 채용 | 앱개발,Java,Python,objective",대성 관심기업,전주 팔복동,http://kr.indeed.com/취업?q=python&limit=50&vjk=5d4ef5faadd96b30
+[이마트] 이마트 Data Scientist 경력직 모집,신세계,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=106e2372b51da4be
+[전문연구요원] 상시 (전직),네이버랩스,경기도,http://kr.indeed.com/취업?q=python&limit=50&vjk=14b591547a3b9df5
+"데이터 분석 및 컨설팅 분야 (Python, SAS, 빅데이터) 경력직",한국정보기술단,과천 과천시,http://kr.indeed.com/취업?q=python&limit=50&vjk=9fe4755841bec8ce
+DGIST 2019년 제1차 계약직원 공개채용 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=4cd34228af5013fd
+스테코 부문별 신입 및 경력사원,스테코,천안 서북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=df607996134e60ff
+Machine Learning Researcher (Intern),Qualcomm Korea YH,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=0f7993638aee82bd
+"Design Consultant, Staff",Synopsys,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=7e9a745cd8bdcbe3
+2021 Market Data Analyst - Seoul,Bloomberg,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=e8a4630bec0783e8
+2021 Global Data Internship - Seoul (Korean Speaker),Bloomberg,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=18f62dc644a89e0c
+위촉연구원 (에너지통계연구팀),에너지경제연구원,울산,http://kr.indeed.com/취업?q=python&limit=50&vjk=58aeb0762366a605
+[고경력자의 경우 시간단축] 홈페이지 개발 및 관리 웹프로그래머,규,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=44b27e9dde454c6a
+사내 및 서비스 보안 담당자 (경력),네오위즈,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=cd40cf786e32f325
+데이터 엔지니어(신입/경력),쏘카,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=05aa5498d84c58e1
+Applied Data Scientist,dunnhumby,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=f10a132f53b6307d
+글로벌 소셜카지노 서비스 해외사업 담당자 (경력),네오위즈,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=57dead75c6dee2c1
+[누구랑 라라랑] (주)라라와 함께할 웹프로그래머,라라,부산,http://kr.indeed.com/취업?q=python&limit=50&vjk=d29856ba80e4bc98
+퀀트운용팀 (사원-대리급),신한비엔피파리바자산운용,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=9040dba1c8db2a5d
+"링크캠퍼스 웹개발, 웹마스터 외 신입/경력 정규직",링크캠퍼스,광주 동구,http://kr.indeed.com/취업?q=python&limit=50&vjk=73d2d489b37dcf4a
+(주)신세계아이앤씨 경력사원 상시,신세계아이앤씨,서울 중구,http://kr.indeed.com/취업?q=python&limit=50&vjk=b5b88516a299bbb2
+[EY한영] 금융감사본부 Data Analytics 전문 경력직 모집,Ernst & Young,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=e934bb33ef71dacb
+글로벌 소셜카지노 부문 사업PM,네오위즈,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=4665562997b87ff0
+2021년 (신입) 전문연구요원 모집,NHN,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=9acc17c535b42959
+AI 분야 경력,LG CNS,서울특별시,http://kr.indeed.com/취업?q=python&limit=50&vjk=c8bf4fa58999927f
+소형전지사업부/기술혁신센터,삼성SDI,충청남도 천안,http://kr.indeed.com/취업?q=python&limit=50&vjk=089931931a0474d5
+Perception Software Engineer - Autonomous Vehicles,NVIDIA,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=94e6b51a16f4a0f6
+Application Engineer Consultant - HAV,Mentor Graphics (Korea) LLC,경기도 성남,http://kr.indeed.com/취업?q=python&limit=50&vjk=68486bb7da29a05b
+지스트 블록체인인터넷경제연구센터 계약직(연구원),광주과학기술원,광주 북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=cd2ef993ee5c8d3f
+Software Engineer - AI,GE Appliances,경기도 성남,http://kr.indeed.com/취업?q=python&limit=50&vjk=b6f60e1ac5501c9c
+전사 생산기술분야 경력사원,LG이노텍,경기도 평택,http://kr.indeed.com/취업?q=python&limit=50&vjk=7d85656bf08b8bf2
+Developer / Designer recruit,마이뮤직테이스트,서울 논현동,http://kr.indeed.com/취업?q=python&limit=50&vjk=55a19c92c845685e
+AI/빅데이터/클라우드 분야 (인재 Pool),LG유플러스,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=be95b5718905880f
+"[4년제 대졸자 취업연계과정] 융합 SW 바이오 분야, 전공무관, 취업율 92.7",한국폴리텍대학분당융합기술교육원,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=24f7f205ae589c18
+2021년 상반기 Python 경력,매크로액트,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=0592fae45af22542
+NAVER IDC 서버 운영/관리(춘천),NIT Service,춘천 동면,http://kr.indeed.com/취업?q=python&limit=50&vjk=de567c4b6b588c4c
+소프트웨어 부문,맥시멈코퍼레이션,경상남도 진주,http://kr.indeed.com/취업?q=python&limit=50&vjk=8df5412c2beb197f
+Field Application Overlay Competence Engineer,ASML,경기도 평택,http://kr.indeed.com/취업?q=python&limit=50&vjk=1e55c69312e7685f
+Life Actuarial Analyst (Intern) - Korea,Willis Towers Watson,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=b9b5a48d2121caca
+[전문연구요원] 빅데이터 엔지니어(신입/경력),웹젠,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=3259e28d21f56288
+데이터 분야 경력,LG CNS,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=010d38b18b07b6bb
+[Search] Knowledge Base Applications (신입),네이버,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=23dfc13905f7fcc0
+빅데이터 분석(머신러닝/딥러닝) 컨설턴트 정규직,디앤아이컨설팅,서울 동대문구,http://kr.indeed.com/취업?q=python&limit=50&vjk=e7cc2dd53f8b03b7
+"[각 분야별] Java, MySQL, Python 외 정규직",로제타텍,성남 중원구,http://kr.indeed.com/취업?q=python&limit=50&vjk=22880c1154a12433
+"빅데이터, Python 외 신입 정규직",주)씽크풀,서울 영등포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=f91bdb1160ad64d2
+"연구개발, it개발 신입/경력 정규직",포엔,대전 유성구,http://kr.indeed.com/취업?q=python&limit=50&vjk=c3c9f36cd3a8c314
+[카카오커머스] 기술직군,카카오커머스,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=52f8fb3f7e662c5d
+데이터 사이언스(데이터 모델링 및 추천 모델링),NHN,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=da5c549bf1a76ded
+"웹개발, Python 외 신입/경력 계약직",쿠바로엠앤씨,서울 강서구,http://kr.indeed.com/취업?q=python&limit=50&vjk=84fd9f9deb6105b0
+[취업연계교육]전액무료 IT교육받고 취업하자,휴먼교육센터,청주 흥덕구,http://kr.indeed.com/취업?q=python&limit=50&vjk=ce3e13c2bc8da256
+"네모파트너즈비에이 데이터 분석가 신입,경력",네모파트너즈비에이,서울 영등포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=3fbbb0a082dd1ff9
+Customer Operations Engineering Manager,Success Korea,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=8a15326f80e07c08
+[대구] 빅데이터 개발 연구원,드림아이디어소프트,대구 동구,http://kr.indeed.com/취업?q=python&limit=50&vjk=623d7d0a12068235
+2021년 상반기 R&D 개발자 (병역특례 가능/경력 무관),네오스텍,인천 연수구,http://kr.indeed.com/취업?q=python&limit=50&vjk=754be9e3d78fa802
+MI(Market Intelligence)담당 마케팅 전략 경력사원,LG전자,서울 영등포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=54e0d08c99dcf507
+"빅데이터 전문가, 클라우드 분야 IT 전문가 취업교육",한국기술교육직업전문학교,부산 동래구,http://kr.indeed.com/취업?q=python&limit=50&vjk=4b3017286dd4fc26
+정보보안 담당자,Nexon,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=eeb9fe1c361f0758
+(주)넷타겟 연구원 (웹프론트엔드 개발자),넷타겟,대전 유성구,http://kr.indeed.com/취업?q=python&limit=50&vjk=0feb2770202a5be1
+NAVER IDC 서버 운영/관리(가산),NIT Service,서울 가산동,http://kr.indeed.com/취업?q=python&limit=50&vjk=70fccff4d30cb6bf
+고등광기술연구소 전문연구요원,광주과학기술원,광주 북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=7c19ff88836f8869
+[개발자] 꿈 찾아드립니다. 저희와 함께하세요.,ICON,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=7e94b666d8fbe2d0
+Consultant - Identity & Security,Microsoft,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=f71d35f5dff01c45
+[이마트] 이마트 ML Engineer 경력직 모집,신세계,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=7f3e824eab01a741
+"Application Engineer South Korea (Physics, EE)",Zurich Instruments,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=444320d2e49672dc
+추천 시스템 소프트웨어 엔지니어,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=07375dc4e800dfa9
+"솔루션 개발자, 품질인력 채용",한화그룹,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=ddd1f037549e47a2
+사물인터넷(IoT) 개발자 (하드웨어 및 소프트웨어),큐빅스,경기도 파주,http://kr.indeed.com/취업?q=python&limit=50&vjk=a4ade495ab488c6f
+DGIST 제2차 계약직 연구원 채용공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=2cfd15907402c5cc
+[브랜디] 경영본부/사업본부/개발직군 신입 및 경력,브랜디,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=cd5ca556791f1f79
+[Janssen] Data Scientist,Johnson & Johnson Family of Companies,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=4bd70fb8a220d90d
+추천 통계분석/데이터사이언티스트,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=bfe0f5ac4f32ec89
+전기전자컴퓨터공학부(바이오컴퓨팅연구실) 위촉연구원,광주과학기술원,광주 북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=98c2229e57d4ee1f
+전문연구요원 (병역특례) 수시 (AI / HW 분야),딥엑스,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=78e99625e5de3c95
+"하드웨어, 소프트웨어 외 신입/경력 정규직",유닉트,경기도 양주,http://kr.indeed.com/취업?q=python&limit=50&vjk=7639fede84396f4a
+기술 인턴 인공지능 응용 연구/개발 인턴,써로마인드로보틱스,서울 관악구,http://kr.indeed.com/취업?q=python&limit=50&vjk=71c47ac87bb4087e
+Solutions Engineer,f5,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=661a80939b1acd30
+"금융 데이터 분석 엔진, 로보어드바이저 개발자",에스비씨엔,서울 영등포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=649ccf047c868778
+데이터 분석가 모집,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=092d062a6faa7139
+DGIST 동반진단의료기술융합연구실 계약직 연구원 공개 초빙 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=cb32ed51c4e0c7ad
+Plat.B 추진단 AID팀 Machine Learning&AI 정규직,이투스교육,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=f611a72cc9b1761e
+"[Search] 파파고 머신러닝(자연어처리, 컴퓨터비전) 엔지니어 신입/경력",네이버,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=e9d6c53d8915adf6
+데이터 분석가,스포카,부산 해운대구,http://kr.indeed.com/취업?q=python&limit=50&vjk=90e77f4d6043c724
+[K디지털무료교육] 빅데이터분석 AI활용 디지털트랜스포메이션 교육생 (2차),한경닷컴,서울 영등포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=d506db8d8e7637bd
+Python Programmer,Mofac,서울 서초구,http://kr.indeed.com/취업?q=python&limit=50&vjk=df21e3bb5d773616
+신한AI 인공지능(AI) 인력,신한에이아이,서울 영등포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=a2b8aae664300392
+2월 11번가 Backend 개발 경력공채,십일번가,서울 중구,http://kr.indeed.com/취업?q=python&limit=50&vjk=42006c8f26b8f263
+보안,NHN,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=810816c790317a08
+현대무벡스 경력사원 상시,현대무벡스,서울 종로구,http://kr.indeed.com/취업?q=python&limit=50&vjk=d4c52ba1a491a8b9
+[교보라이프플래닛생명] 서비스기획/개발부문 신입/경력,교보라이프플래닛생명보험,서울 영등포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=bf5c07ed37d6a417
+자율주행연구팀 연구사원 (신입/경력),소네트,대구 달성군,http://kr.indeed.com/취업?q=python&limit=50&vjk=02bcd7b6412d1db9
+[취업연계 무료교육] 차세대 스마트공장 현장 엔지니어 전문가 양성과정 수강생,한국산업기술협회,서울 금천구,http://kr.indeed.com/취업?q=python&limit=50&vjk=5c88acd09f153fc3
+[NIT Service] NAVER IDC 서버 운영/관리(춘천),엔아이티서비스,강원도 춘천,http://kr.indeed.com/취업?q=python&limit=50&vjk=35f72aeb142bceaa
+"서버/클라이언트 Application 개발, java, 웹개발 기술연구소 연구원",굿링크,경상남도 진주,http://kr.indeed.com/취업?q=python&limit=50&vjk=0019db89120acd75
+DGIST 계약직 연구원 및 일반직원 초빙 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=65da831cb9d5a6b5
+"웹개발자, 모바일앱개발 외 신입/경력 정규직, 계약직",다온에스엔씨,서울 광진구,http://kr.indeed.com/취업?q=python&limit=50&vjk=79c3fd29f2a08496
+(주)쓰리에치솔루션 부문별 신입/경력 직원,쓰리에치솔루션,청주 흥덕구,http://kr.indeed.com/취업?q=python&limit=50&vjk=bc4c4f6e75fc8a77
+[넥슨·엔씨소프트등] 자바·파이썬 응용SW 개발자 양성교육 · 동종업계 신입 초봉5천1,한국직업전문학교,서울 구로구,http://kr.indeed.com/취업?q=python&limit=50&vjk=4698c0e2364b5576
+MBC 방송IT센터 소프트웨어 개발 담당,문화방송,서울 마포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=ae8d56c7b5aa16c7
+FPGA 플랫폼 엔지니어 (딥러닝 하드웨어 프로세서 개발),딥엑스,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=e5448ffc7d6ecf02
+[청년디지털일자리] 파이썬(Excel 활용) 업무 전자 부품 등록/관리,성호전자,서울 금천구,http://kr.indeed.com/취업?q=python&limit=50&vjk=9a0695002b7ffb96
+[조선해양/토목/기계] 엔지니어,포어시스,서울 마포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=f70127e91faf757c
+"MVP 개발 엔지니어(서버, 웹프론트) (정규직, 계약직, 프리랜서)",더테스터,대전 중구,http://kr.indeed.com/취업?q=python&limit=50&vjk=1748baa27965fdbf
+Field AI Engineer,Graphcore,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=9e1861e691426a98
+"Software Engineer, Machine Learning",Google,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=4f319862856fe9c1
+생산기술연구팀 개발자 연구원,에이스트로닉스,대전 유성구,http://kr.indeed.com/취업?q=python&limit=50&vjk=3805907e10c94ad1
+Application Engineer ( Silicondash),Synopsys,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=3c516818303c4d51
+DGIST 미래자동차융합연구센터 계약직 연구원 및 연수연구원 공개 초빙 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=74cf47be676133ff
+블록체인인터넷경제연구센터 위촉연구원,광주과학기술원,광주 북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=3e80435be74cd28f
+Lead Product Engineer - Liberate,Cadence Design Systems,경기도,http://kr.indeed.com/취업?q=python&limit=50&vjk=ffac42e32db26233
+Data Scientist,Toss,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=7af6301dc691d3ab
+Security Engineer (모의해킹/취약점 점검),Toss,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=241ae1e7499c461c
+지스트 블록체인인터넷경제연구센터 계약직(박사급 연구원),광주과학기술원,광주 북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=7609462290636e5d
+각 분야별 인재 Pool 등록,지투알,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=e631d46f39019d13
+Modem QA Contractor,聯發科技,경기도 성남,http://kr.indeed.com/취업?q=python&limit=50&vjk=bd5ce1a809ec610a
+Data Scientist(CSS 모델링),Toss,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=3933762f9f06df56
+리서치분야 석사이상 경력직,케이지제로인,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=b602108c31558329
+NAVER IDC 서버 운영/관리(평촌/부산),NIT Service,안양 동안구,http://kr.indeed.com/취업?q=python&limit=50&vjk=18b288e9021d899f
+카카오 데이터의 가치를 발굴할 데이터 분석가 모집,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=2b2dcd3ffe3d53df
+21년 전문연구요원 (AI엔지니어),Nexon,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=69ab0f58743cb713
+연구소 개발부문 연구원 직원 (회로설계/하드웨어설계/머신비전/이미지프로세싱),모든,경기도 광명,http://kr.indeed.com/취업?q=python&limit=50&vjk=793d3bdf17f3593f
+메시지발송 플랫폼 개발자,Nexon,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=eaee1538d8cc832f
+DBA 엔지니어,쏘카,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=d748c217f78dbd58
+SM파견 웹개발자,유저해빗,인천 서구,http://kr.indeed.com/취업?q=python&limit=50&vjk=69e29038ecc0f40f
+Healthcare Real World Data Analyst 담당자,IQVIA,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=a746de9c7a6168ef
+기후 분석&모델링연구실 시간제연구원,광주과학기술원,광주 북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=78d1ec77f4a5e0dc
+qe 소프트웨어 엔지니어,에이치알 코리아,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=85687b250386c4be
+"Java, Python 영상툴 개발자",에이아이메이커,서울 마곡동,http://kr.indeed.com/취업?q=python&limit=50&vjk=cae2de07045cfb2b
+2020년 하반기 영업/기획/마케팅/개발 부문,아우토크립트,서울 영등포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=4e91309fc89e9534
+[빅데이터분석] 데이터 사업 기획 및 운영 담당자,한국카카오은행,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=f258bcb2c6f24dc9
+(주)에이테크와 함께할 솔루션 개발팀장/파트장,에이테크,울산 중구,http://kr.indeed.com/취업?q=python&limit=50&vjk=5702c02123c8bd42
+21년 상반기 현대오트론 경력사원 수시,현대오트론,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=e91a6a5eb66c641f
+Customer Engineer,Microsoft,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=7d4bc2a107c6669b
+[검색] 프론트엔드 엔지니어 (전문연구요원 가능),버즈니,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=5bfcdbb81dd0d7be
+Data Science 컨설턴트 - 글로벌 컨설팅펌,에스에프인촌,서울 서초구,http://kr.indeed.com/취업?q=python&limit=50&vjk=da707a546a13ee22
+cctv영상처리 s/w 개발자,삼성g2b,부산 부산진구,http://kr.indeed.com/취업?q=python&limit=50&vjk=da4542ce5a1010ab
+[웹젠] 보안솔루션 운영(경력),웹젠,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=c74b8591c7e59774
+[고경력자의 경우 시간 단축] (주)라라와 함께할 개발자,라라,부산 수영구,http://kr.indeed.com/취업?q=python&limit=50&vjk=8dff939e6fd66f17
+(주)엘솔루 웹 개발자,㈜엘솔루,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=99695c193990e56a
+추천 시스템 연구/개발,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=be6c1f03fa566f8e
+Software Architecture 설계 엔지니어,딥엑스,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=7df915e1f0f86b2d
+[라젠]2021년 지역주도형 일자리사업「4차 산업혁명 IT인력 일자리창출 지원」인공지능 솔루션 개발 분야,라젠,광주 화정동,http://kr.indeed.com/취업?q=python&limit=50&vjk=0e675e6e150d8798
+Data Analyst,Toss,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=6a062e6906aadca2
+2021-2회 인지 및 사회성 연구단 선임연구원,기초과학연구원,대전,http://kr.indeed.com/취업?q=python&limit=50&vjk=e2af029a81ae7506
+[AI R&D] ML 엔지니어 모집,엔씨소프트,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=4f61daa017b07bae
+2019 Military Service Exemption Position Available at the IBS CMCM (Synthetic Organic/Polymer Chemistry OR Theoretical Study of Carbon and Related Materials),울산과학기술원,울산 언양읍,http://kr.indeed.com/취업?q=python&limit=50&vjk=8becbf73bbda7c96
+"데이터 분석 솔루션 기반 웹프로그래머(Java, JSP, Python, R)",비즈플러그,서울 송파구,http://kr.indeed.com/취업?q=python&limit=50&vjk=4ac4e8a20b8c6dec
+퍼즐데이터 역량있는 데이터 분석가,주식회사퍼즐데이터,서울 역삼동,http://kr.indeed.com/취업?q=python&limit=50&vjk=116009dbf59211ed
+[데이터 플랫폼]데이터 엔지니어 (전문연구요원 가능),버즈니,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=ceb8243bc8ae3c35
+[이마트] 이마트 Data Engineer 경력직 모집,신세계,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=e61c9e2f3acea4ad
+DGIST HumanLAB(인간중심지능형시스템연구실) 연수연구원 채용 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=54ce47c4db974112
+[인재풀] 아티스트,Electronic Arts,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=aac8e9355cb855ac
+[한국컴패션] 데이터분석가 정규직 #사무직,서울,서울 한남동,http://kr.indeed.com/취업?q=python&limit=50&vjk=bffe438c88d567ad
+[AI/Lab] AI 백엔드 엔지니어 (마케팅 분야),버즈니,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=1d2b22a2bcd3256f
+Machine Learning Researcher – On-device AI theory and algorithm,Qualcomm Korea YH,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=c2f5f53dc48263eb
+데이터 분석/처리 플랫폼 개발,NHN,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=46975ee759c13b8a
+시스템엔지니어 신입/경력 정규직,메에먼트,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=5a349ecd72559c9f
+[베스파] 데이터 분석(Data Analyst),베스파,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=2f45b4d9ff507a82
+"Field Applications Engineer, Audio",Dolby,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=7cb5c3076d1701db
+Back-end Engineer (Python),Soomgo,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=752a4b5d63eac97c
+플랫폼쉴드 시스템 개발,Nexon,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=b2661d357cf26c8f
+MongoDB Engineer 모집,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=2695294aea6dc3b6
+콘텐츠서비스개발- 데이터엔지니어,Nexon,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=a4b72e38fb50bde0
+블록체인 노드 DevOps(구축 및 운영) 담당자 (경력),네오위즈,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=6b65e8aeb42661de
+지표구축,아프리카TV,경기도 성남,http://kr.indeed.com/취업?q=python&limit=50&vjk=e0e37aaebc73dde3
+광학솔루션사업부 경력사원 (렌즈개발/Actuator개발/Digital Transformation 분야),LG이노텍,경기도 안산,http://kr.indeed.com/취업?q=python&limit=50&vjk=34e05b9e4079e7d6
+데이터 엔지니어 및 사이언티스트,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=d8a8869ab092f731
+데이터 분석,아프리카TV,경기도 성남,http://kr.indeed.com/취업?q=python&limit=50&vjk=7fdcd7a7457b1e93
+"Technical Operations Manager, Premium Support",Amazon Web Services Korea LLC,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=af725f1c975c7581
+Technical Specialist,Microsoft,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=f4c784e2cb1ecbbb
+DGIST-ETH 마이크로로봇연구센터 계약직 연구원 공개 초빙 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=f19b8cb8881146ea
+DGIST 미래자동차융합연구센터 계약직 연구원 공개 초빙 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=403c866fc5f43cc3
+AML 데이터 분석/모델링 전문가,네이버,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=30352a55b8205ca8
+[검색] 백엔드 엔지니어 (전문연구요원 가능),버즈니,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=9fe3ec26cead9adc
+[L'Oreal Korea] IT Business Analyst,L'Oreal,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=db26147e9223e38a
+지구·환경공학부 환경시스템공학 연구실 위촉연구원,광주과학기술원,광주 북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=d425b24146af3fa1
+"데이터 가치를 함께 발굴하실 머신러닝, 통계 모델링 전문가 모집",카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=d1e75364ef505c68
+FDS 데이터 분석 담당자,네이버,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=b2ef9dc168ce46f0
+Machine Learning Researcher – Audio and Speech,Qualcomm Korea YH,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=aea07d26df8ae423
+[라젠][청년디지털일자리지원사업] 빅데이터 수집 및 정보처리,라젠,광주 화정동,http://kr.indeed.com/취업?q=python&limit=50&vjk=8291f4cc1fc52912
+Junior Quant Trader,Byzantine Partners,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=25725b3c0e607311
+Data Engineer(신입),PUBG,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=210243e0776dc26f
+DGIST 동반진단의료기술융합연구실 계약직 연구원 공개 채용 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=776ccceeaf6fe02e
+Web Full-Stack Engineer,NVIDIA,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=edf8d34357ba0747
+AI 개발자,넷아이디,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=b8c6ad4bd3f32e3d
+8퍼센트 개발자 (신입/경력),8퍼센트,서울 종로구,http://kr.indeed.com/취업?q=python&limit=50&vjk=8af26b37623864c4
+머신러닝 개발자 모집,넷마블,서울 구로구,http://kr.indeed.com/취업?q=python&limit=50&vjk=481f953ccaa4bc96
+Cloud Solution Architect,Microsoft,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=d146cfe5dea6a5fa
+데이터분석팀 일반연구원(계약직) 채용,동국대학교,서울 필동,http://kr.indeed.com/취업?q=python&limit=50&vjk=a4e8e1be8cfd92f4
+[단기계약직] 인공지능 기술 개발을 위한 언어 데이터 구축자 모집,엔씨소프트,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=9ccd0db79695e27e
+"MD, 플랫폼 개발자",슬래디티,경기도 의정부,http://kr.indeed.com/취업?q=python&limit=50&vjk=f5b0e4923baeca2f
+Autonomous Driving 분야 엔지니어,포티투닷,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=1e974ff27c6eb340
+[TmaxBI/기술] 빅데이터 플랫폼 QA,티맥스소프트,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=8dfcac57b93113ea
+인공지능(AI) 프로그래밍 교육 소프트웨어 시니어 개발자,에이쳐,용인 처인구,http://kr.indeed.com/취업?q=python&limit=50&vjk=efb97a2335823cbd
+[AI R&D] 플랫폼 개발 엔지니어 모집,엔씨소프트,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=52d863eb7e90b1af
+(주)에이쳐 인공지능(AI) 프로그래밍 교육 커리큘럼 기획 및 컨텐츠 개발,에이쳐,용인 처인구,http://kr.indeed.com/취업?q=python&limit=50&vjk=46040f2836467e84
+전문연구요원 (병역특례) 수시 (AI / SW 분야),딥엑스,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=d83fc0dd2641f483
+[AI/Lab] AI 백엔드 엔지니어 (전문연구요원 가능),버즈니,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=dbe3257e487e5814
+카카오 광고 서비스 알고리즘 및 시스템 개발,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=afe92c03320fe1b3
+Senior Solutions Engineer,Confluent,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=6a399a2c059ebbb1
+"Systems Engineer, Ground Truth Automation",NVIDIA,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=194bbf20319d9f24
+Linux/Python/PHP/MySQL/백엔드 정규직 경력,일루미나리안,용인 보정동,http://kr.indeed.com/취업?q=python&limit=50&vjk=04d685fc70b67d4e
+(주)신세계아이앤씨 AI/클라우드 부문 상시,신세계아이앤씨,서울 중구,http://kr.indeed.com/취업?q=python&limit=50&vjk=01296857655fc85f
+정보전략 담당자 모집,넷마블,서울 구로구,http://kr.indeed.com/취업?q=python&limit=50&vjk=70767c5d54149524
+Data Specialist (Scientist&&Engineer),아우름플래닛,서울 마포구,http://kr.indeed.com/취업?q=python&limit=50&vjk=dd4d8e59a4a9265d
+데이터 사이언티스트 모집,카카오,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=0064deb5fa9cbce0
+SW Engineer for R&D Extension Korea,Applied Materials Inc.,경기도 화성,http://kr.indeed.com/취업?q=python&limit=50&vjk=fb3395b4ba6b4f61
+DGIST 동반진단의료기술융합연구실 계약직 연구원 채용 공고,대구경북과학기술원,대구 현풍면,http://kr.indeed.com/취업?q=python&limit=50&vjk=db55ee61f98e6816
+시스템 엔지니어링,NHN,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=5cb14c0712a6c4c1
+8퍼센트 경력 개발자,8퍼센트,서울 종로구,http://kr.indeed.com/취업?q=python&limit=50&vjk=464ef95516a5fa5c
+System Engineer,Toss,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=80dea8b8353c3ee0
+Security Engineer (모의해킹),Toss,서울 강남구,http://kr.indeed.com/취업?q=python&limit=50&vjk=0b03d57e900ac140
+클라우드 오퍼레이션 엔지니어,NHN SOFT,성남 판교역,http://kr.indeed.com/취업?q=python&limit=50&vjk=8bcc7807085700a7
+게임 데이터 분석가,쿡앱스,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=5a299cf580491445
+차세대 광-무선 가입자망 연구센터 연구전담교수,광주과학기술원,광주 북구,http://kr.indeed.com/취업?q=python&limit=50&vjk=05439002712f8135
+웹개발_경력자(3년 이상),더핏,수원 권선구,http://kr.indeed.com/취업?q=python&limit=50&vjk=c6824f6f0c312d01
+데이터 엔지니어,RIDI Corp,서울,http://kr.indeed.com/취업?q=python&limit=50&vjk=733c04bade808d8a
+자연어처리(NLP) 개발자,바운티팜,서울 서초구,http://kr.indeed.com/취업?q=python&limit=50&vjk=35e009befbd56015
+AML 데이터 분석/모델링 전문가 모집,네이버파이낸셜,성남 정자동,http://kr.indeed.com/취업?q=python&limit=50&vjk=f0df38dd41b4447f
+System SW 엔지니어,딥엑스,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=fc037709d0770796
+더존 ICT그룹 헬스케어솔루션 사업직군,더존비즈온,서울 중구,http://kr.indeed.com/취업?q=python&limit=50&vjk=6dc47bfa91abf550
+"(주)트윔 개발자(경력직) 빅데이터,영상처리,머신비전/AI 딥러닝",트윔,경기도 화성,http://kr.indeed.com/취업?q=python&limit=50&vjk=a0dda478567db352
+에이쳐 인공지능(AI) 프로그래밍 교육 커리큘럼 기획 및 컨텐츠 개발,에이쳐,용인 처인구,http://kr.indeed.com/취업?q=python&limit=50&vjk=1393e3df4db66927
+엔미디어플랫폼 데이터베이스 관리자 (DBA) 인재 안내,리더스소프트,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=d0ca27a97ddf91f9
+Field Data Scientist,Success Korea,경기도,http://kr.indeed.com/취업?q=python&limit=50&vjk=2892c67308e87f01
+PhD Scholarships in Membrane Water Treatment Technology,Kyungpook National University,대한민국,http://kr.indeed.com/취업?q=python&limit=50&vjk=e6c30cd499a8ee80
+[KSTEC] 2021년 경력 사원 (SW개발자),지식시스템,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=8525eb04feb95444
+1분기 개발자 (신입/경력),이스트게임즈,서울 서초구,http://kr.indeed.com/취업?q=python&limit=50&vjk=6bfec9fa5d0c15f5
+게임이상탐지 분석/개발,Nexon,성남 분당구,http://kr.indeed.com/취업?q=python&limit=50&vjk=4ec305f59ce64060
+IT 개발자(백엔드) 경력직,스포츠데이터에볼루션,경기도 파주,http://kr.indeed.com/취업?q=python&limit=50&vjk=e15972f6e01cb7dc
