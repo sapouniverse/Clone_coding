@@ -1,0 +1,1002 @@
+stackoverflow.py
+
+import requests
+from bs4 import BeautifulSoup
+
+
+stackoverflow_URL = f"https://stackoverflow.com/jobs?q=python"
+
+
+def get_last_page():
+  result = requests.get(stackoverflow_URL)
+  soup=BeautifulSoup(result.text,"html.parser")
+
+  pagination = soup.find("div", {"class":"s-pagination"})
+  pages=pagination.find_all("a")
+  last_pages=pages[-2].get_text(strip=True)
+  return int(last_pages)
+
+
+def extract_job(html):
+  title=html.find("h2",{"class":"mb4"}).find("a")["title"]
+  company, location=html.find("h3",{"class":"fs-body1"}).find_all("span", recursive=False)   <----- fs-body1랑 mb4랑 같은거야? 일부러 바꾼거임
+  
+  
+  company = company.get_text(strip=True)        <------ 아까 print로 확인해서 이상없는거 봤으니까 앞으로 쓰기 편하라고 풀어서 정의한거임
+  location = location.get_text(strip=True)
+
+  print(company,location)
+  return{'title':title}
+
+
+
+
+def extract_jobs(last_pages):
+  jobs = []
+  for page in range(last_pages):
+    result=requests.get(f"{stackoverflow_URL}&pg={page+1}")
+    soup=BeautifulSoup(result.text,"html.parser")
+    results=soup.find_all("div", {"class":"-job"})
+    for result in results:
+      job = extract_job(result)
+      jobs.append(job)
+  return jobs
+
+
+def get_jobs():
+  last_page = get_last_page()
+  jobs = extract_jobs(last_page)
+  return jobs 
+  
+-------------------------------------
+# 결과 : fs-body1랑 mb4랑 같은게 맞는지 결과 
+
+.
+.
+.
+.
+.
+
+Roon Labs LLC No office location
+proactivaudio GmbH Vienna, Austria
+Robart GmbH Linz, Österreich
+JPMorgan Chase Bank, N.A. Mumbai, India
+Picnic Amsterdam, Netherlands
+Old Mission Capital, LLC Chicago, IL
+Trafilea No office location
+Zattoo Berlin, Germany
+Nexthink Prilly, Switzerland
+NewtonX New York, NY
+JPMorgan Chase Bank, N.A. Bengaluru, India
+UKG (Ultimate Kronos Group) No office location
+ENERCON GmbH Bremen, Deutschland
+SteepRock Inc No office location
+CareSolace Inc. Encinitas, CA
+Financial Technology Partners San Francisco, CA
+scoutbee GmbH Berlin, Germany
+DIGARC No office location
+HealthJoy No office location
+Captivation Software Fort Meade, MD
+Channable Utrecht, Netherlands
+Ströer Online Marketing Hamburg, Deutschland
+Arolla Paris, France
+Ambient Innovation: GmbH No office location
+Perch Security, Inc. No office location
+Advertima Berlin, Germany
+Octopus Energy London, UK
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+CareSolace Inc. Encinitas, CA
+Opinew No office location
+Cookpad Limited Bristol, UK
+Financial Technology Partners San Francisco, CA
+Zumper Providence, RI
+DIGARC No office location
+Medicines Discovery Catapult Alderley Edge, UK
+Captivation Software Fort Meade, MD
+BASF Köln, Deutschland
+bloomon Amsterdam, Netherlands
+Channable Utrecht, Netherlands
+Ströer Online Marketing Hamburg, Deutschland
+JPMorgan Chase Bank, N.A. Glasgow, UK
+Fashion Cloud Amsterdam, Netherlands
+Arolla Paris, France
+Ambient Innovation: GmbH No office location
+Longshot Systems Ltd London, UK
+Pagefreezer No office location
+Cazana London, UK
+Seez No office location
+ProSiebenSat.1 Media SE München, Deutschland
+Alasco München, Germany
+Advertima Berlin, Germany
+JPMorgan Chase Bank, N.A. Bengaluru, India
+YouGov No office location
+BairesDev LLC San Francisco, CA
+Tails.com Richmond, UK
+3D Hubs Amsterdam, Netherlands
+Scalable Path No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. London, UK
+Limehome GmbH Madrid, Spain
+Opinew No office location
+Itemize No office location
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Medicines Discovery Catapult Alderley Edge, UK
+Tails.com Richmond, UK
+BASF Köln, Deutschland
+Saphetor S.A. Athens, Greece
+CeleraOne GmbH Berlin, Deutschland
+Hearst Magazines New York, NY
+KAISER+KRAFT Europa GmbH Stuttgart, Deutschland
+Blackshark.ai GmbH Graz, Austria
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Agrando München, Germany
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Blackshark.ai GmbH Graz, Österreich
+Memri B.V No office location
+Hetzner Cloud GmbH Unterföhring, Deutschland
+JPMorgan Chase Bank, N.A. Mumbai, India
+Hetzner Cloud GmbH Unterföhring, Deutschland
+Scalable Path No office location
+JPMorgan Chase Bank, N.A. Mumbai, India
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Global Reach Consulting LLC Reston, VA
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+TelSmart Zagreb, Croatia
+Flow Traders Amsterdam, Netherlands
+Flashpoint No office location
+Modus Create No office location
+JPMorgan Chase Bank, N.A. London, UK
+tribe29 GmbH München, Deutschland
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Newark, DE
+Canonical No office location
+JPMorgan Chase Bank, N.A. London, UK
+JP Morgan Chase Herzliya, Israel
+GAF AG München, Deutschland
+Erias Ventures Annapolis Junction, MD
+Blackshark.ai GmbH Graz, Austria
+TileDB, Inc. Cambridge, MA
+KAISER+KRAFT Europa GmbH Stuttgart, Deutschland
+Memri B.V No office location
+UBIMET GmbH Wien, Österreich
+JPMorgan Chase Bank, N.A. London, UK
+Blackshark.ai GmbH Graz, Austria
+X-Team No office location
+Anyfin AB Stockholm, Sweden
+JPMorgan Chase Bank, N.A. London, UK
+Skalar Systems Graz, Austria
+Memri B.V No office location
+SAP Bengaluru, India
+Flow Traders Amsterdam, Netherlands
+Flashpoint No office location
+Geomagical Labs Mountain View, CA
+GAF AG München, Deutschland
+JPMorgan Chase Bank, N.A. Hyderabad, India
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Canonical No office location
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. London, UK
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Itemize Philadelphia, PA
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Mumbai, India
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Westerville, OH
+TileDB, Inc. Cambridge, MA
+JPMorgan Chase Bank, N.A. Mumbai, India
+UBIMET GmbH Wien, Österreich
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Version 1 No office location
+Zyte (formerly Scrapinghub) No office location
+Modus Create No office location
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+tribe29 GmbH München, Deutschland
+JP Morgan Chase Herzliya, Israel
+JPMorgan Chase Bank, N.A. Newark, DE
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Glasgow, UK
+StratavoviaTopDev Quận 1, Vietnam
+RIAG DIGITAL Wien, Austria
+JPMorgan Chase Bank, N.A. Bournemouth, UK
+Deutsche BankviaJWiderberg Inc. DBA Insight Resource Group New York, NY
+teckro Dublin, Ireland
+AMBOSS Berlin, Germany
+Kiwi.com Brno, Czechia
+The Meet Group No office location
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+QuantCo Karlsruhe, Germany
+JPMorgan Chase Bank, N.A. Houston, TX
+JPMorgan Chase Bank, N.A. Herzliya, Israel
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+OpsTalent Wrocław, Poland
+Overloop No office location
+Princeton Consultants Princeton, NJ
+Tenfifty AB Göteborg, Sweden
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. Mumbai, India
+Boyle Software No office location
+Version 1 No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Itemize Philadelphia, PA
+Mimecast London, UK
+ABOUT YOU GmbH Hamburg, Deutschland
+Fintel SAS Marseille, France
+JPMorgan Chase Bank, N.A. Mumbai, India
+Susten Capital Management Inc. Chuo City, Japan
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+RIAG DIGITAL Wien, Austria
+Hummingbot No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Canva Sydney, Australia
+Canonical Bratislava, Slovakia
+The Meet Group No office location
+brainbot Berlin, Germany
+Canonical Bratislava, Slovakia
+Schoolytics No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Draftable San Francisco, CA
+Tech9 Pune, India
+EverQuote Inc. No office location
+ABOUT YOU GmbH Hamburg, Deutschland
+EDF London, UK
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Delivery Hero SE Berlin, Germany
+Choco Berlin, Germany
+TIER Mobility GmbH Berlin, Deutschland
+Delivery Hero SE Berlin, Germany
+Iterative, Inc No office location
+JPMorgan Chase Bank, N.A. London, UK
+Cvedia PTE. LTD. No office location
+Otto (GmbH & Co KG) Hamburg, Deutschland
+Greenfield Partners No office location
+EverQuote Inc. No office location
+TIER Mobility GmbH Berlin, Deutschland
+Fashion Cloud Amsterdam, Netherlands
+Relaxdays GmbH Leipzig, Deutschland
+VIKTOR Rotterdam, Netherlands
+BrainGu Chantilly, VA
+ScoutAPM No office location
+Relaxdays GmbH Leipzig, Deutschland
+Channable Utrecht, Netherlands
+Fashion Cloud Amsterdam, Netherlands
+ENGIE Digital Paris, France
+tribe29 GmbH München, Deutschland
+Thinksurance Frankfurt am Main, Deutschland
+TrustYou Madrid, Spain
+Relaxdays GmbH Leipzig, Deutschland
+Thinksurance Frankfurt am Main, Deutschland
+Government Digital Service (GDS) London, UK
+Haufe Group Freiburg im Breisgau, Germany
+xe.gr (Xrysi Eukairia) Athina, Greece
+LeadIQ Singapore
+ScoutAPM No office location
+JBS Custom Software Solutions No office location
+Channable Utrecht, Netherlands
+xe.gr (Xrysi Eukairia) Athina, Greece
+JBS Custom Software Solutions No office location
+Arista Networks, Inc Dublin, Ireland
+LeadIQ Singapore
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+think-cell Berlin, Germany
+Cognitive Space Houston, TX
+Cazana London, UK
+Actio Berlin, Germany
+SmartNews Shibuya City, Japan
+TIB – Leibniz Information Centre for Science and Technology and University Library Hannover, Deutschland
+Hellebore Consulting Group, LLC Wright-Patterson Air Force Base, OH
+zooplus AG Madrid, Spain
+Cluby Helsinki, Finland
+Vail Systems Inc. Deerfield, IL
+Otto (GmbH & Co KG) Hamburg, Deutschland
+Charles GmbH Berlin, Germany
+HYDROGRID GmbH Vienna, Austria
+Imaginary Cloud Lisbon, Portugal
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+Sector Labs Cluj-Napoca, Romania
+Armored Things Boston, MA
+QuantCo Berlin, Germany
+UCARE.AI Singapore
+BenchSci Toronto, ON, Canada
+Bloomberg LP New York, NY
+ShareStream No office location
+Esri Redlands, CA
+ShareStream No office location
+Secureframe San Francisco, CA
+ArcaScience Paris, France
+Wonder Berlin, Germany
+Imaginary Cloud Lisbon, Portugal
+causaLens London, UK
+AWAZEviaMRJ Recruitment Manchester, UK
+AIM No office location
+Pretia Technologies, Inc. Shinagawa City, Japan
+Rivian Palo Alto, CA
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Tynker No office location
+Gordian Software No office location
+Eturnity St. Gallen, Schweiz
+Skyword/TrackMaven Boston, MA
+Omnivore Technologies Clearwater, FL
+GOintegro No office location
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+ByteDance Singapore
+Plecto Warsaw, Poland
+Safran Vectronix AG Heerbrugg, Switzerland
+Jimdo Hamburg, Germany
+Smart Steel Technologies GmbH Berlin, Germany
+JPMorgan Chase Bank, N.A. Mumbai, India
+Techcyte, Inc. Orem, UT
+Plecto Warsaw, Poland
+Safran Vectronix AG Heerbrugg, Switzerland
+QuantCo Cologne, Germany
+Sitowise Espoo, Finland
+Sofía Mexico City, Mexico
+Jimdo Hamburg, Germany
+Smart Steel Technologies GmbH Berlin, Germany
+OMICRON electronics GmbH Klaus, Austria
+Arolla Paris, France
+Smart Energy Lab Lisbon, Portugal
+Vouched Seattle, WA
+freiheit.com technologies gmbh Hamburg, Germany
+Singular Genomics San Diego, CA
+Macabacus New York, NY
+Gordian Software No office location
+Secureframe San Francisco, CA
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Frequenz Energy-as-a-Service GmbH Berlin, Germany
+Tidepool No office location
+Cambly San Francisco, CA
+Lodestone Menlo Park, CA
+Tenet3 Dayton, OH
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+Maven Clinic New York, NY
+freiheit.com technologies gmbh Lissabon, Portugal
+Tenet3 Dayton, OH
+The Remote Company No office location
+Gordian Software No office location
+finn.auto München, Deutschland
+Global Reach Consulting LLC Reston, VA
+Better No office location
+Dream Broker Helsinki, Finland
+JPMorgan Chase Bank, N.A. Bengaluru, India
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+Unusual Ventures San Francisco, CA
+JPMorgan Chase Bank, N.A. Wilmington, DE
+Octopus Energy London, UK
+HeidelbergCement AG Heidelberg, Germany
+causaLens London, UK
+Armored Things Boston, MA
+Ezoic Carlsbad, CA
+Evidation Health Santa Barbara, CA
+BenchSci Toronto, ON, Canada
+solute GmbH Karlsruhe, Deutschland
+Otto (GmbH & Co KG) Hamburg, Deutschland
+QuantCo Berlin, Germany
+iptiQ by Swiss Re Zürich, Switzerland
+Find Your Info, Corp No office location
+Varen Technologies Columbia, MD
+Odoo Ramillies, Belgium
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Mumbai, India
+Picnic Amsterdam, Netherlands
+Old Mission Capital, LLC Chicago, IL
+Trafilea No office location
+Zattoo Berlin, Germany
+Nexthink Prilly, Switzerland
+NewtonX New York, NY
+JPMorgan Chase Bank, N.A. Bengaluru, India
+UKG (Ultimate Kronos Group) No office location
+ENERCON GmbH Bremen, Deutschland
+SteepRock Inc No office location
+CareSolace Inc. Encinitas, CA
+Financial Technology Partners San Francisco, CA
+scoutbee GmbH Berlin, Germany
+DIGARC No office location
+HealthJoy No office location
+Captivation Software Fort Meade, MD
+Channable Utrecht, Netherlands
+Ströer Online Marketing Hamburg, Deutschland
+Arolla Paris, France
+Ambient Innovation: GmbH No office location
+Perch Security, Inc. No office location
+Advertima Berlin, Germany
+Octopus Energy London, UK
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+CareSolace Inc. Encinitas, CA
+Opinew No office location
+Cookpad Limited Bristol, UK
+Financial Technology Partners San Francisco, CA
+Zumper Providence, RI
+DIGARC No office location
+Medicines Discovery Catapult Alderley Edge, UK
+Captivation Software Fort Meade, MD
+BASF Köln, Deutschland
+bloomon Amsterdam, Netherlands
+Channable Utrecht, Netherlands
+Ströer Online Marketing Hamburg, Deutschland
+JPMorgan Chase Bank, N.A. Glasgow, UK
+Fashion Cloud Amsterdam, Netherlands
+Arolla Paris, France
+Ambient Innovation: GmbH No office location
+Longshot Systems Ltd London, UK
+Pagefreezer No office location
+Cazana London, UK
+Seez No office location
+ProSiebenSat.1 Media SE München, Deutschland
+Alasco München, Germany
+Advertima Berlin, Germany
+JPMorgan Chase Bank, N.A. Bengaluru, India
+YouGov No office location
+BairesDev LLC San Francisco, CA
+Tails.com Richmond, UK
+3D Hubs Amsterdam, Netherlands
+Scalable Path No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. London, UK
+Limehome GmbH Madrid, Spain
+Opinew No office location
+Itemize No office location
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Medicines Discovery Catapult Alderley Edge, UK
+Tails.com Richmond, UK
+BASF Köln, Deutschland
+Saphetor S.A. Athens, Greece
+CeleraOne GmbH Berlin, Deutschland
+Hearst Magazines New York, NY
+KAISER+KRAFT Europa GmbH Stuttgart, Deutschland
+Blackshark.ai GmbH Graz, Austria
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Agrando München, Germany
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Blackshark.ai GmbH Graz, Österreich
+Memri B.V No office location
+Hetzner Cloud GmbH Unterföhring, Deutschland
+Itemize No office location
+Global Reach Consulting LLC Reston, VA
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+TelSmart Zagreb, Croatia
+JPMorgan Chase Bank, N.A. Mumbai, India
+Frequenz Energy-as-a-Service GmbH Berlin, Germany
+EDF London, UK
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Blackshark.ai GmbH Graz, Österreich
+JPMorgan Chase Bank, N.A. Mumbai, India
+Hearst Magazines New York, NY
+Smart Steel Technologies GmbH Berlin, Germany
+PandaScore Paris, France
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Westerville, OH
+JPMorgan Chase Bank, N.A. Houston, TX
+JC Development AG Glarus, Switzerland
+FELFEL Zürich, Switzerland
+JPMorgan Chase Bank, N.A. New York, NY
+JPMorgan Chase Bank, N.A. New York, NY
+JPMorgan Chase Bank, N.A. Wilmington, DE
+Erias Ventures Annapolis Junction, MD
+JPMorgan Chase Bank, N.A. Lewisville, TX
+IHS Markit Minsk, Belarus
+Trilliant Health Nashville, TN
+JPMorgan Chase Bank, N.A. London, UK
+Blackshark.ai GmbH Graz, Austria
+X-Team No office location
+Anyfin AB Stockholm, Sweden
+Skalar Systems Graz, Austria
+JPMorgan Chase Bank, N.A. London, UK
+Memri B.V No office location
+SAP Bengaluru, India
+Flow Traders Amsterdam, Netherlands
+Flashpoint No office location
+Geomagical Labs Mountain View, CA
+UBIMET GmbH Wien, Österreich
+GAF AG München, Deutschland
+JPMorgan Chase Bank, N.A. Hyderabad, India
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Canonical No office location
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. London, UK
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Itemize Philadelphia, PA
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Mumbai, India
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Westerville, OH
+JPMorgan Chase Bank, N.A. Mumbai, India
+UBIMET GmbH Wien, Österreich
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Version 1 No office location
+Zyte (formerly Scrapinghub) No office location
+Modus Create No office location
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+tribe29 GmbH München, Deutschland
+JP Morgan Chase Herzliya, Israel
+JPMorgan Chase Bank, N.A. Newark, DE
+JPMorgan Chase Bank, N.A. Glasgow, UK
+JPMorgan Chase Bank, N.A. Bengaluru, India
+TileDB, Inc. Cambridge, MA
+StratavoviaTopDev Quận 1, Vietnam
+RIAG DIGITAL Wien, Austria
+JPMorgan Chase Bank, N.A. Bournemouth, UK
+Deutsche BankviaJWiderberg Inc. DBA Insight Resource Group New York, NY
+teckro Dublin, Ireland
+AMBOSS Berlin, Germany
+Kiwi.com Brno, Czechia
+The Meet Group No office location
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+QuantCo Karlsruhe, Germany
+JPMorgan Chase Bank, N.A. Houston, TX
+JPMorgan Chase Bank, N.A. Herzliya, Israel
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+OpsTalent Wrocław, Poland
+Overloop No office location
+Princeton Consultants Princeton, NJ
+Tenfifty AB Göteborg, Sweden
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. Mumbai, India
+Boyle Software No office location
+Version 1 No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Itemize Philadelphia, PA
+Mimecast London, UK
+ABOUT YOU GmbH Hamburg, Deutschland
+Fintel SAS Marseille, France
+JPMorgan Chase Bank, N.A. Mumbai, India
+Susten Capital Management Inc. Chuo City, Japan
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+RIAG DIGITAL Wien, Austria
+Hummingbot No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Canva Sydney, Australia
+Canonical Bratislava, Slovakia
+The Meet Group No office location
+JP Morgan Chase Herzliya, Israel
+brainbot Berlin, Germany
+JobRad GmbH Freiburg im Breisgau, Germany
+JPMorgan Chase Bank, N.A. Glasgow, UK
+Deutsche BankviaJWiderberg Inc. DBA Insight Resource Group New York, NY
+Kiwi.com Brno, Czechia
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Research Affiliates (Investment Systems) Newport Beach, CA
+Tech9 Pune, India
+Cvedia PTE. LTD. No office location
+Delivery Hero SE Berlin, Germany
+Otto (GmbH & Co KG) Hamburg, Deutschland
+JPMorgan Chase Bank, N.A. Herzliya, Israel
+Fintel SAS Marseille, France
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. London, UK
+Canonical Bratislava, Slovakia
+Draftable San Francisco, CA
+Iterative, Inc No office location
+EverQuote Inc. No office location
+TIER Mobility GmbH Berlin, Deutschland
+Greenfield Partners No office location
+VIKTOR Rotterdam, Netherlands
+Fashion Cloud Amsterdam, Netherlands
+Relaxdays GmbH Leipzig, Deutschland
+BrainGu Chantilly, VA
+ScoutAPM No office location
+Relaxdays GmbH Leipzig, Deutschland
+Channable Utrecht, Netherlands
+Fashion Cloud Amsterdam, Netherlands
+ENGIE Digital Paris, France
+tribe29 GmbH München, Deutschland
+Thinksurance Frankfurt am Main, Deutschland
+TrustYou Madrid, Spain
+Relaxdays GmbH Leipzig, Deutschland
+Thinksurance Frankfurt am Main, Deutschland
+Government Digital Service (GDS) London, UK
+Haufe Group Freiburg im Breisgau, Germany
+xe.gr (Xrysi Eukairia) Athina, Greece
+LeadIQ Singapore
+ScoutAPM No office location
+JBS Custom Software Solutions No office location
+Channable Utrecht, Netherlands
+xe.gr (Xrysi Eukairia) Athina, Greece
+JBS Custom Software Solutions No office location
+Arista Networks, Inc Dublin, Ireland
+LeadIQ Singapore
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+Bloomberg LP New York, NY
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+F-Secure Helsinki, Finland
+think-cell Berlin, Germany
+Cognitive Space Houston, TX
+Cazana London, UK
+Actio Berlin, Germany
+SmartNews Shibuya City, Japan
+TIB – Leibniz Information Centre for Science and Technology and University Library Hannover, Deutschland
+Hellebore Consulting Group, LLC Wright-Patterson Air Force Base, OH
+zooplus AG Madrid, Spain
+Cluby Helsinki, Finland
+Vail Systems Inc. Deerfield, IL
+Otto (GmbH & Co KG) Hamburg, Deutschland
+Charles GmbH Berlin, Germany
+HYDROGRID GmbH Vienna, Austria
+Imaginary Cloud Lisbon, Portugal
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+Sector Labs Cluj-Napoca, Romania
+Armored Things Boston, MA
+QuantCo Berlin, Germany
+UCARE.AI Singapore
+BenchSci Toronto, ON, Canada
+ShareStream No office location
+Jimdo Hamburg, Germany
+ShareStream No office location
+Secureframe San Francisco, CA
+ArcaScience Paris, France
+Wonder Berlin, Germany
+Imaginary Cloud Lisbon, Portugal
+causaLens London, UK
+AWAZEviaMRJ Recruitment Manchester, UK
+Esri Redlands, CA
+AIM No office location
+Pretia Technologies, Inc. Shinagawa City, Japan
+Rivian Palo Alto, CA
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Tynker No office location
+Gordian Software No office location
+Eturnity St. Gallen, Schweiz
+Skyword/TrackMaven Boston, MA
+Omnivore Technologies Clearwater, FL
+GOintegro No office location
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+ByteDance Singapore
+Plecto Warsaw, Poland
+Safran Vectronix AG Heerbrugg, Switzerland
+Smart Steel Technologies GmbH Berlin, Germany
+JPMorgan Chase Bank, N.A. Mumbai, India
+Tessian London, UK
+JPMorgan Chase Bank, N.A. Mumbai, India
+Imaginary Cloud Lisbon, Portugal
+AWAZEviaMRJ Recruitment Manchester, UK
+Otto (GmbH & Co KG) Hamburg, Deutschland
+QOMPLX, Inc. McLean, VA
+GrammaTech, Inc. Ithaca, NY
+JPMorgan Chase Bank, N.A. Plano, TX
+real.digital Köln, Deutschland
+Gordian Software No office location
+BenchSci Toronto, ON, Canada
+JPMorgan Chase Bank, N.A. Lewisville, TX
+INGENIANCE Courbevoie, France
+Bloomberg LP New York, NY
+BigCommerce Austin, TX
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+zooplus AG Madrid, Spain
+Smart Steel Technologies GmbH Berlin, Germany
+Tenet3 Dayton, OH
+OMICRON electronics GmbH Klaus, Austria
+Semiotic Labs BV Leiden, Netherlands
+Kubevisor No office location
+TIB – Leibniz Information Centre for Science and Technology and University Library Hannover, Deutschland
+Chaturbate Los Angeles, CA
+JPMorgan Chase Bank, N.A. Mumbai, India
+freiheit.com technologies gmbh Lissabon, Portugal
+Maven Clinic New York, NY
+finn.auto München, Deutschland
+Axomic Inc London, UK
+Zumper Providence, RI
+Strata Oncology Ann Arbor, MI
+Shopee Singapore Private Limited Singapore
+Volume Graphics GmbH Heidelberg, Deutschland
+Blueprint Genetics Espoo, Finland
+Global Reach Consulting LLC Reston, VA
+JPMorgan Chase Bank, N.A. Glasgow, UK
+JPMorgan Chase Bank, N.A. New York, NY
+Gorgias No office location
+Unusual Ventures San Francisco, CA
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Motius GmbH München, Deutschland
+JPMorgan Chase Bank, N.A. Lewisville, TX
+FRIDAY Berlin, Deutschland
+M-Way Solutions GmbH Stuttgart, Deutschland
+Wildlife Studios Dublin, Ireland
+PayPay Corporation. Minato City, Japan
+Ezoic Carlsbad, CA
+Tynker No office location
+AnyDesk Software GmbH Stuttgart, Germany
+iptiQ by Swiss Re Zürich, Switzerland
+Odoo Ramillies, Belgium
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Hyderabad, India
+JPMorgan Chase Bank, N.A. Lewisville, TX
+FortressIQ No office location
+High AlphaviaHigh Alpha Studio, LLC. Indianapolis, IN
+Omnivore Technologies Clearwater, FL
+CheMondis GmbH Köln, Deutschland
+The Washington Post No office location
+EDAG Group Regensburg, Deutschland
+Chan Zuckerberg Initiative Redwood City, CA
+Smartlane GmbH München, Germany
+Signal AI London, UK
+PAYBACK München, Deutschland
+Sitowise Espoo, Finland
+SG Cap Trading Chicago, IL
+solute GmbH Karlsruhe, Deutschland
+Vail Systems Inc. Chicago, IL
+Ergon Zürich, Schweiz
+HENNGE K.K. Tokyo, Japan
+ResoluteAI New York, NY
+Lime Lund, Sweden
+Web Summit Dublin, Ireland
+FactSet Boston, MA
+Reply München, Deutschland
+The Washington Post No office location
+Goodway Group No office location
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+Octopus Energy London, UK
+Mimecast Tel Aviv-Yafo, Israel
+CircleBlack No office location
+causaLens London, UK
+European Bioinformatics Institute (EMBL-EBI) Hinxton, UK
+CrowdStrike, Inc. Sunnyvale, CA
+Bankhead Technologies, Inc. Las Vegas, NV
+EDAG Group Regensburg, Deutschland
+Rivian Palo Alto, CA
+JPMorgan Chase Bank, N.A. Lewisville, TX
+Smartlane GmbH München, Germany
+AIM No office location
+ShareStream No office location
+Bloomberg LP New York, NY
+High AlphaviaHigh Alpha Studio, LLC. Indianapolis, IN
+Omnivore Technologies Clearwater, FL
+Eturnity St. Gallen, Schweiz
+CheMondis GmbH Köln, Deutschland
+Property Meld No office location
+JPMorgan Chase Bank, N.A. Herzliya, Israel
+Online Partner AB Hägersten, Sweden
+100x Group Singapore
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Oracle Guadalajara, Mexico
+Clio No office location
+Niometrics Brașov, Romania
+Imaginary Cloud Lisbon, Portugal
+DialogTech No office location
+Niometrics Ho Chi Minh City, Vietnam
+Shoott No office location
+RegioHelden GmbH Stuttgart, Deutschland
+SmartNews Shibuya City, Japan
+Deepfield Networks Ann Arbor, MI
+Hetzner Cloud GmbH Unterföhring, Deutschland
+Zoopla London, UK
+Saturna Capital Corporation Bellingham, WA
+ASML Veldhoven, Netherlands
+CrowdStrike, Inc. Sunnyvale, CA
+Unusual Ventures Charlotte, NC
+JPMorgan Chase Bank, N.A. Houston, TX
+BenchSci Toronto, ON, Canada
+Solar And Storage Modelling Pty Ltd (Solcast) Leichhardt, Australia
+ESRF Grenoble, France
+The Sensible Code Company Belfast, UK
+ByteDance Singapore
+FATMAP Berlin, Germany
+Esri Melbourne, Australia
+Esri Redlands, CA
+NAVIS No office location
+ESRF Grenoble, France
+The Sensible Code Company Belfast, UK
+ByteDance Singapore
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Esri Melbourne, Australia
+Fei Siong Food Management Pte. Ltd. Singapore
+adidas Zaragoza Tech Hub Zaragoza, Spain
+Lean Media Chesterfield, MO
+Hypothesis.is No office location
+Black Spectacles Chicago, IL
+Parkside Graz, Österreich
+Esri Redlands, CA
+RavenPack International SL. No office location
+Canonical No office location
+JPMorgan Chase Bank, N.A. Hyderabad, India
+Celonis Munich, Germany
+Ailo Melbourne, Australia
+FileWave Gmbh Düsseldorf, Germany
+SDVI No office location
+Mimacom Stuttgart, Deutschland
+Pentalog No office location
+JP Morgan Chase Herzliya, Israel
+ReCharge Payments No office location
+ImFusion GmbH München, Deutschland
+Paige New York, NY
+Ascend Innovations Dayton, OH
+KLAXIT Paris, France
+NAVIS No office location
+Boston Dynamics No office location
+JPMorgan Chase Bank, N.A. Hyderabad, India
+JPMorgan Chase Bank, N.A. Hyderabad, India
+REX Redwood City, CA
+JPMorgan Chase Bank, N.A. New York, NY
+TransferWise London, UK
+TeraVolt GmbH Hamburg, Deutschland
+Combined Public Communication Cold Spring, KY
+JPMorgan Chase Bank, N.A. Mumbai, India
+Trafilea No office location
+NewtonX New York, NY
+Picnic Amsterdam, Netherlands
+CareSolace Inc. Encinitas, CA
+Nexthink Prilly, Switzerland
+Financial Technology Partners San Francisco, CA
+DIGARC No office location
+UKG (Ultimate Kronos Group) No office location
+ENERCON GmbH Bremen, Deutschland
+Captivation Software Fort Meade, MD
+Old Mission Capital, LLC Chicago, IL
+SteepRock Inc No office location
+Pagefreezer No office location
+Ströer Online Marketing Hamburg, Deutschland
+Arolla Paris, France
+Ambient Innovation: GmbH No office location
+Zattoo Berlin, Germany
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Advertima Berlin, Germany
+Share Edge, LLC Manhattan Beach, CA
+HealthJoy No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+scoutbee GmbH Berlin, Germany
+RavenPack International SL. Marbella, Spain
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+EODC GmbH Wien, Österreich
+Cookpad Limited Bristol, UK
+Zumper Providence, RI
+Ströer Online Marketing Hamburg, Deutschland
+Arolla Paris, France
+Ambient Innovation: GmbH No office location
+creditshelf Frankfurt am Main, Deutschland
+Perch Security, Inc. No office location
+Pagefreezer No office location
+bloomon Amsterdam, Netherlands
+Advertima Berlin, Germany
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Channable Utrecht, Netherlands
+Imaginary Cloud Lisbon, Portugal
+Share Edge, LLC Manhattan Beach, CA
+Cazana London, UK
+This Land Inc dba Sunday Boulder, CO
+Alasco München, Germany
+ASOS London, UK
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Smart Steel Technologies GmbH Berlin, Germany
+Innoactive GmbH München, Germany
+Seez No office location
+3D Hubs Amsterdam, Netherlands
+JPMorgan Chase Bank, N.A. Glasgow, UK
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Medicines Discovery Catapult Alderley Edge, UK
+Innoactive GmbH München, Germany
+Seez No office location
+BASF Köln, Deutschland
+Bundesdruckerei GmbH Hamburg, Deutschland
+KAISER+KRAFT Europa GmbH Stuttgart, Deutschland
+Tails.com Richmond, UK
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Fashion Cloud Amsterdam, Netherlands
+Saphetor S.A. Athens, Greece
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Blackshark.ai GmbH Graz, Austria
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Longshot Systems Ltd London, UK
+Agrando München, Germany
+CeleraOne GmbH Berlin, Deutschland
+ProSiebenSat.1 Media SE München, Deutschland
+YouGov No office location
+Memri B.V No office location
+Delivery Hero SE Berlin, Germany
+JPMorgan Chase Bank, N.A. Houston, TX
+Hetzner Cloud GmbH Unterföhring, Deutschland
+Administrate Beirut, Lebanon
+JP Morgan Chase Herzliya, Israel
+JPMorgan Chase Bank, N.A. Hyderabad, India
+Tails.com Richmond, UK
+BairesDev LLC San Francisco, CA
+Hetzner Cloud GmbH Unterföhring, Deutschland
+Scalable Path No office location
+JPMorgan Chase Bank, N.A. Mumbai, India
+JPMorgan Chase Bank, N.A. Westerville, OH
+Global Reach Consulting LLC Reston, VA
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+TelSmart Zagreb, Croatia
+JPMorgan Chase Bank, N.A. Mumbai, India
+JPMorgan Chase Bank, N.A. New York, NY
+Flow Traders Amsterdam, Netherlands
+Flashpoint No office location
+Modus Create No office location
+JPMorgan Chase Bank, N.A. London, UK
+tribe29 GmbH München, Deutschland
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Newark, DE
+Canonical No office location
+JPMorgan Chase Bank, N.A. London, UK
+GAF AG München, Deutschland
+Erias Ventures Annapolis Junction, MD
+JPMorgan Chase Bank, N.A. New York, NY
+TileDB, Inc. Cambridge, MA
+KAISER+KRAFT Europa GmbH Stuttgart, Deutschland
+JPMorgan Chase Bank, N.A. London, UK
+Memri B.V No office location
+UBIMET GmbH Wien, Österreich
+This Land Inc dba Sunday Boulder, CO
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+teckro Dublin, Ireland
+AMBOSS Berlin, Germany
+CrowdStrike, Inc. 
+Frequenz Energy-as-a-Service GmbH Berlin, Germany
+JPMorgan Chase Bank, N.A. Mumbai, India
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Westerville, OH
+StratavoviaTopDev Quận 1, Vietnam
+JPMorgan Chase Bank, N.A. Bournemouth, UK
+Boyle Software No office location
+Bundesdruckerei GmbH Hamburg, Deutschland
+PandaScore Paris, France
+JPMorgan Chase Bank, N.A. Houston, TX
+JC Development AG Glarus, Switzerland
+QuantCo Karlsruhe, Germany
+Boyle Software No office location
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Bournemouth, UK
+Version 1 No office location
+Bundesdruckerei GmbH Hamburg, Deutschland
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JP Morgan Chase Herzliya, Israel
+QuantCo Karlsruhe, Germany
+JPMorgan Chase Bank, N.A. Houston, TX
+TileDB, Inc. Cambridge, MA
+RIAG DIGITAL Wien, Austria
+Hummingbot No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+The Meet Group No office location
+Delivery Hero SE Berlin, Germany
+JPMorgan Chase Bank, N.A. Houston, TX
+OpsTalent Wrocław, Poland
+Overloop No office location
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+Tenfifty AB Göteborg, Sweden
+JPMorgan Chase Bank, N.A. Mumbai, India
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Sytac IT Consulting Amsterdam, Netherlands
+EDF London, UK
+CrowdStrike, Inc. 
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+JPMorgan Chase Bank, N.A. Buenos Aires, Argentina
+JPMorgan Chase Bank, N.A. New York, NY
+Version 1 No office location
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Bengaluru, India
+Itemize Philadelphia, PA
+ABOUT YOU GmbH Hamburg, Deutschland
+TIER Mobility GmbH Berlin, Deutschland
+solute GmbH Karlsruhe, Deutschland
+RIAG DIGITAL Wien, Austria
+Grandperspective GmbH Berlin, Germany
+EverQuote Inc. No office location
+The Meet Group No office location
+Anyfin AB Stockholm, Sweden
+EDF London, UK
+OpenCraft No office location
+Geomagical Labs Mountain View, CA
+JPMorgan Chase Bank, N.A. Bengaluru, India
+JPMorgan Chase Bank, N.A. Jersey City, NJ
+Delivery Hero SE Berlin, Germany
+Sytac IT Consulting Amsterdam, Netherlands
+Choco Berlin, Germany
+Zyte (formerly Scrapinghub) No office location
+JPMorgan Chase Bank, N.A. Houston, TX
