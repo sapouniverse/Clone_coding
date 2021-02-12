@@ -1,0 +1,24 @@
+main.py
+
+from indeed import extract_indeed_pages, extract_indeed_jobs
+from stackoverflow import get_jobs as get_stackoverflow_jobs
+from save import save_to_file                                     <--------- 가져와라
+
+max_indeed_pages=extract_indeed_pages()
+indeed_jobs = extract_indeed_jobs(max_indeed_pages)
+
+stackoverflow_jobs=get_stackoverflow_jobs()
+
+jobs = stackoverflow_jobs + indeed_jobs
+save_to_file(jobs)                                  <---------- save_to_file을 호출할거고, jobs를 파일로 저장할거임
+
+
+
+
+
+save.py
+
+import csv     <----- 파이썬에서 제공해주는 패키지 
+
+def save_to_file(jobs):    <----- jobs인자를 받을거임
+  return                   <------ 지금은 아무것도 안할거임
