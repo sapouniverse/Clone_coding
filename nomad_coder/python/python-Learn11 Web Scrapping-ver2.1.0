@@ -18,11 +18,9 @@ def get_last_page():
   return int(last_pages)
 
 
-def extract_job(html):        <---------- 일자리만 따로 뺄라고 다시 정의했고
-
-.
-.
-.
+def extract_job(html):                                         <------- 일자리 불러올라고 따로 또 정의함
+  title=html.find("h2",{"class":"mb4"}).find("a")["title"]
+  print(title)
 
 
 
@@ -34,7 +32,7 @@ def extract_jobs(last_pages):
     results=soup.find_all("div", {"class":"-job"})
     for result in results:
       job = extract_jobs(result)            <--------- 여기
-      job.append(job)                       <--------- 여기
+      jobs.append(job)                       <--------- 여기
   return jobs                               <--------- 여기 수정함
 
 
@@ -42,3 +40,830 @@ def get_jobs():
   last_pages = get_last_page()
   jobs=extract_jobs(last_pages)
   return jobs 
+------------------------------
+# 결과 : 잘된거 같기도 하고 아닌거 같기도 하고 그러네? 여기 말곤 검증할 방법이 없어서 그렇게 
+
+Site Reliability Engineers wanted!
+Environment Management Associate - Unix
+Senior Site Reliability Engineer
+Senior Data Engineer - Quick Commerce (f/m/d)
+Senior Cloud Security Engineer
+Oracle Database Administrator
+DevOps Engineer (with Dev Background)
+Cloud Engineer
+Strategic Business Analyst I
+Software Engineering - KDB - VP
+System Architect
+Data Engineer
+System- and Database-Administrator (f/m/d)
+Hadoop Site Reliability Engineer
+Senior Software Engineer @ Enveil
+DevOps Engineer
+Principal Member Technical Staff (JoinOCI-SDE)
+Software Engineering
+Java / Big Data Software Engineer
+Infrastructure Engineer
+Cloud Architect
+Software Engineering - Pyspark Development Lead
+Senior Security Analyst
+Principal Mobile Software Engineer
+Algorithms developer
+Linux System Engineer (m/w/d)
+Data Engineer
+DevOps Engineer
+Senior Site Reliability Engineer (EMEA)
+Application Engineers
+Linux System-Administrator mit Schwerpunkt AWS (m/w/d) - Remote
+Test Automation Engineer bij Europees software marktleider
+Senior Automation Controls Engineer
+Data Scientist (m/w/d) Data Analytics
+Metrics & Observability VP - CIB Platform Services - Software Engineer / SRE
+Maintenance Release Coordination Engineer
+Fullstack Entwickler / DevOps (m/w/d) für R-Applikationen
+Data Engineer
+Java Software Engineer - FX Trading Platform - VP
+Data Engineer ( F/H)
+Senior Data Scientist
+Senior Frontend Engineer
+Data Engineer
+CIB Technology - Business Analysis - Associate
+Software Engineer - Peoplesoft
+Senior Developer Java -Micro services - Bangalore
+Software Engineer - Cloud Solutions (Remote)
+Product Owner - Identity & Access - Auth
+Senior Site Reliability Engineer (SRE)
+Data Engineer
+Senior Rust Engineer (m/f/d)
+Principal Software Developer - File system Service - Cloud Engineering Infrastructure Development
+Firmware Engineer
+Infrastructure Engineering
+Infrastructure Engineering
+Network Development Engineer - (JoinOCI-SecClear)
+Senior Ruby on Rails Engineer
+Site Reliability Engineer
+Software Engineer - Peoplesoft
+(Senior) Data Engineer - Data & Machine Learning (f/m/d)
+Data Engineer
+Sr Data Scientist
+Big Data DevOps Engineer
+Junior Google Cloud Developer (m/w/d)
+Scientist, Single Cell Genomics
+CCB_Global Technology_Generic_Global_JPMC
+Senior Data Engineer
+Engineering Lead - Cairo - Egypt
+AI/ML - Sr Data Engineer, Siri Data
+Software Engineering - Microservices Frameworks (Polyglot Programmers)
+Senior QA Automation Engineer
+Infrastructure Engineering
+Senior Systems Engineer (m/f/d)
+Network Development Engineer - (JoinOCI-SecClear)
+Digital Technology Lead, Data Analytics, Vice President
+Senior Ruby on Rails Engineer
+Senior Software Engineer - Collaboration Frameworks
+Google Cloud Data Engineer (m/f)
+Infrastructure Engineer II
+(Senior) Data Engineer - Data & Machine Learning (f/m/d)
+Full Stack Engineer (Front-end Focus)
+Sr Data Scientist
+Systems Engineer
+Big Data DevOps Engineer
+Junior Google Cloud Developer (m/w/d)
+Software Engineering (Bangalore) - Java Full Stack Developer- Content Management Platform
+Data Engineer
+Scientist, Single Cell Genomics
+Senior Data Engineer
+Director of Engineering (Full Stack); Leader, Mentor, Partner - work with us!
+Public Cloud Platform - Software Engineer, VP
+Principal Software Developer - Distributed Systems - (JoinOCI-SDE)
+AI/ML - Machine Hearing Quality Engineer
+Senior DevOps Engineer
+Apple Cloud - ML Engineer
+Senior Site Reliability Engineer (Distributed Storage)
+Director of Engineering
+Executive Director - Architect Lead
+Microservices Frameworks - Software Engineering
+Quant Optimization Engineer - AM Portfolio Management
+Senior Data Engineer
+Senior Developer Advocate for Secure Data Exchange
+Apple Media Products Engineering - Machine Learning Computer Vision Engineer (Client side)
+Oracle Database Administrator
+Oracle Database Administrator
+Security engineer for Android and Linux based platforms (f/m/x)
+Software Engineering - Microservices Frameworks (Polyglot Programmers)
+Cybersecurity Architect with cloud experience
+Senior QA Automation Engineer
+BI Developer / Data engineer with Oracle competence
+Data Science Lead - AI/ML
+Data Engineer
+Fachinformatiker/in Systemintegration (w/m/d) - für Forschungsinfrastruktur
+Engineering Manager
+(Senior) Devops Engineer
+Engineering Manager
+CCB_Generic_Global_JPMC
+AWS Cloud Data Engineer
+Senior Automation Controls Engineer
+Environment Management Associate - Unix
+Senior Site Reliability Engineer
+Site Reliability Engineer
+Applications Support
+Senior Machine Learning Engineer
+Technology Strategy Lead / Architect - Executive Director
+Senior Big Data / Infrastructure Engineer - Investment Bank
+Cloud Platform Engineering
+System Software Test Engineer
+Software Engineer - Cloud Platform
+CPU Performance Simulation Environment Lead
+Node.JS Developer - Freelance
+Principal Reverse Engineer
+Full Stack Lead Engineer - Java/Cloud/React- VP - Asset Management
+Back End Software Developer
+Training & Documentation Manager
+DevOps Specialist in Business Intelligence (f/m/x)
+Staff Machine Learning Engineer
+Senior Fullstack Engineer
+Site Reliability Engineer - Cyber Security
+Senior Quality Assurance Engineer – Web and International
+DevOps Engineer (m/w/d)
+Cloud Berater (m/w/d) Risk Advisory Technology Center
+Support Engineer / Tier2 Fullstack Engineer
+Software Engineering
+Observability/ Telemetry  Engineer - Software Engineer
+Azure Machine Learning Engineer | Location Intelligence Application
+Training & Documentation Manager
+Senior Quality Assurance Engineer – Web and International
+ETL Developer
+QA Automation Engineer
+Site Reliability Engineer
+Manager/Cloud Developer
+Senior Site Reliability Engineer
+Senior Mobile Pipeline/DevOps Engineer
+DevOps Engineer (m/w/d)
+Support Engineer / Tier2 Fullstack Engineer
+Software Engineering
+Site Reliability Engineer
+Software Engineer - Cloud Native Technologies
+Senior Embedded Software Developer (IoT)
+Senior Distributed Systems Engineer (Java)
+Equity Derivatives Technology - Java Developer, Analyst
+Linux Platform Developer
+SDET / Automation QA, Benefex - Employee Wellbeing, £40-50k remote (UK based)
+Infrastructure Engineer / Security & Compliance
+Site Reliability Developer 3 (JoinOCI-SDE)
+Experienced Java Web Developer
+Expert Data Engineer (m/w/d)
+Infrastructure Development
+Technical Co-Founder / CTO for a Machine Learning Startup
+Engineering Manager - Search Platform
+Site Reliability Developer 3 (JoinOCI-SDE)
+Applications Support
+Hadoop Engineer, Remote
+Central Risk Book Algo Developer, Associate
+Data Wrangler / Curator (m/f/d)
+QA Engineer
+Site Reliability Engineer
+Linux System Administration & Applications Support - DevOps - VP
+AWS Cloud Data Engineer
+AWS Cloud Data Engineer
+Senior Integrations Engineer
+DevOps/Site Reliability Engineer
+Site Reliability Engineer - Corporate Technology | Office of the CTO
+Senior Full Stack Engineer interested in collaborative hardware development
+Software Engineer - Cloud & Data Platform Team
+Developer / Technology Consultant for SAP Subscription Order Management (remote work)
+Machine Learning Scientist
+System Architect
+(Senior) Systems Engineer im DevOps-Umfeld (m/w/d) in Stuttgart
+Software Engineering - Oracle Dev - Mumbai
+AI Solutions Architect
+System Integration Automation Tester 80-100%
+Senior Software Developer (Java)
+Machine Learning Scientist
+Central Risk Book Algo Developer, Associate
+QA Engineer
+Principal Search Engineer
+Test Automation Engineer
+Fullstack Developer
+Lead Data Science & Product Owner (d/f/m)
+Site Reliability Engineer
+(Senior) Systems Engineer im DevOps-Umfeld (m/w/d) in Stuttgart
+Software Engineer - Peoplesoft
+Software Engineer - Peoplesoft
+Central Risk Book Algo Developer, Associate
+Senior Back-End Developer
+Technology Operations - Associate
+Linux-Systemadministrator*in (m/w/d)
+Software Engineering - Oracle Dev - Mumbai
+Senior Developer (React, Node.js) (m/f/d)
+Dev Ops - Lead
+System Integration Automation Tester 80-100%
+Engineering Manager - Search Platform
+Technical Co-Founder / CTO for a Machine Learning Startup
+Browser Frontend Developer - Video Game: Forge of Empires
+Sr. Technical Writer/ Product Mgt.
+Software Engineer - Directed Energy Systems (Mid-Lead)
+Engineering Lead - Cairo - Egypt
+Site Reliability Developer 3 (JoinOCI-SDE)
+DevOps Engineer
+Tagalog Speaking Full Stack Angular and C# Developer (Remote)
+Back End Web Developer - ArcGIS StoryMaps
+Security Engineer
+Engineering Manager
+Integration Engineer
+Senior Software Engineer
+(Senior) Performance Engineer (f/m/d) for SAP HANA Porting Team
+Data Scientist (m/f/d)
+Rates Analytical Trading Tools Software Engineer - Associate
+Infrastructure &  Automation Engineer (d/m/w)
+Full Stack Software Engineer: Ruby on Rails (m/f/d)
+Firmware Engineer
+Infrastructure Engineering
+Technology Operations - Associate
+IoT Developer
+Engineering Manager - Search Platform
+Frontend Engineer
+Applications Support
+Hadoop Engineer, Remote
+Central Risk Book Algo Developer, Associate
+Data Wrangler / Curator (m/f/d)
+Sr Data Engineer
+Infrastructure Development - POS Terminals
+Software Engineer - Peoplesoft
+Cyber Security Engineer
+Frontend Engineer
+Applications Support
+Tagalog Speaking Full Stack Angular and C# Developer (Remote)
+Senior Deployment/DevOps Engineer
+Sr Data Engineer
+Infrastructure Development - POS Terminals
+Principal Search Engineer
+Site Reliability Engineer
+Test Automation Engineer
+Fullstack Developer
+Lead Data Science & Product Owner (d/f/m)
+Site Reliability Engineer
+Software Engineer - Peoplesoft
+Central Risk Book Algo Developer, Associate
+Senior Back-End Developer
+Technology Operations - Associate
+Linux-Systemadministrator*in (m/w/d)
+Senior Developer (React, Node.js) (m/f/d)
+Dev Ops - Lead
+Engineering Manager - Search Platform
+Network Engineer Operations (f/m/d) - Linux
+Data Governance Dashboard Lead
+Delivery Engineer (CI/CD, Ansible)
+Infrastructure Engineering
+AI/ML- Security Infrastructure Lead, Siri Search, Knowledge & Platform
+HPC Expert
+Software Engineer, Infrastructure
+DevOps Engineer
+3D Graphics Programmer with a focus on tools (C++)
+Data Engineer / Senior Data Engineer (Singapore)
+Applications Support
+Systems Engineer
+Senior Big Data Engineer
+Senior Software Engineer (PHP/Nodejs/Golang)
+Cloud Engineer
+Senior Backend Developer
+Senior Full Stack Engineer - Rent (m/f/d)
+Cloud Security Engineer (f/m/x)
+Central Risk Book Algo Developer,  Vice President
+Hadoop Site Reliability Engineer
+Senior ML Engineer
+Senior DevOps Engineer
+Sr. Software Engineer - Public Cloud
+Data Engineer (Remote)
+Data Scientist
+Software Engineering - Cloud and Data Platform
+Ruby / Elixir Developer
+C# Engineer
+Sr. Software Developer - Distributed Systems - (JoinOCI-SDE)
+DevOps Software Automation Engineer
+Senior Deep Learning Engineer
+Cloud Security Engineer (f/m/x)
+Senior Cloud Developer (m/f/d)
+Site Reliability Engineer
+Software Engineering
+Softwareentwickler(m/w/d) Lokalisierung & Digitale Karten SLAM Autonomes Fahren
+DevSecOps Engineer (m/f/d)
+DevOps Engineer
+Site Reliability Engineer - Public Cloud
+Senior Full Stack Developer
+Technical Implementation Engineer (ETL, SQL, XML)
+Site Reliability Engineer - Public Cloud
+Security DevOps Engineer
+Senior Search Engineer Solr
+AI/ML - Language Engineer (Taiwanese), Siri Understanding
+DevOps Engineer
+Systems Engineer
+AI / NLP Developer That is Excited About Healthcare Data
+Software Engineering - Cloud and Data Platform
+Node.JS Developer - Freelance
+Senior Big Data Engineer
+Infrastructure Engineering
+Werkstudent (m/w/d) - Systemadministration / IT Operations Server Hosting Linux
+Associate, Software Engineer II - Big Data, Java
+Systems Engineer
+AI / NLP Developer That is Excited About Healthcare Data
+Software Engineering - Cloud and Data Platform
+Node.JS Developer - Freelance
+Senior Big Data Engineer
+Infrastructure Engineering
+Werkstudent (m/w/d) - Systemadministration / IT Operations Server Hosting Linux
+Senior Site Reliability Engineer (JoinOCI-SDE)
+HPC, Cloud or Storage System Engineer for Supercomputing
+DevOps Engineer
+Senior Back-End Developer
+Senior/Lead Java Engineer
+Senior Full Stack Engineer - Rent (m/f/d)
+Software Engineer
+Manager - Big Data Engineering - Wallet & Apple Pay - Austin
+Senior DevOps Engineer
+Site Reliability Engineer (JoinOCI-SDE)
+Senior Business Intelligence Engineer ioki (f/m/d)
+Sr. or Principal Site Reliability Developer (JoinOCI-SDE)
+Site Reliability Engineer- ArcGIS Online
+Applications Support - Production Support
+Data and Diagnostics Onboard Developer
+Principal Backend Developer Cloud Engineering Infrastructure Development  (JoinOCI-SDE)
+Expert Data Engineer (m/w/d)
+Software Engineering - Java - OMS-Mumbai
+Software Engineering - Lead Full Stack Java Developer- Mumbai
+Technical Architect
+IT System Administrator Linux (m/w/d)
+DevOps Engineer
+Data Analyst
+Network Attack Response Center Engineer.
+Lead Data Architect
+Senior Fullstack Engineer - Javascript
+Sr. Software Developer - Distributed Systems - (JoinOCI-SDE)
+Data Engineer (m/f/d)
+Sr Site Reliability Engineering (SRE)
+Quality Assurance Engineer
+Senior Quality Assurance Engineer – Data
+Technology Operations - Associate
+Product Owner - Identity & Access - Auth
+Principal Software Developer - Distributed Systems - (JoinOCI-SDE)
+Environment Management Associate - Unix
+Software Engineer - Cloud Images
+Site Reliability Developer 3 (JoinOCI-SDE)
+Oracle Database Administrator
+Blockchain Developer
+Senior Front End Developer
+Senior Data Scientist - Data Foundation
+DevOps Engineer #London #FinTech
+SE Linux Systems Engineer
+Principal Cloud Software Engineer - Apache Cassandra
+Research Engineer
+Distributed Systems Engineer
+Lead Data Scientist (NLP, CV)
+Software Engineering - Equities - Core Java - Bengaluru
+Mobile Applications Developer
+UAS Drone Developer QT/QML/C++
+QA Engineer
+System Administrator
+Swift Developer
+Site Reliability Engineer - Digital Channel
+DevOps Engineer - Managed Cloud Services
+Cloud Platform Engineer (m/f/d)
+Sr. Full Stack Engineer
+Senior API Developer
+Senior System Engineer (m/f/x) UNIX / Linux, HPC and Storage
+Senior Cloud Engineer
+Tech Lead Data Engineer (f/m/d) 80-100%
+Java FX eTrading Developer
+Senior Software Engineer - Standard Data Feeds
+Senior DevOps Engineer
+Site Reliability Engineer 602 Mumbai
+Senior Data Engineer (m/w/d)
+Senior DevOps Engineer
+Computer Scientist / IT Specialist as developer (m/f) Ruby on Rails
+DevOps Engineer (ACE) - Innovating engineering productivity for public good
+Linux System Administrator (office or remote)
+Entwickler (w/m/d) im Bereich Glasfaser
+Application Security Engineer
+Build and Release Engineer
+Senior Front End Developer
+Intraday Algo Trader
+Technical Product Owner (VP)
+Core Engineering and DevOps - Associate
+IT Consultant (m/f/x) - Payment Fraud Prevention
+C++ Engineer - Desktop
+IT System Administrator Linux (m/w/d)
+Medior / Senior Cloud Data Engineer
+DevOps Engineer
+SmartDX/Thunderhead Developer-TM Document-Mumbai
+Ruby on Rails Developer
+Data Engineer - Search Intelligence
+Data Engineer
+Infrastructure Engineering
+Senior DevOps Engineer
+SoC Security Validation
+Senior Software Engineer, Core Infrastructure
+Applications Support
+Technology Operations - Associate
+Network Attack Response Center Engineer.
+Infrastructure Developer Platform Services
+Java Developer - Bangalore
+Senior Site Reliability Engineer - Distributed Systems - (JoinOCI-SRE)
+C++ Software Engineer
+Software Engineering - Lead Full Stack Java Developer- Mumbai
+BIG DATA ARCHITECT
+DevOps Engineer
+Strategic Business Analyst II - Columbus, OH
+GIO Network Support Engineer
+Linux Administrator AWS (m/w/d)
+Lead Data Architect
+Infrastructure Engineering
+(Senior) Data Analyst (f/m/x)
+(Senior) Performance Engineer (f/m/d) for SAP HANA Porting Team
+Senior QA Automation Engineer
+Senior Systems Test Engineer - Infotainment
+Lead Data Scientist /Bioinformatician
+Senior Security Architect
+Senior Front End Developer
+DevOps Best Practice Software Engineer
+Cloud / GitOps Engineer
+DevOps Engineer (f/m/d)
+Site Reliability Engineer
+Sr. Software Developer - Distributed Systems - (JoinOCI-SDE)
+Site Reliability Engineer (JoinOCI-SDE)
+Quant Optimization Engineer - AM Portfolio Management
+Senior QA Automation Engineer
+Lead Data Science & Product Owner (d/f/m)
+Senior Deployment/DevOps Engineer
+Delivery Engineer (CI/CD, Ansible)
+Central Risk Book Algo Developer, Associate
+Systems Engineer
+Digital Technology Lead, Data Analytics, Vice President
+ServiceNow Admin/Production Support
+Technology Operations - Associate
+Google Cloud Data Engineer (m/f)
+AWS Cloud Computing Virtual Lecturer (m/w/d)
+Senior Data Platform Engineer
+DevOps Engineer
+Data Engineer (Global Business Intelligence)
+Cybersecurity Intelligence Group Analyst
+Dev-Ops Deployment Specialist
+MG - LVS/Extraction - Sr. SW QA Engineer (RQ0002611)
+AI/ML- Security Infrastructure Lead, Siri Search, Knowledge & Platform
+DevOps Engineer
+Senior Software Engineer (PHP/Nodejs/Golang)
+Senior Big Data / Infrastructure Engineer - Investment Bank
+Senior Private Cloud SRE
+Senior Data Engineer
+DevOps Engineer (f/m/d)
+DevOps Engineer - London
+DevOps Best Practice Software Engineer
+Cloud / GitOps Engineer
+Software Development Director, Oracle Cloud (JoinOCI-Leader)
+Site Reliability Engineer
+Sr. Software Developer - Distributed Systems - (JoinOCI-SDE)
+Apple Media Products - Operations Engineer
+Linux Kernel Engineer
+Technical Architect
+Senior/Principal DevOps
+Big Data Developer- Bangalore
+Software Engineering - Java - OMS-Mumbai
+Data Engineer (m/f/d)
+DevOps Engineer
+Principle Software Engineer
+Blockchain Developer
+Full Stack Cloud Developer
+Senior Data Scientist - Data Foundation
+Software Engineer - Cloud Images
+Engineering Director - Quality & Integration
+Sr. Software Engineer - Cloud Enablement
+Product Manager SIEM Platform
+PHP Programmierer (m/w/d)
+Linux Cloud Kernel Engineer
+Data Engineer, Digital and Computational Pathology
+Back End Software Developer
+DevOps Specialist in Business Intelligence (f/m/x)
+Linux OS Architecture and Development Expert (f/m/d)
+Futures & Options Technical BA/ PM, Vice President
+Cloud Engineer with an knowledge of Azure
+Cloud Berater (m/w/d) Risk Advisory Technology Center
+Infrastructure Development
+Lead Engineer | Manager - Penetration Testing & Assessments
+Technical Account Manager: Performance Tuning Specialist
+Infrastructure Engineering
+AI / NLP Developer That is Excited About Healthcare Data
+Fullstack-Software Developer (m/w/d)
+DevSecOps
+Senior Software Engineering Manager
+Principal Site Reliability Developer
+Specialist Solution Architect: NoSQL Databases - ElastiCache
+Senior Site Reliability Engineer
+Team Lead / Teamleiter DevOps (m/w/d)
+Frontend Web Developer
+IT Process Automation Engineer IV - Distributed
+Site Reliability Engineer - Public Cloud
+Data Scientist / Senior Data Scientist (Jakarta or Singapore)
+Principal / Director Data & Analytics Consultant
+Senior Administrator*in Technisches Applikationsmanagement
+Senior Systems Administrator
+Software Engineer - Cloud and Data Platform
+Senior Software Engineering Manager
+Senior Site Reliability Engineer
+Team Lead / Teamleiter DevOps (m/w/d)
+Frontend Web Developer
+DevOps Engineer
+IT Process Automation Engineer IV - Distributed
+Site Reliability Engineer - Public Cloud
+Senior DevOps Engineer im Bereich Softwareentwicklung (m/w/x)
+Senior Administrator*in Technisches Applikationsmanagement
+Security DevOps Engineer
+Senior Data Engineer
+Cloud Engineer (f/m/d) for George
+Principal Software Developer IC4 (JoinOCI-SDE)
+Site Reliability Engineer
+Infrastructure Engineer
+Infrastructure Engineering
+Senior Solution Engineer (m/w/d) - Cloud Azure
+Specialized Solutions Architect III, Analytics
+Sr. or Principal Site Reliability Developer (JoinOCI-SDE)
+Engineering Manager – Streaming Technology [Hong Kong or Singapore]
+Principal / Director Data & Analytics Consultant
+Hyper Automation Delivery Consultant - Gurgaon
+Lead DevOps Software Engineer
+Sr. Application Security Engineer
+Senior Front-End ReactJS Developer
+Data Engineer III (Channel Consumption Engineer)
+Berufseinsteiger (m/w/d) Technology Center Leipzig- Cloud
+Java Cloud Full Stack Software Engineering Lead
+Principle Software Engineer
+QA Engineer (m/f/d)
+Engineering Manager – Streaming Technology [Hong Kong or Singapore]
+Lead Dev-Ops Engineer
+Site Reliability Engineer
+Principal Software Developer Cloud Engineering Infrastructure Development JoinOCI-FNBR
+Cloud Operations Engineer - Americas REMOTE
+Platform Analytics Manager
+AI/ML - Language Engineer (Japanese), Siri Understanding
+Specialist Solution Architect: NoSQL Databases - ElastiCache
+Data Engineer (m/w/d)
+Fast Track Software Engineering Lead
+Data Science Manager - Strategic Data Solutions
+Image Data Scientist (m/f/d)
+Senior Devops Engineer (f/m/x)
+Senior Full Stack Engineer
+Carrier Technical Lead
+DevOps Engineer
+Infrastructure & Devops Engineer
+Game Data Analyst
+Apple Media Products - SRE Manager
+DevOps Engineer
+Web Application Security Specialist (w/m/d) | Security-Team von otto.de
+Cloud Architect
+Senior C++ Developer
+Java Engineer - Portfolio Management - Global Fixed Income
+Tech Lead Agathe
+Werkstudent (m/w/d) - Systemadministration / IT Operations Server Hosting Linux
+Infrastructure Developer - Kubernetes - Mumbai
+Senior Site Reliability Engineer - Distributed Systems - (JoinOCI-SRE)
+Solution Engineer (m/w/d) - Cloud AWS
+Principal Data Platform Engineer
+Senior/Lead Java Engineer
+DevOps Specialist
+Senior Data Engineer - Data Insights (m/f/d)
+Senior DevOps Engineer
+Senior Data Engineer
+Merchant Services - Helix, Production Management, Site Reliability Engineer, Associate
+Sr. Backend Engineer
+Tech Lead Automation Engineer - Insider Threat Management
+IT Security Analyst 4
+Head of SRE (Site Reliability Engineering)
+Software Development Snr Manager (JoinOCI-Leader)
+Security Manager
+Platform Engineer
+Apple Media Products - SRE Manager
+CCB - Strategic Business Analysis Mgr - VP
+Site Reliability Engineer
+Senior DevOps Engineer
+Principal / Director Data & Analytics Consultant
+F&O Execution Technology Production Management, Application Support Engineer
+Head of SRE (Site Reliability Engineering)
+Software Development Snr Manager (JoinOCI-Leader)
+Robotics Systems Engineer II / III
+Data Engineer
+Production Support Engineer
+Senior Data Engineer
+Software Development Director, Oracle Cloud (JoinOCI-Leader)
+Qlikview Developer
+Machine Learning Engineer
+Private Cloud Information Architect - Platform Services
+Machine Learning Engineer
+DevOps Engineer - London
+Infrastructure Engineering
+Linux Kernel Engineer
+Senior Software Engineer - Cyber Security
+Market Data Infrastructure Engineer
+Senior Full Stack Software Engineer
+Senior C#-utvecklare: Fight cancer with code!
+Data Engineer Team Lead - We're scaling fast come and join us!!
+Senior Data Engineer
+Applications Support
+Lead BizOps Engineer
+Infrastructure Development
+Frontend Developer (Haxe) - Video Game: Forge of Empires
+Strategic Business Analyst II - Columbus, OH
+Frontend Web Developer
+Lead Incident Responder - Cyber Fusion Center
+Lead Data Scientist /Bioinformatician
+Hyper Automation Delivery Consultant - Gurgaon
+Back End Engineer - Retail & Catalog
+Principal / Director Data & Analytics Consultant
+Cloud & Big Data Architect
+Java Developer
+TechOps Engineer
+Senior Solution Engineer (m/w/d) - Cloud Azure
+Senior/Principal DevOps
+Applications Support
+Linux Kernel Engineer
+AI/ML - Language Engineer (Japanese), Siri Understanding
+Sr. Software Engineer, Data Products/Engineering
+HANA Cloud Performance Engineer (f/m/d)
+Senior Business Intelligence Cloud Platform Engineer
+Game Data Analyst
+Security Architect - Risk Assessment Lead
+Cloud & Big Data Architect
+Lead BizOps Engineer
+Cloud Data Analytics Engineer
+Awesome Cloud Engineer - Java, NiFi, Data (Fully Cleared)
+Applications Support
+Solutions Architect, Senior
+DevOps Engineer - Early Talent, Immediate start
+Tech Lead Agathe
+Specialized Solutions Architect III, DW
+Senior Security Engineer, Infrastructure
+DevOps Engineer
+Senior C++ Developer
+Principal Data Platform Engineer
+Lead Incident Responder - Cyber Fusion Center
+DevOps Specialist
+Site Reliability Engineer - Production Support
+IT Security Analyst 4
+Manager, Database Administration
+IT-Spezialist (w/m/d) im Bereich der Initiativermittlungen Kinderpornografie
+Dedicated Support Engineer - Tokyo
+Senior ML Engineer
+Platform Engineer
+Data Architect - Data Lake & Analytics
+Site Reliability Engineer
+Associate IoT Systems Engineer
+Senior Java Developer (FIRE)
+Data Engineer III (Channel Consumption Engineer)
+Site Reliability Engineer - Public Cloud
+Senior Front-End ReactJS Developer
+Sr. Infrastructure Development
+Director - Site Reliability Engineering (SRE)
+Principal Software Developer IC4 (JoinOCI-SDE)
+IT-Spezialist (w/m/d) im Bereich der (Massen)Datenanalyse und Ermittlungsunterst
+Sr. Software Development Engineer - AWS Identity
+Principal / Director Data & Analytics Consultant
+Senior Systems Administrator
+Cloud Security Engineer
+Network Engineer II
+QA Engineer (m/f/d)
+Applications Support - Unix/SQL
+AI/ML- Kafka and Data Production Engineer, Siri Search, Knowledge & Platform
+AppArmor Security Engineer
+Infrastructure & Devops Engineer
+DevOps Engineer
+Lead Site Reliability Engineer
+Cloud DevOps Engineer
+Technical Account Manager- Americas REMOTE
+DevOps Engineer
+Senior Cloud Engineer Who Loves Linux and Operates Like a Developer
+Site Reliability Engineer - APAC
+Senior Java Developer (FIRE)
+Private Cloud Information Architect - Platform Services
+Senior Product Security Engineer
+Data Engineer
+Data Architect - Data Lake & Analytics
+Frontend Developer
+Linux Kernel Engineer
+Technical Engineer
+Senior C#-utvecklare: Fight cancer with code!
+Team Lead Engineering (Infrastructure)
+IT-Spezialist (w/m/d) im Bereich der (Massen)Datenanalyse und Ermittlungsunterst
+Cyber Security Engineer / Information System Security Engineer (ISSE)
+Senior Security Engineer, Infrastructure
+IT-Spezialist (w/m/d) im Bereich der Initiativermittlungen Kinderpornografie
+Manager, Database Administration
+Dedicated Support Engineer - Tokyo
+Associate IoT Systems Engineer
+Senior Member Technical Staff (JoinOCI-SDE)
+IT-Spezialist (w/m/d) im Bereich der (Massen)Datenanalyse und Ermittlungsunterst
+Senior Site Reliability Engineer, Data Engineering
+Site Reliability Engineer - Americas
+Production Support Engineer
+Senior Data Engineer
+Data Analyst II/III
+Site Reliability Engineer
+Computer Scientist - Development Programs - Entry/ Mid-Level
+API Security Engineer
+Site Reliability Engineer - Americas
+Site Reliability Engineer
+Cyber Mitigations Engineer/System Vulnerability Analyst - Entry to Experienced
+Director Data Analytics and Insights
+ソフトウェアエンジニア (バックエンド)
+Senior Backend Engineer - Piñata Farms (Los Angeles)
+Software Engineer, Full Stack
+Senior Backend Engineer at hyperexponential
+Senior Full Stack Software Engineer (React & Django)
+Software Engineering Manager
+Principal Full Stack Software Engineer (React & Django)
+Senior Software Engineer, Full Stack
+Founding Software Engineer - Backend (RelicX)
+Lead Engineer - Innovating how emerging tech is used for public good
+Senior backend / embedded systems engineer (REMOTE in NC)
+Senior Full Stack Engineer (Remote OR NYC)
+Software Trainee-Programm für Studienabgänger (100%)
+Software Engineer
+Software Engineer Team Lead
+Senior Full Stack Engineer (REMOTE)
+Engineering Manager (m/w/x) - remote possible
+Senior Backend Developer (US Timezones)
+Site Reliability Engineer - Biotech startup helping dogs!
+CoreOS - System Power Validation Manager
+Backend Engineer- Music Data
+Senior Backend Engineer
+Software Engineer
+Frontend React Developer (m/f/x)
+Server-side Software Developer
+Software Engineer (Remote)
+Senior Robotics Software Engineer - Navigation
+Skilled C++ Software Engineer
+Senior Node/React Developer (Remote, US Timezones)
+Senior Software Engineer (Starship)
+.NET Integration Developer
+Software Engineer in Test
+Backend Engineer
+Software Automation Engineer
+Software Developers Wanted!
+Back-End Engineer (.NET) (f/m/d)
+Data Scientist (Remote)
+Machine Learning Engineer
+Machine Learning Engineer
+Software Developer (Video Processing)
+DevOps Engineer im Versicherungssektor
+Support Engineer
+Principal Software Engineer
+Back-End Engineer (.NET) (f/m/d) - Remote
+Algo Developer - On Campus Recruiting
+Principal Software Engineer
+Full Stack Engineer
+Engineering Team Leader - Perception Robotics
+IT-Spezialist (w/m/d) (Massen)Datenanalyse und Ermittlungsunterstützung
+Apple Media Products (AMP): Business Manager
+Klassifizierer Schwerpunkt Software (m/w/d)
+(Senior) Machine Learning Engineer
+IT Consultant (m/w/d)
+Self-Starter Rapid-Prototyping DoD Network Software Developers
+Mobile Robotics Engineer
+Principal AppOps and Site Reliability Engineer
+Data Infrastructure Engineer: Big Data, Functional Programming, Drug Discovery
+IoT Developer (m/w/d)
+Data Scientist (Remote)
+Senior Back-End Developer
+Data Scientist - Entry to Experienced Level
+Software Engineer on Machine Learning
+Algorithm Developer (m/w/x)
+Principal Staff Engineer
+Data Scientist (Machine Learning/AI)
+Full Stack Developer / CTO Co-founder
+Product Manager, Growth
+Telemetry and Signals Analyst - Entry/Experienced Level
+Lead NLP Data Scientist
+Lead NLP Data Scientist
+Data Infrastructure Engineer: Big Data, Functional Programming, Drug Discovery
+Telemetry and Signals Analyst - Entry/Experienced Level
+(Senior) Systems Engineer im DevOps-Umfeld (m/w/d)
+Scientific Applications Developer
+IT Consultant
+Lead Cloud Developer
+Senior Technical Product Manager (m/f/div) for PAIR Finance
+Sr. Manager of Core Product Engineering
+DevOps Engineer (f/m/x)
+Senior Autonomy Engineer - State Estimation
+DevOps Engineer (Build and Release Engineer)
+Site Reliability Engineering Manager
+DevOps Engineer
+Insight Engine Developer
+Sr. Data Analyst
+Senior Engineering Manager
+Softwareentwickler (w/m/d) Financial Solutions / Quantitative Methoden
+Solutions Architect, Manager
+(Senior) Systems Engineer im DevOps-Umfeld (m/w/d) in München
+Researcher Developer
+Cloud Developer (m/w/d) DevOps
+Cloud Infrastructure Engineer
+Head of Cloud Operations (ProdOps)
+System Engineer - Corporate IT (m|w|x)
+Manager, DevOps
+Softwareentwickler C++ Optische Messtechnik (m/w/d)
+Data Science Evangelist (Community Manager) - HeartEx
+Senior Business Analytics Manager (EMEA)
+Engineering Director - Community
