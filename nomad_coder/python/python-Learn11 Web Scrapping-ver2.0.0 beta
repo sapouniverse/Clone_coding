@@ -1,0 +1,59 @@
+---------주피터
+
+pip install requests
+pip install beautifulsoup4
+
+import requests
+from bs4 import BeautifulSoup
+
+
+stackoverflow_result = requests.get("https://stackoverflow.com/jobs?q=python")
+
+print(stackoverflow_URL)
+
+stackoverflow_soup = BeautifulSoup(stackoverflow_result.text, 'html.parser')
+
+pagination=stackoverflow_soup.find("div", {"class":"s-pagination"})
+pages=pagination.find_all('a')
+
+spans=[]
+for page in pages[:-1]:
+    spans.append(int(page.text))        <----------- 여기가 string이 아니라 text를 해야 불러오더라고? 이것도 왜그런지 모르겠어 
+    
+max_page = spans[-1]
+
+print(max_page)
+
+85
+
+----------repl.it
+stackoverflow.py
+
+import requests
+from bs4 import BeautifulSoup
+
+
+stackoverflow_URL = f"https://stackoverflow.com/jobs?q=python"
+
+
+def get_last_page():
+  result = requests.get(stackoverflow_URL)
+  soup=BeautifulSoup(result.text,"html.parser")
+
+  pagination = soup.find("div", {"class":"s-pagination"})
+  pages=pagination.find_all("a")
+  last_pages=pages[-2].get_text(strip=True)
+  return last_pages
+  
+  
+
+def get_jobs():
+  last_pages = get_last_page()
+  print(last_pages)
+  return [] 
+  
+85
+  
+------------------------------ 뭐가 다른건지 모르겠네
+# repl.it에 있는거 주피터에 그대로 가져가면 아무것도 못불러옴
+# 그래서 이전에 했던거 조금 수정해서 하니까 나오네?
