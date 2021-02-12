@@ -51,3 +51,28 @@ def get_jobs():
   jobs = extract_jobs(last_page)
 
   return jobs 
+  
+----------------------------
+# 결과 : 링크까지 잘 되는지 봤더니 잘 됨
+
+.
+.
+.
+.
+.
+
+{'title': 'Software Engineer - Python', 'company': 'Canonical', 'location': 'No office location', 'apply_link': 'https://stackoverflow.com/jobs/451978/software-engineer-python-canonical'}
+{'title': 'Java/Python Software Engineering Lead  - VP', 'company': 'JPMorgan Chase Bank, N.A.', 'location': 'Jersey City, NJ', 'apply_link': 'https://stackoverflow.com/jobs/496241/java-python-software-engineering-lead-vp-jpmorgan-chase-bank-na'}
+{'title': 'Java / Python Software Engineer - AWM Trading Technology - Vice President (VP)', 'company': 'JPMorgan Chase Bank, N.A.', 'location': 'London, UK', 'apply_link': 'https://stackoverflow.com/jobs/489521/java-python-software-engineer-awm-trading-jpmorgan-chase-bank-na'}
+{'title': 'Engineering Lead Python Developer', 'company': 'JPMorgan Chase Bank, N.A.', 'location': 'Jersey City, NJ', 'apply_link': 'https://stackoverflow.com/jobs/500913/engineering-lead-python-developer-jpmorgan-chase-bank-na'}
+{'title': 'Backend Python Developer', 'company': 'Itemize', 'location': 'Philadelphia, PA', 'apply_link': 'https://stackoverflow.com/jobs/489608/backend-python-developer-itemize'}
+{'title': 'Software Engineering - Python - VP (Athena)', 'company': 'JPMorgan Chase Bank, N.A.', 'location': 'Bengaluru, India', 'apply_link': 'https://stackoverflow.com/jobs/498073/software-engineering-python-vp-athena-jpmorgan-chase-bank-na'}
+{'title': 'Developer and Consultant: Java, Python and More', 'company': 'Princeton Consultants', 'location': 'Princeton, NJ', 'apply_link': 'https://stackoverflow.com/jobs/489617/developer-and-consultant-java-python-and-more-princeton-consultants'}
+
+.
+.
+.
+.
+.
+.
+
