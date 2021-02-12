@@ -1,0 +1,14 @@
+save.py
+
+import csv
+
+def save_to_file(jobs):
+  file=open("jobs.csv", mode="w", encoding = "utf-8-sig")   <---------------  다운 해봤더니 한글이 깨져서 utf-8-sig 인코딩 했음
+  writer=csv.writer(file)
+  writer.writerow(["title", "company", "location", "link"])
+  for job in jobs:
+    writer.writerow(list(job.values()))
+  return
+  
+--------------------
+# 결과 : utf-8으로 해도 깨져서 utf-8-sig로 했는데 무슨 차이인지 모르겠음. 와우~ 되네? 신기신기
