@@ -19,8 +19,15 @@ def get_last_page():
 
 def extract_job(html):
   title=html.find("h2",{"class":"mb4"}).find("a")["title"]
-  company, location=html.find("h3",{"class":"mb4"}).find_all("span", recursive=False)   <-----  recursive=False는 너무 깊게 들어가지 말라는 뜻. find all을 하면 전체 다가져오는데 자제시키는 느낌
-  print(company, location)      <------ 첫번째 /sapn은 회사명인 것을 할고 두번째 /sapn은 장소인 것을 알기 때문에 recursive=False를 걸어서 차례대로 불러오는 상황
+  
+  company, location=html.find("h3",{"class":"mb4"}).find_all("span", recursive=False)   
+    <-----  recursive=False는 너무 깊게 들어가지 말라는 뜻. find all을 하면 전체 다가져오는데 자제시키는 느낌
+    <----- 이렇게 packing 해주는 기능은 파이썬에 내장된 좋은 기능이다. soup의 
+  
+  print(company, location)
+    <------ 첫번째 /sapn은 회사명인 것을 할고 두번째 /sapn은 장소인 것을 알기 때문에 recursive=False를 걸어서 차례대로 불러오는 상황
+  
+  
   return{"title":title}
 
 
