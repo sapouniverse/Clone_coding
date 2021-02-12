@@ -33,10 +33,15 @@ def get_last_page():
 def extract_jobs(last_pages):      <-------- 이거 하나 넣을라고
   jobs = []
   for page in range(last_pages):
-    print(page)
+    print(page+1)                  <------- 0부터가 아니라 1부터 출력할라고 +1해준거임
 
 
 def get_jobs():
   last_pages = get_last_page()
   jobs=extract_jobs(last_pages)   <------ 여기랑
   return jobs                     <------ 여기 손봤음
+  
+--------------------
+# 결과
+
+# 1~85 까지가 아니라 1~46 1~47 1~59 1~85 이렇게 뜨는데? 그래도 일단 다음거 따라서 진행해볼게요
