@@ -1,0 +1,1085 @@
+stackoverflow.py
+
+import requests
+from bs4 import BeautifulSoup
+
+
+stackoverflow_URL = f"https://stackoverflow.com/jobs?q=python"
+
+
+def get_last_page():
+  result = requests.get(stackoverflow_URL)
+  soup=BeautifulSoup(result.text,"html.parser")
+
+  pagination = soup.find("div", {"class":"s-pagination"})
+  pages=pagination.find_all("a")
+  last_pages=pages[-2].get_text(strip=True)
+  return int(last_pages)
+
+
+def extract_job(html):
+  title=html.find("h2",{"class":"mb4"}).find("a")["title"]
+  company, location=html.find("h3",{"class":"mb4"}).find_all("span", recursive=False)
+  print(company.string, location.string)                                                 <-------- 깔끔하게 정리하기 .string 
+  return{"title":title}
+
+
+
+
+def extract_jobs(last_pages):
+  jobs = []
+  for page in range(last_pages):
+    result=requests.get(f"{stackoverflow_URL}&pg={page+1}")
+    soup=BeautifulSoup(result.text,"html.parser")
+    results=soup.find_all("div", {"class":"-job"})
+    for result in results:
+      job = extract_job(result)
+      jobs.append(job)
+  return jobs
+
+
+def get_jobs():
+  last_page = get_last_page()
+  jobs = extract_jobs(last_page)
+  return jobs 
+  
+---------------------------------
+# 결과 : 대충 이런 느낌
+
+.
+.
+.
+.
+.
+
+New York, NY                
+Axpo
+                 
+Madrid, Spain                
+Apple
+                 
+San Diego, CA                
+JPMorgan Chase Bank, N.A.
+                 
+Mumbai, India                
+SmartNews
+                 
+Shibuya City, Japan                
+Penn Interactive Ventures
+                 
+Philadelphia, PA                
+JPMorgan Chase Bank, N.A.
+                 
+Jersey City, NJ                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+ErisX
+                 
+Chicago, IL                
+Flip GmbH
+                 
+Stuttgart, Deutschland                
+Forschungsgruppe g/d/p
+                 
+Hamburg, Germany                
+Tidepool
+                 
+No office location                
+Ascend Innovations
+                 
+Dayton, OH                
+KLAXIT
+                 
+Paris, France                
+Boston Dynamics
+                 
+No office location                
+REX
+                 
+Redwood City, CA                
+Parenthetic
+                 
+Arlington, VA                
+Combined Public Communication
+                 
+Cold Spring, KY                
+None 
+No office location                
+LanguageWire
+                 
+Valencia, Spain                
+JPMorgan Chase Bank, N.A.
+                 
+London, UK                
+Sofía
+                 
+Mexico City, Mexico                
+QuantCo
+                 
+Cologne, Germany                
+Hearst Magazines
+                 
+New York, NY                
+Vouched
+                 
+Seattle, WA                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+Ailo
+                 
+Melbourne, Australia                
+Singular Genomics
+                 
+San Diego, CA                
+NavVis GmbH
+                 
+München, Germany                
+JPMorgan Chase Bank, N.A.
+                 
+Herzliya, Israel                
+Servian
+                 
+Bengaluru, India                
+AH Technology – Albert Heijn
+                 
+Zaandam, Netherlands                
+Axpo
+                 
+Madrid, Spain                
+Cambly
+                 
+San Francisco, CA                
+Apple
+                 
+San Diego, CA                
+JPMorgan Chase Bank, N.A.
+                 
+Bengaluru, India                
+1&1 Mail & Media Applications SE - WEB.DE | GMX | 1&1 | mail.com
+                 
+Karlsruhe, Deutschland                
+Captivation Software
+                 
+Aberdeen Proving Ground, MD                
+Forschungsgruppe g/d/p
+                 
+Hamburg, Germany                
+ErisX
+                 
+Chicago, IL                
+Combined Public Communication
+                 
+Cold Spring, KY                
+Tidepool
+                 
+No office location                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+JPMorgan Chase Bank, N.A.
+                 
+Bengaluru, India                
+Blueprint Genetics
+                 
+Espoo, Finland                
+JPMorgan Chase Bank, N.A.
+                 
+Buenos Aires, Argentina                
+Apple
+                 
+Pittsburgh, PA                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+Wildlife Studios
+                 
+Dublin, Ireland                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+PayPay Corporation.
+                 
+Minato City, Japan                
+Ailo
+                 
+Melbourne, Australia                
+Worldline
+                 
+Aachen, Deutschland                
+freiheit.com technologies gmbh
+                 
+Lisbon, Portugal                
+Online Partner AB
+                 
+Hägersten, Sweden                
+FRIDAY
+                 
+Berlin, Deutschland                
+Gorgias
+                 
+Paris, France                
+AnyDesk Software GmbH
+                 
+Stuttgart, Germany                
+Citizens Bank
+                 
+Providence, RI                
+ByteDance
+                 
+Singapore                
+UrbanFootprint, Inc.
+                 
+Berkeley, CA                
+Signal AI
+                 
+London, UK                
+HENNGE K.K.
+                 
+Tokyo, Japan                
+Decodify.me LLC
+                 
+No office location                
+Tynker
+                 
+No office location                
+RSR Group
+                 
+Winter Park, FL                
+PAYBACK
+                 
+München, Deutschland                
+Global Reach Consulting LLC
+                 
+Reston, VA                
+Lime
+                 
+Lund, Sweden                
+Intruder
+                 
+London, UK                
+symphony.is
+                 
+Niš, Serbia                
+Zoopla
+                 
+London, UK                
+Intruder
+                 
+London, UK                
+symphony.is
+                 
+Niš, Serbia                
+Niometrics
+                 
+Brașov, Romania                
+Realtor.com
+                 
+Austin, TX                
+causaLens
+                 
+London, UK                
+Varen Technologies
+                 
+Columbia, MD                
+Dolfin
+                 
+Amsterdam, Netherlands                
+Apple
+                 
+San Diego, CA                
+Chan Zuckerberg Initiative
+                 
+Redwood City, CA                
+Gaia GPS
+                 
+No office location                
+Ledger Investing
+                 
+No office location                
+Parenthetic
+                 
+Arlington, VA                
+JPMorgan Chase Bank, N.A.
+                 
+Wilmington, DE                
+JPMorgan Chase Bank, N.A.
+                 
+Bengaluru, India                
+pascom GmbH & Co KG
+                 
+Niš, Serbia                
+REPAY
+                 
+Tempe, AZ                
+Tessian
+                 
+London, UK                
+Realtor.com
+                 
+Richmond, BC, Canada                
+Breezy HR
+                 
+No office location                
+BenchSci
+                 
+Toronto, ON, Canada                
+None 
+No office location                
+symphony.is
+                 
+Skopje, North Macedonia                
+Saturna Capital Corporation
+                 
+Bellingham, WA                
+Secfi
+                 
+Amsterdam, Netherlands                
+JPMorgan Chase Bank, N.A.
+                 
+Buenos Aires, Argentina                
+AnyDesk Software GmbH
+                 
+Stuttgart, Germany                
+Citizens Bank
+                 
+Providence, RI                
+Fraunhofer-Institut für Werkstoffmechanik IWM
+                 
+Freiburg im Breisgau, Deutschland                
+NavVis GmbH
+                 
+München, Germany                
+HENNGE K.K.
+                 
+Tokyo, Japan                
+Decodify.me LLC
+                 
+No office location                
+RSR Group
+                 
+Winter Park, FL                
+PAYBACK
+                 
+München, Deutschland                
+Lime
+                 
+Lund, Sweden                
+Intruder
+                 
+London, UK                
+Axpo
+                 
+Madrid, Spain                
+symphony.is
+                 
+Niš, Serbia                
+causaLens
+                 
+London, UK                
+Olive
+                 
+Columbus, OH                
+Reply
+                 
+München, Deutschland                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+Wabion AG
+                 
+Olten, Schweiz                
+None 
+No office location                
+UK Home Office
+                 
+Croydon, UK                
+Artificial Solutions
+                 
+Stockholm, Sweden                
+Clio
+                 
+No office location                
+Dolfin
+                 
+Amsterdam, Netherlands                
+Hopjump
+                 
+Cambridge, MA                
+finn.auto
+                 
+München, Deutschland                
+Packet Fabric
+                 
+No office location                
+JPMorgan Chase Bank, N.A.
+                 
+Buenos Aires, Argentina                
+trivago N.V.
+                 
+Düsseldorf, Germany                
+JPMorgan Chase Bank, N.A.
+                 
+Wilmington, DE                
+freiheit.com technologies gmbh
+                 
+Lisbon, Portugal                
+TRAMES Pte Ltd
+                 
+No office location                
+NuffSaid, Inc.
+                 
+San Francisco, CA                
+NuffSaid, Inc.
+                 
+San Francisco, CA                
+Nikola Corporation
+                 
+Phoenix, AZ                
+Realtor.com
+                 
+Austin, TX                
+Grata Inc.
+                 
+New York, NY                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+Aaqua
+                 
+Antwerp, Belgium                
+Babbel (Lesson Nine GmbH)
+                 
+Berlin, Germany                
+Quadpay
+                 
+New York, NY                
+CEL
+                 
+Ho Chi Minh City, Vietnam                
+Nexthink
+                 
+Madrid, Spain                
+Mastery Logistics Systems, Inc.
+                 
+Chicago, IL                
+Slickdeals, LLC
+                 
+Las Vegas, NV                
+ByteDance
+                 
+Singapore                
+JPMorgan Chase Bank, N.A.
+                 
+Lewisville, TX                
+Odoo
+                 
+Ciudad de México, Mexico                
+UrbanFootprint, Inc.
+                 
+Berkeley, CA                
+Adevinta
+                 
+Barcelona, Spain                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+JPMorgan Chase Bank, N.A.
+                 
+Mumbai, India                
+Oracle
+                 
+Guadalajara, Mexico                
+Squla
+                 
+Amsterdam, Netherlands                
+Reali
+                 
+Tel Aviv-Yafo, Israel                
+We Got POP Ltd
+                 
+London, UK                
+DialogTech
+                 
+No office location                
+Derivco
+                 
+Barcelona, Spain                
+SHIELD
+                 
+Singapore                
+EverReal GmbH
+                 
+No office location                
+Genetec Austria GmbH
+                 
+Wien, Austria                
+Accenture DACH
+                 
+Zürich, Switzerland                
+RegioHelden GmbH
+                 
+Stuttgart, Deutschland                
+Bitcoin Depot
+                 
+No office location                
+JPMorgan Chase Bank, N.A.
+                 
+Columbus, OH                
+JP Morgan Chase
+                 
+Herzliya, Israel                
+Apple
+                 
+San Diego, CA                
+Magic Memories Digital, Ltd.
+                 
+No office location                
+Dusty Robotics
+                 
+Mountain View, CA                
+Next Kraftwerke GmbH
+                 
+Köln, Germany                
+Epidemic Sound AB
+                 
+Stockholm, Sweden                
+Kaizo bv
+                 
+Amsterdam, Netherlands                
+Apple
+                 
+San Diego, CA                
+Airtm, Inc
+                 
+No office location                
+Zoopla
+                 
+London, UK                
+Senacor Technologies AG
+                 
+Frankfurt am Main, Deutschland                
+JPMorgan Chase Bank, N.A.
+                 
+Jersey City, NJ                
+DialogTech
+                 
+No office location                
+Derivco
+                 
+Barcelona, Spain                
+SHIELD
+                 
+Singapore                
+Connecterra BV
+                 
+Amsterdam, Netherlands                
+ASRC Federal
+                 
+Moorestown, NJ                
+ASML
+                 
+Veldhoven, Netherlands                
+Apple
+                 
+Cupertino, CA                
+Accenture DACH
+                 
+Zürich, Switzerland                
+RegioHelden GmbH
+                 
+Stuttgart, Deutschland                
+Bitcoin Depot
+                 
+No office location                
+Flip GmbH
+                 
+Stuttgart, Deutschland                
+REX
+                 
+Redwood City, CA                
+Dusty Robotics
+                 
+Mountain View, CA                
+Kaizo bv
+                 
+Amsterdam, Netherlands                
+Apple
+                 
+San Diego, CA                
+Airtm, Inc
+                 
+No office location                
+Zoopla
+                 
+London, UK                
+Paradox Cat GmbH
+                 
+München, Deutschland                
+KLAXIT
+                 
+Paris, France                
+JPMorgan Chase Bank, N.A.
+                 
+Plano, TX                
+Lumen
+                 
+Thousand Oaks, CA                
+WS Audiology
+                 
+Lynge, Denmark                
+ReCharge Payments
+                 
+No office location                
+OSL
+                 
+Hong Kong                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+Trustpilot
+                 
+Copenhagen, Denmark                
+Appear TV
+                 
+Oslo, Norway                
+G2i Inc
+                 
+No office location                
+RavenPack International SL.
+                 
+No office location                
+None 
+Dallas, TX                
+Livello GmbH
+                 
+Düsseldorf, Deutschland                
+1&1 IONOS SE
+                 
+Berlin, Deutschland                
+JPMorgan Chase Bank, N.A.
+                 
+Bengaluru, India                
+Joint Academy
+                 
+Malmö, Sweden                
+Servian
+                 
+Sydney, Australia                
+Creative Mines
+                 
+Hancock, MI                
+Hearst Magazines
+                 
+New York, NY                
+Aiven Australia Pty Ltd
+                 
+The Rocks, Australia                
+Mastercard
+                 
+London, UK                
+Government Technology Agency of Singapore
+                 
+Singapore                
+1plusX AG
+                 
+Zürich, Switzerland                
+JPMorgan Chase Bank, N.A.
+                 
+Buenos Aires, Argentina                
+Givelify
+                 
+No office location                
+Contently
+                 
+New York, NY                
+We Got POP Ltd
+                 
+London, UK                
+FELFEL
+                 
+Zürich, Switzerland                
+JPMorgan Chase Bank, N.A.
+                 
+Lewisville, TX                
+Chan Zuckerberg Initiative
+                 
+Redwood City, CA                
+WELL Health Inc.
+                 
+Santa Barbara, CA                
+Innoactive GmbH
+                 
+München, Germany                
+Skillhouse Staffing Solutions
+                 
+Tokyo, Japan                
+Varen Technologies
+                 
+Columbia, MD                
+JPMorgan Chase Bank, N.A.
+                 
+Lewisville, TX                
+FactSet
+                 
+Norwalk, CT                
+Clearcover
+                 
+Chicago, IL                
+Aloe Care Health
+                 
+New York, NY                
+finn.auto
+                 
+München, Deutschland                
+JPMorgan Chase Bank, N.A.
+                 
+Bengaluru, India                
+HENNGE K.K.
+                 
+Tokyo, Japan                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+JPMorgan Chase Bank, N.A.
+                 
+Hyderabad, India                
+The Orchard
+                 
+London, UK                
+Intruder
+                 
+London, UK                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+TransferWise
+                 
+London, UK                
+Hopjump
+                 
+Cambridge, MA                
+Wildlife Studios
+                 
+Dublin, Ireland                
+TeraVolt GmbH
+                 
+Hamburg, Deutschland                
+Odoo
+                 
+San Francisco, CA                
+JPMorgan Chase Bank, N.A.
+                 
+Herzliya, Israel                
+JPMorgan Chase Bank, N.A.
+                 
+Jersey City, NJ                
+JPMorgan Chase Bank, N.A.
+                 
+Newark, DE                
+Miro
+                 
+Amsterdam, Netherlands                
+JPMorgan Chase Bank, N.A.
+                 
+Bournemouth, UK                
+JPMorgan Chase Bank, N.A.
+                 
+Wilmington, DE                
+Yelp
+                 
+London, UK                
+Wonder
+                 
+Berlin, Germany                
+We Got POP Ltd
+                 
+London, UK                
+JPMorgan Chase Bank, N.A.
+                 
+Chicago, IL                
+Chan Zuckerberg Initiative
+                 
+Redwood City, CA                
+Hypatos GmbH
+                 
+Berlin, Deutschland                
+Bitcoin Depot
+                 
+No office location                
+Dusty Robotics
+                 
+Mountain View, CA                
+Skillhouse Staffing Solutions
+                 
+Tokyo, Japan                
+Varen Technologies
+                 
+Columbia, MD                
+Innoactive GmbH
+                 
+München, Germany                
+FactSet
+                 
+Norwalk, CT                
+JPMorgan Chase Bank, N.A.
+                 
+Bengaluru, India                
+HENNGE K.K.
+                 
+Tokyo, Japan                
+Accenture DACH
+                 
+Zürich, Switzerland                
+Airtm, Inc
+                 
+No office location                
+KnowledgeBridge International, Inc.
+                 
+Reston, VA                
+By - Access Control Systems
+                 
+Madrid, Spain                
+JPMorgan Chase Bank, N.A.
+                 
+Jersey City, NJ                
+JPMorgan Chase Bank, N.A.
+                 
+Jersey City, NJ                
+JPMorgan Chase Bank, N.A.
+                 
+Newark, DE                
+Miro
+                 
+Amsterdam, Netherlands                
+JPMorgan Chase Bank, N.A.
+                 
+Plano, TX                
+Lumen
+                 
+Thousand Oaks, CA                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+JPMorgan Chase Bank, N.A.
+                 
+Newark, DE                
+Miro
+                 
+Amsterdam, Netherlands                
+JPMorgan Chase Bank, N.A.
+                 
+Bournemouth, UK                
+JPMorgan Chase Bank, N.A.
+                 
+Plano, TX                
+Lumen
+                 
+Thousand Oaks, CA                
+iubenda
+                 
+Milan, Italy                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+JPMorgan Chase Bank, N.A.
+                 
+Tampa, FL                
+The Hyve
+                 
+Utrecht, Netherlands                
+JPMorgan Chase Bank, N.A.
+                 
+Mumbai, India                
+OSL
+                 
+Hong Kong                
+JPMorgan Chase Bank, N.A.
+                 
+Jersey City, NJ                
+JPMorgan Chase Bank, N.A.
+                 
+Columbus, OH                
+Tipser AB
+                 
+Wrocław, Poland                
+QOMPLX, Inc.
+                 
+McLean, VA                
+BenchSci
+                 
+Toronto, ON, Canada                
+JPMorgan Chase Bank, N.A.
+                 
+Buenos Aires, Argentina                
+Bloomberg LP
+                 
+San Francisco, CA                
+JPMorgan Chase Bank, N.A.
+                 
+Mumbai, India                
+Postscript
+                 
+No office location                
+DialogTech
+                 
+No office location                
+JPMorgan Chase Bank, N.A.
+                 
+Plano, TX                
+Basware
+                 
+Chandigarh, India                
+Hopjump
+                 
+Cambridge, MA                
+Postscript
+                 
+No office location                
+Elinvar GmbH
+                 
+No office location                
+JPMorgan Chase Bank, N.A.
+                 
+Jersey City, NJ                
+JPMorgan Chase Bank, N.A.
+                 
+Columbus, OH                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+Oracle
+                 
+Bengaluru, India                
+None 
+No office location                
+Esri
+                 
+Redlands, CA                
+DialogTech
+                 
+No office location                
+JPMorgan Chase Bank, N.A.
+                 
+Chicago, IL                
+The State of Wisconsin Investment Board
+                 
+Madison, WI                
+Basware
+                 
+Chandigarh, India                
+JPMorgan Chase Bank, N.A.
+                 
+Plano, TX                
+Aaqua
+                 
+Antwerp, Belgium                
+Nova Dynamics
+                 
+Philomath, OR                
+Frauscher Sensor Technology
+                 
+Sankt Marienkirchen bei Schärding, Austria                
+Engineering Solutions, Inc.
+                 
+Hanover, MD                
+JPMorgan Chase Bank, N.A.
+                 
+Wilmington, DE                
+Wonder
+                 
+Berlin, Germany                
+JPMorgan Chase Bank, N.A.
+                 
+Buenos Aires, Argentina                
+Fraunhofer-Institut für Werkstoffmechanik IWM
+                 
+Freiburg im Breisgau, Deutschland                
+Nikola Corporation
+                 
+Phoenix, AZ                
+Senacor Technologies AG
+                 
+Frankfurt am Main, Deutschland                
+Senacor Technologies AG
+                 
+Hamburg, Deutschland                
+UrbanFootprint, Inc.
+                 
+Berkeley, CA                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+Mastery Logistics Systems, Inc.
+                 
+Chicago, IL                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+Chan Zuckerberg Initiative
+                 
+Redwood City, CA                
+Gorgias
+                 
+Paris, France                
+Babbel (Lesson Nine GmbH)
+                 
+Berlin, Germany                
+Packet Fabric
+                 
+No office location                
+JPMorgan Chase Bank, N.A.
+                 
+New York, NY                
+Adevinta
+                 
+Barcelona, Spain                
+CommentSold
+                 
+No office location                
+JPMorgan Chase Bank, N.A.
+                 
+Lewisville, TX                
+Emerson Sweden
+                 
+Mölnlycke, Sweden                
+Topic Embedded Systems B.V.
+                 
+Eindhoven, Netherlands                
+Market America / Shop.com
+                 
+Greensboro, NC                
+Apple
+                 
+Cambridge, MA                
+QuantCo
+                 
+Zürich, Switzerland                
+SoundExchange
+                 
+No office location                
+Joint Academy
+                 
+Malmö, Sweden                
+Penni.io
+                 
+København, Denmark                
+Apple
+                 
+San Diego, CA                
+EPFL - Blue Brain Project
+                 
+Genève, Switzerland                
+pulseData
+                 
+New York, NY                
+JPMorgan Chase Bank, N.A.
+                 
+Jersey City, NJ                
+None 
+McLean, VA                
+Realtor.com
+                 
+Austin, TX  
+  
