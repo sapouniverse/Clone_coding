@@ -2,15 +2,16 @@ from flask import Flask
 
 app = Flask("SuperScrapper")   <----- 1. 내 맘대로 앱 이름 넣기, 아무거나
 
-@app.route("/")
+@app.route("/")     <---- 3. 누군가가 '/' 로 접속 요청을 하면 home이라는 함수를 불러올거에요.
 def home():
   return "Hello! Welcome to mi casa!"
 
-@app.route("/contact")
+@app.route("/contact")    <----- 4. 웹사이트 뒤에 추가 루트 붙여서 새로운 페이지로 이동하게 하기
 def potato():
   return "Contact me!"
 
-app.run(host="0.0.0.0")    <------- 2. repl.it 환경이라 IP 주소를 이렇게 설정한거임. 
+app.run(host="0.0.0.0")    <------- 2. repl.it은 0.0.0.0 을 입력하면 이 사이트를 공개하고 싶은거구나~ 라고 
 
 ------------------------
-# 결과 : flask를 통해 홈페이지 만들기
+# 결과 : python이랑 flask를 통해 웹사이트 만들기
+# @ = 데코레이터 = 바로 아래 있는 "함수"를 찾는다. 함수가 아니면 오류로 인식함. 파이썬은 이 @를 보는 순간 그 바로 아래 def를 실행하면 된다고 생각하는 것이다. 
