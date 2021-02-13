@@ -1,0 +1,17 @@
+from flask import Flask
+
+app = Flask("SuperScrapper")
+
+@app.route("/")
+def home():
+  return "<h1>Job Search</h1><form><input placeholder='What job do want?' required/><button>Search</button>"
+
+<----- required 받아서 Search 버튼 
+
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
