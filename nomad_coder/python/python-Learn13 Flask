@@ -1,0 +1,16 @@
+from flask import Flask
+
+app = Flask("SuperScrapper")   <----- 1. 내 맘대로 앱 이름 넣기, 아무거나
+
+@app.route("/")
+def home():
+  return "Hello! Welcome to mi casa!"
+
+@app.route("/contact")
+def potato():
+  return "Contact me!"
+
+app.run(host="0.0.0.0")    <------- 2. repl.it 환경이라 IP 주소를 이렇게 설정한거임. 
+
+------------------------
+# 결과 : flask를 통해 홈페이지 만들기
