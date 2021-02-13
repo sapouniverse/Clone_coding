@@ -1,0 +1,17 @@
+@app.route("/<username>")
+def potato():
+  return "Contact me!“
+
+TypeError : potato() got an unexpected keyword argument ‘username’
+--> flask가 potato 함수를 username인자와 함꼐 호출하려고 하는데, potato를 보면 아무런 인자를 받고 있지 않다. 
+--> 그래서 potato가 username을 받을 수 있도록 괄호 안에 username을 넣어주고, 내용에도 {username}을 넣어주면 좋다. 
+
+
+
+
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing“
+
+--> 인스타그램에서도 비슷한 일이 일어나고 있다. /username 치고 들어가면 페이지 뒤편에서는 해당 username을 DB에서 찾고 있는 것이다. 
