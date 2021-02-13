@@ -4,7 +4,7 @@ app = Flask("SuperScrapper")
 
 @app.route("/")
 def home():
-  return "<h1>Job Search</h1><form><input placeholder='What job do want?'  />"
+  return "<h1>Job Search</h1><form><input placeholder='What job do want?'  />"  <----- 오~? 검색창이 만들어지네?
 
 @app.route("/<username>")
 def potato(username):
