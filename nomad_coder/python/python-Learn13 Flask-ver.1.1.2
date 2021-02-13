@@ -6,7 +6,7 @@ app = Flask("SuperScrapper")
 
 @app.route("/")
 def home():
-  return render_template("potato.html")
+  return render_template("potato.html")  <----- 쨔잔
 
 @app.route("/<username>")
 def potato(username):
