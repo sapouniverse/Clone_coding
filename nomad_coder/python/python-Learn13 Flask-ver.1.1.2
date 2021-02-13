@@ -1,0 +1,37 @@
+main.py
+
+from flask import Flask, render_template   <----- html 파일을 main.py 로 보내기 위해 render_template를 import함.
+
+app = Flask("SuperScrapper")
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
+
+
+>>templates
+poteto.html     <---- 이렇게 따로 빼니까 아이 이쁘다
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Search</title>
+  </head>
+  
+  <body>
+    <h1>Job Search</h1>
+    <form>
+      <input placeholder='What job do want?' required/>
+      <button>Search</button>
+    </form>
+  </body> 
+</html>
