@@ -1,0 +1,42 @@
+main.py
+
+from flask import Flask, render_template
+
+app = Flask("SuperScrapper")
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")        <------- 무엇을 검색하든 potato.html에서 여기(action="/report")에 걸리는 것들은
+def report():
+  return "this is haha"      <------- 그 검색 결과를 "this is haha" 로 나오게 만들었음. 
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
+
+
+>>templates
+potato.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Search</title>
+  </head>
+  
+  <body>
+    <h1>Job Search</h1>
+    
+     <form action="/report" method="get">                              <--------- "여기"에 걸리는 것들
+      <input placeholder='Search for a job' required name="word"/>
+      <button>Search</button>
+    </form>
+  </body> 
+</html>
