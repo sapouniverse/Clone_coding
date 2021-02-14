@@ -44,6 +44,6 @@ report.html     <----- 새로 만든거임
 # 결과 : 내가 검색한 단어를 끌어오면서
 
 Search Results
-You are looking for 
+You are looking for {검색어}
 
 이런 결과물을 출력함!!
