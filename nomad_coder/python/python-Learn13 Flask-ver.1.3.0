@@ -1,0 +1,49 @@
+main.py 
+
+from flask import Flask, render_template, request
+
+app = Flask("SuperScrapper")
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  return render_template("report.html", searchingBy=word)   <----- 요거 손댄거임. searchingBy=word 이건 임의로 만든 변수임
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+>>templates
+potato.html
+(생략)
+
+report.html     <----- 새로 만든거임
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Search</title>
+  </head>
+  
+  <body>
+    <h1>Search Results</h1>
+    <h3>You are looking for {{searchingBy}}</h3>    <----- 여기에 새로 만든 변수(searchingBy)를 넣어줬음
+    
+    </form>
+  </body> 
+</html>
+
+------------------
+# 결과 : 내가 검색한 단어를 끌어오면서
+
+Search Results
+You are looking for 
+
+이런 결과물을 출력함!!
