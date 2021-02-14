@@ -47,3 +47,7 @@ Search Results
 You are looking for {검색어}
 
 이런 결과물을 출력함!!
+
+
+# rendering : 변수들을 {{}}안에 넣어서 사용자 한테 보여줌
+# flask는 html을 rendering해서 {{}} 대신에 내가 던진 변수를 넣는 작업을 해준다.
