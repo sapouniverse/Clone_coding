@@ -1,0 +1,31 @@
+potato.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Search</title>
+  </head>
+  
+  <body>
+    <h1>Job Search</h1>
+    
+    
+     <form action="/report" method="get">     <----- 이게 뭔소린지 모르면 html코스부터 다시 보고 와야 한다. 기본적으로 웹에서 데이터를 보내는 방식이다.
+      
+      <input placeholder='Search for a job' required name="word"/>    <----- 뭔가 search 해서 검색 결과를 가져오게 하게 위해서 name을 넣었다. 
+      <----- "" 안에는 아무거나 상관없음. 임의로 word라고 넣은 것임
+      
+      
+      <button>Search</button>
+    </form>
+  </body> 
+</html>
+
+
+---------------------
+# 결과 : https://superscrapper.sapouniverse.repl.co/report?word=react
+# url을 보면 /report 로 갔고, ? 조건문을 만나서 word=react 인지 물어봤다. 
+# ? 이후부터는 url이 아니다. /report까지가 url이다. 그래서 이 뒤에는 아무거나 넣을 수 있다.
+# report 뒤에 무엇을 넣든 전부 /report로 가게 되어 있다. 
+# 구글이나 네이버 같은 검색창에 검색을 하게되면 /search 가 뜨면서 뒤에 엄청나게 긴 무언가(Query Arguments)가 뜬다. 같은 원리다.
+# 이제 이 뒤에 react와 일치하는 결과 값을 끄집어 내오는 작업이 필요하다.
