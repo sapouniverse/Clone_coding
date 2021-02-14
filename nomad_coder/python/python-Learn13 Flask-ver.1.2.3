@@ -1,0 +1,24 @@
+main.py
+
+from flask import Flask, render_template, request
+
+app = Flask("SuperScrapper")
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')        <-----------  request.args의 기능을 print(request.args.get('word'))로 확인 해봤으니 이제 적용 해야겠쥬?
+  return f"You are looking for a job in {word}"
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+-----------------------------------
+# 결과 : awesome을 검색하면 You are looking for a job in awesome 으로 잘 나옴!
