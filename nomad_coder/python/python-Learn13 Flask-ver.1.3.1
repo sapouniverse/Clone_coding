@@ -1,0 +1,28 @@
+main.py
+
+from flask import Flask, render_template, request, redirect  <----- home으로 돌아가는 함수 쓰기 위해 redirect라는 패키지를 import 함.
+
+app = Flask("SuperScrapper")
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()     <-------- 사용자가 대문자로 입력한 단어를 깔끔하게 소문자로 바꿔주는 작업
+  else:
+    return redirect("/")   <----- 아무것도 입력하지 않았을 때 hone으로 돌아가게 만듦.
+
+
+  return render_template("report.html", searchingBy=word)
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
