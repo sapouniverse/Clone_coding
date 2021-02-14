@@ -1,0 +1,40 @@
+# 사용자가 찾으려고 하는 단어를 가져오고 싶다. 추출해오고 싶다는 말
+# 검색하고자 하는 단어는 중요하니까 뽑아 와야 한다. 
+# 이 단어로, 우리의 scrapper를 돌릴 예정이다.
+# 그래서 다음 할 일은 request를 import 하는 것이다. 
+# 웹사이트 = request 라고 생각해도 무방. request에 매우 좋은 scrapper 기능이 있기 때문!
+# 이제 request 안을 들여다 봐야 한다. 왜냐하면 word=react를 뽑아오고 싶거든!
+
+import request     <------- 이거 import 하고 
+@app.route("/report")
+def report():
+  print(request.args.get('word'))    <--- 요거 추가해서 확인함
+  return "this is haha“
+----------------------------------
+결과1 : GET /favicon.ico HTTP/1.1" 200 – react   
+<--- 검색하는 글자에 따라 달라질거 같아서 바로 테스트 들어감
+우리는 지금 word 이름의 argument를 requests에서 뽑은거다.
+
+결과2 : GET /favicon.ico HTTP/1.1" 200 - beautiful
+requests에서 검색한 단어만 뽑는 명령어 같음
+
+결과3 : GET /favicon.ico HTTP/1.1" 200 – awesome
+이렇게 규칙적인거 보면 맞다고 봐도 됨.
+============================================
+import request     <------- 이거 import 하고 
+@app.route("/report")
+def report():
+  print(request.args)    <--- 이렇게 하면
+  return "this is haha“
+----------------------------------
+결과1 : GET /favicon.ico HTTP/1.1" 200 - ImmutableMultiDict([('word', 'react')]) 
+<--- 검색하는 글자에 따라 달라진다.
+모든 requests 데이터가 우리한테 넘어온다. 
+dictionary 안에 word, react가 들어간다. 다른걸 검색하면 
+
+결과2 : GET /favicon.ico HTTP/1.1" 200 - ImmutableMultiDict([('word', 'why so')]) 
+<--- 검색하는 글자에 따라 달라진다.
+dictionary 안에 word, why so 가 들어간다.
+
+결과3 : GET /favicon.ico HTTP/1.1" 200 - ImmutableMultiDict([('word', 'awesome')]) 
+통째로 가져오느냐, 단어 하나만 가져오느냐는 명령어에 달린게 맞군
