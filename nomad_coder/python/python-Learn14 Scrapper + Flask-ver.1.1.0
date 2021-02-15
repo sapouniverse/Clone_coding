@@ -1,0 +1,54 @@
+main.py
+
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs
+
+app = Flask("SuperScrapper")
+
+db={}                        <---------- 가짜 DB
+
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()
+    jobs = get_jobs(word)
+    db[word] = jobs               <---------- jobs를 가져오면 이를 DB에 저장
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word)
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
+
+
+>>templates
+potato.html
+report.html
+(생략)
+
+
+scrapper.py 
+(생략)
+
+-----------------------------------------------------
+# 설명
+이제 결과물들을 검색 결과 페이지에 표로 보여주는 것이 목표다.
+그럼 그 전에 가짜 DB를 만들면 된다. 매번 160페이지 스크래핑을 기다릴 수는 없기 떄문이다. 우선 가짜 DB는 @app 바깥쪽에 있어야 한다.
+jobs를 가져오면 이를 DB에 저장할거다. db[word]에 jobs을 넣어주자.
+이렇게 만들어두면 만약, 누군가가 아까 검색했던 {word}를 다시 찾으러 왔을 때 stackoverflow에서 160페이지를 검색할 필요가 없어진다.
