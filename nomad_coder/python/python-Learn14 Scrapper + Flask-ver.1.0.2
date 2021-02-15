@@ -68,8 +68,7 @@ def extract_job(html):
 
   job_id = html.find("h2",{"class":"fs-body3"}).find("a")["href"]
 
-  return {'title': title,'company': company,'location': location,
-'apply_link': f"https://stackoverflow.com{job_id}"}
+  return {'title': title,'company': company,'location': location, 'apply_link': f"https://stackoverflow.com{job_id}"}
 
 
 
