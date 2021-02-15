@@ -24,7 +24,7 @@ def report():
     fromDb=db.get(word)                <-----  여기부터 if문을 삽입했다
 
     if fromDb:                         <----- 만약 fromDb의 값이 존재하면, jobs가 fromDb가 될 것이다. 
-      pass
+      jobs=fromDb
     else:
       jobs = get_jobs(word)
       db[word] = jobs
