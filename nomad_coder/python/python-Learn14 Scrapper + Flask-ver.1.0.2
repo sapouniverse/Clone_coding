@@ -48,8 +48,8 @@ from bs4 import BeautifulSoup
 
 
 
-def get_last_page(stackoverflow_url):             <------- 여기에도 넣어줬고
-  result = requests.get(stackoverflow_url)        <------- 여기에도 넣어줬고
+def get_last_page(stackoverflow_url):             <------- 3. 여기에도 넣어줬고
+  result = requests.get(stackoverflow_url)        <------- 4. 여기에도 넣어줬고
   soup=BeautifulSoup(result.text,"html.parser")
 
   pagination = soup.find("div", {"class":"s-pagination"})
@@ -73,11 +73,11 @@ def extract_job(html):
 
 
 
-def extract_jobs(last_pages):
+def extract_jobs(last_pages):  <--------- 6. 그래서 여기랑
   jobs = []
   for page in range(last_pages):
     print(f"Scrapping Stackoverflow: Page: {page}")
-    result=requests.get(f"{stackoverflow_URL}&pg={page+1}")
+    result=requests.get(f"{stackoverflow_URL}&pg={page+1}")  <----- 7. 여기를 손봐줘야 한다.
     soup=BeautifulSoup(result.text,"html.parser")
     results=soup.find_all("div", {"class":"-job"})
     for result in results:
@@ -87,8 +87,8 @@ def extract_jobs(last_pages):
 
 
 def get_jobs(word):
-  stackoverflow_url = f"https://stackoverflow.com/jobs?q={word}"   <---- 납치해서 데려왔고
-  last_page = get_last_page(stackoverflow_url)                    <-----   여기에 넣어줬고
-  jobs = extract_jobs(last_page)
+  stackoverflow_url = f"https://stackoverflow.com/jobs?q={word}"   <---- 1. 납치해서 데려왔고
+  last_page = get_last_page(stackoverflow_url)                    <----- 2. 여기에 넣어줬고
+  jobs = extract_jobs(last_page)        <------- 5. 다음으로 jobs를 볼건데, extract_jobs도 url 에 요청을 보낸다. 
 
   return jobs 
