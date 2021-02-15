@@ -30,7 +30,7 @@ def report():
       jobs = get_jobs(word)    <----- 5. 대신 word를 찾는 scrapper가 작동한다. 
       db[word] = jobs          <----- 6. scrapper가 다 돌면 db에 저장된다. 
 
---------------- 문제는 이 상황에서 사용자에게 검색 결과 내용 메시지가 안뜬다는 것이다. 그래서 report.html를 
+--------------- 문제는 이 상황에서 사용자에게 검색 결과 내용 메시지가 안뜬다는 것이다. 그래서 report.html를 손 
 
   else:
     return redirect("/")
