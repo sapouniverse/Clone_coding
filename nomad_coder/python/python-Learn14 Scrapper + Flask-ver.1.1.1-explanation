@@ -48,8 +48,23 @@ app.run(host="0.0.0.0")
 
 >>templates
 potato.html
-report.html
 (생략)
+
+report.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Search</title>
+  </head>
+  
+  <body>
+    <h1>Search Results</h1>
+    <h3>You are looking for {{searchingBy}}</h3>    <----- 7. 여기를 손봐줄거임
+    
+    </form>
+  </body> 
+</html>
 
 
 scrapper.py 
