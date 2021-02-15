@@ -1,0 +1,95 @@
+main.py
+
+
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs                                   <------- 3. scrapper에서 함수 가져와야지 영차
+
+app = Flask("SuperScrapper")
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()
+    jobs = get_jobs(word)            <----- 2. get_jobs는 웹사이트 URL에서 오는 word를 받는다. 
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word)
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
+>>templates
+potato.html
+report.html
+(생략)
+
+
+
+
+scrapper.py 
+
+import requests
+from bs4 import BeautifulSoup
+
+
+stackoverflow_URL = f"https://stackoverflow.com/jobs?q=python"
+
+
+def get_last_page():
+  result = requests.get(stackoverflow_URL)
+  soup=BeautifulSoup(result.text,"html.parser")
+
+  pagination = soup.find("div", {"class":"s-pagination"})
+  pages=pagination.find_all("a")
+  last_pages=pages[-2].get_text(strip=True)
+  return int(last_pages)
+
+
+def extract_job(html):
+  title=html.find("h2",{"class":"mb4"}).find("a")["title"]
+  company, location=html.find("h3",{"class":"mb4"}).find_all("span", recursive=False)
+  
+  
+  company=company.get_text(strip=True)
+  location=location.get_text(strip=True)
+
+  job_id = html.find("h2",{"class":"fs-body3"}).find("a")["href"]
+
+  return {'title': title,'company': company,'location': location,
+'apply_link': f"https://stackoverflow.com{job_id}"}
+
+
+
+
+def extract_jobs(last_pages):
+  jobs = []
+  for page in range(last_pages):
+    print(f"Scrapping Stackoverflow: Page: {page}")
+    result=requests.get(f"{stackoverflow_URL}&pg={page+1}")
+    soup=BeautifulSoup(result.text,"html.parser")
+    results=soup.find_all("div", {"class":"-job"})
+    for result in results:
+      job = extract_job(result)
+      jobs.append(job)
+  return jobs
+
+
+def get_jobs(word):                       <----------- 1. python만 검색할게 아니라 검색하는걸 다 받아오려면 get_jobs 부터 word를 받아야 한다.
+  last_page = get_last_page()
+  jobs = extract_jobs(last_page)
+
+  return jobs 
