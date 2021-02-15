@@ -1,0 +1,74 @@
+main.py
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs
+
+app = Flask("SuperScrapper")
+
+db={}
+
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()
+
+
+
+    fromDb=db.get(word)
+
+    if fromDb:
+      jobs=fromDb
+    else:
+      jobs = get_jobs(word)
+      db[word] = jobs
+
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word, resultNumber=len(jobs))     <----- resultNumber는 <h3> </h3>에서 새로만든 변수
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
+
+>>templates
+potato.html
+(생략)
+report.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Search</title>
+  </head>
+  
+  <body>
+    <h1>Search Results</h1>
+    <h3>Found {{resultNumber}} results for: {{searchingBy}}</h3>  <----- 사용자에게 검색 결과 내용 메시지가 안떠서 문구 수정함
+    
+    </form>
+  </body> 
+</html>
+
+------------------
+# 결과 : 아직 결과를 표로 보여주지는 못하지만, 검색 결과를 브리핑해 줄 수 있도록은 만들었다.
+
+Search Results
+Found 437 results for: vue
+
+
+scrapper.py 
+(생략)
