@@ -48,8 +48,8 @@ from bs4 import BeautifulSoup
 
 
 
-def get_last_page():
-  result = requests.get(stackoverflow_URL)
+def get_last_page(stackoverflow_url):             <------- 여기에도 넣어줬고
+  result = requests.get(stackoverflow_url)        <------- 여기에도 넣어줬고
   soup=BeautifulSoup(result.text,"html.parser")
 
   pagination = soup.find("div", {"class":"s-pagination"})
@@ -68,7 +68,8 @@ def extract_job(html):
 
   job_id = html.find("h2",{"class":"fs-body3"}).find("a")["href"]
 
-  return {'title': title,'company': company,'location': location, 'apply_link': f"https://stackoverflow.com{job_id}"}
+  return {'title': title,'company': company,'location': location,
+'apply_link': f"https://stackoverflow.com{job_id}"}
 
 
 
@@ -87,9 +88,8 @@ def extract_jobs(last_pages):
 
 
 def get_jobs(word):
-  stackoverflow_url = f"https://stackoverflow.com/jobs?q={word}"   <------- 납치해서 이쪽으로 데려옴
-  last_page = get_last_page()
+  stackoverflow_url = f"https://stackoverflow.com/jobs?q={word}"   <---- 납치해서 데려왔고
+  last_page = get_last_page(stackoverflow_url)                    <-----   여기에 넣어줬고
   jobs = extract_jobs(last_page)
 
   return jobs 
-  
