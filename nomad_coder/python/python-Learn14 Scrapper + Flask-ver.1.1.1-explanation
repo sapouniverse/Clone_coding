@@ -1,0 +1,55 @@
+main.py
+
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs
+
+app = Flask("SuperScrapper")
+
+db={}
+
+----------------------- 서버가 막 켜졌다고 생각해보자. 누군가가 검색어에 react를 치고 search를 누르면 scrapper가 작동한다. 
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:                     <----- 1. word는 react니까 True
+    word=word.lower()          <----- 2. 입력된 word를 소문자로 바꿔준다.
+
+
+
+    fromDb=db.get(word)        <----- 3. word가 db에 있는지 찾아봄
+
+    if fromDb:                 <----- 4. db가 비어있으면 실행이 안 됨. fromDb=None
+      jobs=fromDb
+    else:
+      jobs = get_jobs(word)    <----- 5. 대신 word를 찾는 scrapper가 작동한다. 
+      db[word] = jobs          <----- 6. scrapper가 다 돌면 db에 저장된다. 
+
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word)
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
+>>templates
+potato.html
+report.html
+(생략)
+
+
+scrapper.py 
+(생략)
