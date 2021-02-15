@@ -4,7 +4,7 @@ from scrapper import get_jobs
 
 app = Flask("SuperScrapper")
 
-db={}
+db={}         <------- 그래서 가짜 DB는 @app.route 바깥쪽에 있어야 하는 것이다.
 
 
 @app.route("/")
