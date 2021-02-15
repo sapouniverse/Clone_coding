@@ -46,10 +46,10 @@ import requests
 from bs4 import BeautifulSoup
 
 
-stackoverflow_URL = f"https://stackoverflow.com/jobs?q=python"
+stackoverflow_URL = "https://stackoverflow.com/jobs?q=python"  <--------- 6. 근데 이 URL이 python만 검색하고 있네! 찾았다 요놈! 납치해서 데려가자!
 
 
-def get_last_page():
+def get_last_page():                          <--------- 5. 그래서 와서 보니까 get_last_page는 URL로 request를 보내고 있다. 
   result = requests.get(stackoverflow_URL)
   soup=BeautifulSoup(result.text,"html.parser")
 
@@ -69,8 +69,7 @@ def extract_job(html):
 
   job_id = html.find("h2",{"class":"fs-body3"}).find("a")["href"]
 
-  return {'title': title,'company': company,'location': location,
-'apply_link': f"https://stackoverflow.com{job_id}"}
+  return {'title': title,'company': company,'location': location, 'apply_link': f"https://stackoverflow.com{job_id}"}
 
 
 
@@ -89,7 +88,7 @@ def extract_jobs(last_pages):
 
 
 def get_jobs(word):                       <----------- 1. python만 검색할게 아니라 검색하는걸 다 받아오려면 get_jobs 부터 word를 받아야 한다.
-  last_page = get_last_page()
+  last_page = get_last_page()             <----------- 4. 근데 요놈 보니까 word를 get_last_page()로 보내네?
   jobs = extract_jobs(last_page)
 
   return jobs 
