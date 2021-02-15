@@ -1,8 +1,12 @@
 main.py
 
+(생략)
+
 >>templates
 potato.html
 report.html
+(생략)
+
 
 scrapper.py                    <------ 이전에 했던거 싹 붙여넣기
 
