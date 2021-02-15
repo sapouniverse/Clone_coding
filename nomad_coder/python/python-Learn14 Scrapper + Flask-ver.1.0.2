@@ -1,0 +1,96 @@
+main.py
+
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs
+
+app = Flask("SuperScrapper")
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()
+    jobs = get_jobs(word)               <-------- 여기를 집중적으로 보는 중
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word)
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+>>templates
+potato.html
+report.html
+(생략)
+
+
+
+
+scrapper.py 
+
+
+import requests
+from bs4 import BeautifulSoup
+
+
+
+
+
+def get_last_page():
+  result = requests.get(stackoverflow_URL)
+  soup=BeautifulSoup(result.text,"html.parser")
+
+  pagination = soup.find("div", {"class":"s-pagination"})
+  pages=pagination.find_all("a")
+  last_pages=pages[-2].get_text(strip=True)
+  return int(last_pages)
+
+
+def extract_job(html):
+  title=html.find("h2",{"class":"mb4"}).find("a")["title"]
+  company, location=html.find("h3",{"class":"mb4"}).find_all("span", recursive=False)
+  
+  
+  company=company.get_text(strip=True)
+  location=location.get_text(strip=True)
+
+  job_id = html.find("h2",{"class":"fs-body3"}).find("a")["href"]
+
+  return {'title': title,'company': company,'location': location,
+'apply_link': f"https://stackoverflow.com{job_id}"}
+
+
+
+
+def extract_jobs(last_pages):
+  jobs = []
+  for page in range(last_pages):
+    print(f"Scrapping Stackoverflow: Page: {page}")
+    result=requests.get(f"{stackoverflow_URL}&pg={page+1}")
+    soup=BeautifulSoup(result.text,"html.parser")
+    results=soup.find_all("div", {"class":"-job"})
+    for result in results:
+      job = extract_job(result)
+      jobs.append(job)
+  return jobs
+
+
+def get_jobs(word):
+  stackoverflow_url = f"https://stackoverflow.com/jobs?q={word}"   <------- 납치해서 이쪽으로 데려옴
+  last_page = get_last_page()
+  jobs = extract_jobs(last_page)
+
+  return jobs 
+  
