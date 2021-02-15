@@ -1,0 +1,44 @@
+main.py
+
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs
+
+app = Flask("SuperScrapper")
+
+db={}
+
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()
+
+
+
+    fromDb=db.get(word)                <-----  여기부터 if문을 삽입했다
+
+    if fromDb:                         <----- 만약 fromDb의 값이 존재하면, jobs가 fromDb가 될 것이다. 
+      pass
+    else:
+      jobs = get_jobs(word)
+      db[word] = jobs
+
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word)
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
