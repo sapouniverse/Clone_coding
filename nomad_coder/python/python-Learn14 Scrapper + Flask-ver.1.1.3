@@ -1,5 +1,49 @@
 main.py
-(생략)
+
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs
+
+app = Flask("SuperScrapper")
+
+db={}
+
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()
+
+
+
+    fromDb=db.get(word)
+
+    if True:                       <----- 아래 디자인이 잘 들어갔는지 보기 위해서 임의로 손봄
+      jobs=[]                      <----- 이렇게 하면 scrapper 작동(else 다음 부분) 없이 얘네들의 모양만 볼 수 있게 된다.
+    else:
+      jobs = get_jobs(word)        
+      db[word] = jobs
+
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word, resultNumber=len(jobs))
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
 
 
 >>templates
