@@ -1,0 +1,81 @@
+main.py
+
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs
+
+app = Flask("SuperScrapper")
+
+db={}
+
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()
+
+    fromDb=db.get(word)
+
+    if fromDb:           <-------- 이거 다시 살림
+      jobs=fromDb        <-------- 이거 다시 살림
+    else:
+      jobs = get_jobs(word)
+      db[word] = jobs
+
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word, resultNumber=len(jobs))
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
+>>templates
+potato.html
+(생략)
+report.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Search</title>
+
+    <style>
+      section {
+      display: grid; 
+      gap: 20px;                             <----------- 간격 조절만 추가하고 나머지는 그대로라서, 가로로 안보일수도 
+      grid-template-colums: repeat(4,1fr);}
+
+    </style>
+
+  </head>
+  
+  <body>
+    <h1>Search Results</h1>
+    <h3>Found {{resultNumber}} results for: {{searchingBy}}</h3> 
+
+    <section>
+      <h4>Title</h4>
+      <h4>Company</h4>
+      <h4>Location</h4>
+      <h4>Link</h4>
+    </section>
+    
+  </body> 
+</html>
+
+
+scrapper.py 
+(생략)
