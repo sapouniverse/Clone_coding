@@ -33,7 +33,9 @@ def report():
     return redirect("/")
 
 
-  return render_template("report.html", searchingBy=word, resultNumber=len(jobs), jobs=jobs)  <---- 여기 보고 { %% } 넣은거임 (jobs=jobs 빠져있었네?)
+  return render_template("report.html", searchingBy=word, resultNumber=len(jobs), jobs=jobs)  <---- 여기 보고 { %% } 넣은거임 
+
+<------- (jobs=jobs 빠져있었네?) 이게 실행에 영향을 줬을까?
 
 <------ main에 jobs가 존재하지 않으면 작동하지 않는 것이니까 주의 집중! report.html에 jobs를 잘 넘겨줘야 한다.
   
