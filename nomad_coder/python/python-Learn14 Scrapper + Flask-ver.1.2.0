@@ -80,10 +80,10 @@ report.html
       <h4>Link</h4>
       {% for job in jobs %} <------- 다행히도 flask에서는 html에다가 for ~ in을 적용할 수 있다.
       
-        <span>{{potato.title}}</span>
-        <span>{{potato.company}}</span>
-        <span>{{potato.Location}}</span>
-        <a href="{{potato.link}}" target="_blank">Apply</a>
+        <span>{{job.title}}</span>
+        <span>{{job.company}}</span>
+        <span>{{job.Location}}</span>
+        <a href="{{job.link}}" target="_blank">Apply</a>
 
       
       {% endfor %}      <------ html에 파이썬을 넣을 거라는 신호
@@ -95,3 +95,6 @@ report.html
 
 scrapper.py 
 (생략)
+
+---------------------------------
+# 결과 : 다 나오는데, 가로세로 표 정렬이 안됨.. 어디가 문제인지는 찾을 수가  ㅠ
