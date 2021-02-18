@@ -40,7 +40,17 @@ def potato(username):
   return f"Hello {username} how are you doing"
 
 
---------------- 여기에 
+@app.route("/expert")        <-------- 여기 새로 추가! csv로 export 하기 
+def expert():
+  try:
+    word=request.args.get('word')
+        
+    if not word:
+      raise Exception()
+         
+  except:
+    return redirect("/")
+
 
 
 
