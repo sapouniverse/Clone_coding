@@ -1,0 +1,87 @@
+main.py
+
+
+from flask import Flask, render_template, request, redirect
+from scrapper import get_jobs
+
+app = Flask("SuperScrapper")
+
+db={}
+
+
+@app.route("/")
+def home():
+  return render_template("potato.html")
+
+@app.route("/report")
+def report():
+  word=request.args.get('word')
+  
+  if word:
+    word=word.lower()
+
+    fromDb=db.get(word)
+
+    if fromDb:
+      jobs=fromDb
+    else:
+      jobs = get_jobs(word)
+      db[word] = jobs
+
+
+  else:
+    return redirect("/")
+
+
+  return render_template("report.html", searchingBy=word, resultNumber=len(jobs), jobs=jobs)  <---- 여기 보고 { %% } 넣은거임 (jobs=jobs 빠져있었네?)
+
+<------ main에 jobs가 존재하지 않으면 작동하지 않는 것이니까 주의 집중! report.html에 jobs를 잘 넘겨줘야 한다.
+  
+
+@app.route("/<username>")
+def potato(username):
+  return f"Hello {username} how are you doing"
+
+
+app.run(host="0.0.0.0")
+
+
+>>templates
+potato.html
+(생략)
+report.html
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Search</title>
+
+    <style>
+      section {
+      display: grid; 
+      gap: 20px;
+      grid-template-colums: repeat(4,1fr);}
+
+    </style>
+
+  </head>
+  
+  <body>
+    <h1>Search Results</h1>
+    <h3>Found {{resultNumber}} results for: {{searchingBy}}</h3> 
+
+    <section>
+      <h4>Title</h4>
+      <h4>Company</h4>
+      <h4>Location</h4>
+      <h4>Link</h4>
+      {% for job in jobs %}    <------- 다행히도 flask에서는 html에다가 for ~ in을 적용할 수 있다.
+    </section>
+    
+  </body> 
+</html>
+
+
+scrapper.py 
+(생략)
