@@ -47,6 +47,13 @@ def expert():
         
     if not word:
       raise Exception()
+    
+    word=word.lower()     <------- 쭉쭉 
+    jobs=db.get(word)
+    if not jobs:
+      raise Exception()
+    return f"Generate CSV for {word}"
+    
          
   except:
     return redirect("/")
