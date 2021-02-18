@@ -83,7 +83,7 @@ report.html
         <span>{{job.title}}</span>
         <span>{{job.company}}</span>
         <span>{{job.Location}}</span>
-        <span>{{job.link}}</span>           <--------- 링크가 제대로 안나와서 바꿨음
+        <span>{{job.apply_link}}</span>           <--------- 링크가 제대로 안나와서 바꿨음
               
       {% endfor %}      <------ html에 파이썬을 넣을 거라는 신호
     </section>
