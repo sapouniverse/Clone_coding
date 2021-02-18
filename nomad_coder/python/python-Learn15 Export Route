@@ -89,7 +89,7 @@ report.html
     <h1>Search Results</h1>
     <h3>Found {{resultNumber}} results for: {{searchingBy}}</h3> 
 
-    <a href="/expert?word={{searchingBy}}">Export to CSV</a>    <---- 3. 
+    <a href="/expert?word={{searchingBy}}">Export to CSV</a>    <---- 3. 이걸 추가 함으로써 
 
     <section>
       <h4>Title</h4>
