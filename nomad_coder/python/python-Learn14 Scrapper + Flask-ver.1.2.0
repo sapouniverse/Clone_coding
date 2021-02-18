@@ -63,7 +63,7 @@ report.html
       section {
       display: grid; 
       gap: 20px;
-      grid-template-colums: repeat(4,1fr);}
+      grid-template-columns: repeat(4,1fr);}   <----- 뻐킹 columns 오타!!! n을 빼먹었
 
     </style>
 
@@ -97,4 +97,4 @@ scrapper.py
 (생략)
 
 ---------------------------------
-# 결과 : 다 나오는데, 가로세로 표 정렬이 안됨.. 어디가 문제인지는 찾을 수가  ㅠ
+# 결과 : 잘 
