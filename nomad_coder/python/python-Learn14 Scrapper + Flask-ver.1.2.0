@@ -76,7 +76,15 @@ report.html
       <h4>Company</h4>
       <h4>Location</h4>
       <h4>Link</h4>
-      {% for job in jobs %}    <------- 다행히도 flask에서는 html에다가 for ~ in을 적용할 수 있다.
+      {% for job in jobs %} <------- 다행히도 flask에서는 html에다가 for ~ in을 적용할 수 있다.
+      
+        <span>{{potato.title}}</span>
+        <span>{{potato.company}}</span>
+        <span>{{potato.Location}}</span>
+        <a href="{{potato.link}}" target="_blank">Apply</a>
+
+      
+      {% endfor %}      <------ html에 파이썬을 넣을 거라는 신호
     </section>
     
   </body> 
