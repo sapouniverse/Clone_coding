@@ -52,7 +52,7 @@ def expert():
     jobs=db.get(word)
     if not jobs:
       raise Exception()
-    return f"Generate CSV for {word}"   <--------4. 예가 나올 수 있게 만든 
+    return f"Generate CSV for {word}"   <--------4. 예가 나올 수 있게 만
     -------------------------------
          
   except:
