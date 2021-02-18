@@ -83,7 +83,7 @@ report.html
         <span>{{job.title}}</span>
         <span>{{job.company}}</span>
         <span>{{job.Location}}</span>
-        <span>{{job.apply_link}}</span>           <--------- 링크가 제대로 안나와서 바꿨음
+        <a href="{{job.apply_link}}" target="_blank">Apply</a>     <------ 클릭해서 들어갈 수 있게 
               
       {% endfor %}      <------ html에 파이썬을 넣을 거라는 신호
     </section>
